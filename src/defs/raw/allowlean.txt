@@ -1,0 +1,10 @@
+Name: AllowLean
+Function: AllowLean( <player lean left> )
+Module: Player
+Restriction: SP Only
+Summary: Sets whether the player can lean
+CallOn: The player
+Example: level.player AllowLean( false );
+RequiredArgs:
+1 : <player lean>: A boolean. true if the player can lean, and false otherwise
+

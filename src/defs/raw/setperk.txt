@@ -1,0 +1,10 @@
+Name: SetPerk
+Function: SetPerk( <perk name> )
+Module: Player
+Restriction: MP Only
+Summary: give the specified perk
+CallOn: A player
+Example: player SetPerk( "specialty_gpsjammer" );
+RequiredArgs:
+1 : <perk name> the perk to give
+

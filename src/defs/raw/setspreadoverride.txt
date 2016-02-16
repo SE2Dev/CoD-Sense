@@ -1,0 +1,9 @@
+Name: SetSpreadOverride
+Function: SetSpreadOverride( <player spread> )
+Module: Player
+Summary: Sets the player fixed spread value
+CallOn: A player
+Example: level.player SetSpreadOverride( 30 );
+RequiredArgs:
+1 : <player spread>: An integer. It will override all the spread values (min, max, stand, crouch, prone) no matter which weapon is in use.
+

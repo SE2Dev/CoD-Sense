@@ -1,0 +1,9 @@
+Name: GetWeaponAmmoClip
+Function: GetWeaponAmmoClip( <weapon name> )
+Module: Player
+Summary: Get the amount of ammo left in the player's weapon's current clip.
+CallOn: The player
+Example:  clipCount = level.player GetWeaponAmmoClip( "uzi" );
+RequiredArgs:
+1 : <weapon name>: (string) The weapon name for this weapon.
+

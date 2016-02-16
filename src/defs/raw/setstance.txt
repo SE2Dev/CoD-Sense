@@ -1,0 +1,8 @@
+Name: SetStance
+Function: SetStance()
+Module: Player
+Restriction: SP Only
+Summary: Sets the stance of the player. It only works for the player. Possible values are 'crouch', 'prone' and 'stand'
+CallOn: The player
+Example: level.player SetStance( "stand" );
+

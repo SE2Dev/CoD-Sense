@@ -1,0 +1,10 @@
+Name: setweaponslotammo
+Function: setweaponslotammo( <weapon slot>, <ammo count> )
+Module: Player
+Summary: Sets the ammunition for the weapon in the given weapon slot.
+CallOn: The player
+Example:  level.player setweaponslotammo("primary", 125);
+RequiredArgs:
+1 : <weapon slot>: Valid weaponslots are "primary" and "primaryb".
+2 : <ammo count>: The amount of ammunition.
+

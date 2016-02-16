@@ -1,0 +1,10 @@
+Name: SetViewModelDepthOfField
+Function: SetViewModelDepthOfField( <start>, <end> )
+Module: Player
+Summary: Set the depth of field values for the player's viewmodel when at hip.  If start >= end, depth of field is disabled.
+CallOn: <player>
+Example: self SetViewModelDepthOfField( 2, 10 );
+RequiredArgs:
+1 : <start> Before this distance, depth of field is maximally blurry
+2 : <end> After this distance, depth of field is perfectly in focus
+

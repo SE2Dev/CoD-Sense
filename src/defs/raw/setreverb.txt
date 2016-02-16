@@ -1,0 +1,14 @@
+Name: SetReverb
+Function: SetReverb( <priority>, <room type>, <dry level>, <wet level>, <fade time> )
+Module: Player
+Summary: Set the sound reverberation for the player
+CallOn: The player
+Example: level.player SetReverb( "snd_enveffectsprio_level", "stoneroom", 1, .7, 3 );
+RequiredArgs:
+1 : <priority>: Valid priorities are "snd_enveffectsprio_level", or "snd_enveffectsprio_shellshock".
+2 : <room type>: string describing the type of reverb.
+OptionalArgs:
+1 : <dry level>: a float from 0 (no source sound) to 1 (full source sound)
+2 : <wet level>: a float from 0 (no effect) to 1 (full effect)
+3 : <fade time>: in seconds and modifies drylevel and wetlevel.
+

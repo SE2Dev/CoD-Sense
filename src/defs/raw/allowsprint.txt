@@ -1,0 +1,9 @@
+Name: AllowSprint
+Function: AllowSprint( <player sprint> )
+Module: Player
+Summary: Sets whether the player can sprint
+CallOn: The player
+Example: level.player AllowSprint(false);
+RequiredArgs:
+1 : <player sprint>: A boolean. True if the player can sprint, and false otherwise
+

@@ -1,0 +1,9 @@
+Name: SetPhysicsGravityDir
+Function: SetPhysicsGravityDir( <direction> )
+Module: Physics
+Restriction: SP Only
+Summary: Sets the direction of gravity for physics.
+Example: SetPhysicsGravityDir( (0,0,1) );
+RequiredArgs:
+1 : <direction> The direction that gravity will pull (i.e., "down").  Set to (0,0,-1) for normal gravity behavior.
+

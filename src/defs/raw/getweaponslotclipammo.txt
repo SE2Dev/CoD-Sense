@@ -1,0 +1,9 @@
+Name: getweaponslotclipammo
+Function: getweaponslotclipammo( <weapon slot> )
+Module: Player
+Summary: Gets the ammunition in the clip for the weapon in the given weapon slot.
+CallOn: The player
+Example:  ammo = level.player getweaponslotclipammo("primary");
+RequiredArgs:
+1 : <weapon slot>: Valid weaponslots are "primary" and "primaryb".
+

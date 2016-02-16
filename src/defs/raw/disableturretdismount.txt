@@ -1,0 +1,8 @@
+Name: DisableTurretDismount
+Function: DisableTurretDismount()
+Module: Player
+Restriction: SP Only
+Summary: Do not let player unstick themselves from a turret that they are using.
+CallOn: A Player
+Example: level.player DisableTurretDismount();
+

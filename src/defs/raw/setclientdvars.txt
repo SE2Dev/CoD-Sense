@@ -1,0 +1,10 @@
+Name: SetClientDvars
+Function: SetClientDvars( <dvarName>, <value>, <dvarName>, <value>, etc. )
+Module: Player
+Summary: Set the values of a list of dvars which are specific to each client.
+CallOn: The player
+Example: self SetClientDvars( "cg_drawhud", "0", "cg_draw2d", "0" );
+RequiredArgs:
+1 : <dvarName>: The name of a dvar.  Valid dvar names: "cg_drawhud".
+2 : <value>: The the value to which the dvar will be set
+

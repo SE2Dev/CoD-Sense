@@ -1,0 +1,10 @@
+Name: EnableHealthShield
+Function: EnableHealthShield( <enable> )
+Module: Player
+Restriction: SP Only
+Summary: Sets whether the player's health shield is active
+CallOn: The player
+Example: level.player EnableHealthShield( false );
+RequiredArgs:
+1 : <enable>: A boolean. true to enable the health shield, and false otherwise
+

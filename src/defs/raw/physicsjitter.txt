@@ -1,0 +1,12 @@
+Name: PhysicsJitter
+Function: PhysicsJitter( <center>, <outer radius>, <inner radius>, <min displacement>, <max displacement> )
+Module: Physics
+Summary: Jitters physics objects touching the ground.  Jitter forces are calculated in such a way as to displace the object upwards some height between min and max displacement at each point of contact with the ground.
+Example: PhysicsJitter( origin, 200, 150, 1.0, 5.0 );
+RequiredArgs:
+1 : <center> The world position of the center of the cylinder
+2 : <outer radius> The radius beyond which the displacement is zero
+3 : <inner radius> The radius within which the displacement is maximum
+4 : <min displacement> Approximate minimum distance each contact point will be displaced
+5 : <max displacement> Approximate maximum distance each contact point will be displaced
+

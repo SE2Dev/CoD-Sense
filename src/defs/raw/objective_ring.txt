@@ -1,0 +1,9 @@
+Name: Objective_Ring
+Function: Objective_Ring( <objective_index>)
+Module: Objective
+Restriction: SP Only
+Summary: Triggers a ring on the objective.
+Example: Objective_Ring( level.mortarObjNumber );
+RequiredArgs:
+1 : <objective_index> The ID of the ring.
+

@@ -1,0 +1,9 @@
+Name: SetViewModel
+Function: SetViewModel( <viewmodel name> )
+Module: Player
+Summary: Set the player's current view model.
+CallOn: The player
+Example: self SetViewModel( "viewmodel_hands_russian_vetrn" );
+RequiredArgs:
+1 : <viewmodel name>: A viewmodel (string)
+

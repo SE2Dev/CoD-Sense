@@ -1,0 +1,18 @@
+Name: PlayerLinkTo
+Function: PlayerLinkTo( <linkto entity>, <tag>, <viewpercentag fraction>, <right arc>, <left arc>, <top arc>, <bottom arc>, <collide> )
+Module: Player
+Restriction: SP Only
+Summary: Attaches the player to an entity.  Any entity rotation is added to the player's view, allow the player to look around.  Rotating the parent entity/tag will not move the player's eye position, but only the player's view angles.  Thus, the player's eye position is locked in place, always directly above the parent tag.
+CallOn: A Player Entity
+Example: level.player PlayerLinkTo( vehicle, "tag_player", 0.5 );
+RequiredArgs:
+1 : <linkto entity> The entity to attach the player to.
+OptionalArgs:
+1 : <tag> The tag to attach the player to.
+2 : <view fraction> How much the change in the tag's rotation effects the players view.  Defaults to 0.
+3 : <right arc> Angle to clamp view to the right.  Defaults to 180.
+4 : <left arc> Angle to clamp view to the left.  Defaults to 180.
+5 : <top arc> Angle to clamp view to the top.  Defaults to 180.
+6 : <bottom arc> Angle to clamp view to the bottom.  Defaults to 180.
+7 : <collide> true/false: Whether the player is to collide with geo, preventing the player from entering solid (but will try to keep the player as close as possible to the parent)
+

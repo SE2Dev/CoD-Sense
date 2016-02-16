@@ -1,0 +1,9 @@
+Name: Target_Remove
+Function: Target_Remove( <target entity> )
+Module: Objective
+Restriction: SP Only
+Summary: Removes a target
+Example: Target_Remove( enemy_chopper );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+

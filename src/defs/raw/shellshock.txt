@@ -1,0 +1,12 @@
+Name: ShellShock
+Function: ShellShock( <shellshockname>, <duration>, overrideCheat )
+Module: Player
+Summary: Start a shell shock sequence for the player. The shell shock must be precached, otherwise calling this script will cause a script error.
+CallOn: <player>
+Example: self ShellShock( "death", 5 );
+RequiredArgs:
+1 : <shellshockname>
+2 : <duration> duration in seconds. The duration must be between 0 and 60 seconds. 
+OptionalArgs:
+1 : <overrideCheat> Certain player cheats can disable this function, set this true to force the issue.
+

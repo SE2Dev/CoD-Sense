@@ -1,0 +1,10 @@
+Name: AllowCrouch
+Function: AllowCrouch( <player crouch> )
+Module: Player
+Restriction: SP Only
+Summary: Sets whether the player can crouch
+CallOn: The player
+Example: level.player AllowCrouch( false );
+RequiredArgs:
+1 : <player crouch>: A boolean. true if the player can crouch, and false otherwise
+

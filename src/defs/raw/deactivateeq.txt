@@ -1,0 +1,13 @@
+Name: DeactivateEq
+Function: DeactivateEq( <eqIndex>, <channelName>, <band> )
+Module: Player
+Restriction: SP Only
+Summary: Deactivate the specified eq filter for the specified band
+CallOn: The player
+Example: level.player DeactivateEq( 0, "local", 0 );
+RequiredArgs:
+1 : <eqIndex> : which eq index to deactivate (0,1)
+OptionalArgs:
+1 : <channelName>: the name of the channel.  channel names are specified in "channels.def"
+2 : <band>: select which band to disable.  There are currently three bands (0,1,2)
+

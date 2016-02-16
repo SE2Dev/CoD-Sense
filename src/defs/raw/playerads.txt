@@ -1,0 +1,7 @@
+Name: PlayerAds
+Function: PlayerAds()
+Module: Player
+Summary: Return the player's weapon position fraction.
+CallOn: The player
+Example: while( self PlayerAds() > 0.3 )...
+

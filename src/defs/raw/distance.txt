@@ -1,0 +1,9 @@
+Name: Distance
+Function: Distance( <point1>, <point2> )
+Module: Vector
+Summary: Returns the distance between two points
+Example: dist = Distance( org, ai[i].origin );
+RequiredArgs:
+1 : <point1> The first point
+2 : <point2> The second point
+

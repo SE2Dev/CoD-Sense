@@ -1,0 +1,8 @@
+Name: HideViewModel
+Function: HideViewModel()
+Module: Player
+Restriction: SP Only
+Summary: Hide the player's current view model.
+CallOn: The player
+Example: level.player HideViewModel();
+

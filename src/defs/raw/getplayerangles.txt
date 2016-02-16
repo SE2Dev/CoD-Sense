@@ -1,0 +1,7 @@
+Name: GetPlayerAngles
+Function: GetPlayerAngles()
+Module: Player
+Summary: Get the player's angles
+CallOn: The player
+Example:  angles = level.player GetPlayerAngles();
+

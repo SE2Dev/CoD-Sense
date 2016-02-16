@@ -1,0 +1,8 @@
+Name: GetPlayerViewHeight
+Function: GetPlayerViewHeight()
+Module: Player
+Restriction: SP Only
+Summary: Get the player's view height
+CallOn: The player
+Example: height = level.player GetPlayerViewHeight();
+

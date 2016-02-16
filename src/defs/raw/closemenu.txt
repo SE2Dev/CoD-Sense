@@ -1,0 +1,7 @@
+Name: CloseMenu
+Function: CloseMenu()
+Module: Player
+Summary: Close the current player menu
+CallOn: The player
+Example: player CloseMenu();
+

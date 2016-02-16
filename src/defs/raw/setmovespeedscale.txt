@@ -1,0 +1,9 @@
+Name: SetMoveSpeedScale
+Function: SetMoveSpeedScale( <scale> )
+Module: Player
+Summary: Scales player movement speed by this amount 
+CallOn: A Player Entity
+Example: self SetMoveSpeedScale( 1.5 );
+RequiredArgs:
+1 : <scale> The amount to scale player movement
+

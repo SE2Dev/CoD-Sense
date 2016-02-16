@@ -1,0 +1,7 @@
+Name: AdsButtonPressed
+Function: AdsButtonPressed()
+Module: Player
+Summary: Check if the player is pressing the 'ads' button.
+CallOn: The player
+Example:  while( self AdsButtonPressed() )...
+

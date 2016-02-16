@@ -1,0 +1,17 @@
+<!--
+H1  { padding: 0; margin: 0; font-size: 16pt; font-weight:bold; font-family:courier new; }
+H2  { padding: 0; margin: 4; }
+H3  { padding: 0; margin: 4; font-size: 13pt; font-weight:normal; }
+P   { padding: 0; margin: 4; }
+PRE { padding: 0; margin: 4; font-size: 10pt; font-weight:normal; color:#EEEEEE; }
+TD  { padding: 4; margin: 0; }
+UL  { margin-bottom:0; }
+-->
+Name: DisconnectPaths
+Function: DisconnectPaths()
+Module: AI
+Restriction: SP Only
+Summary: Disconnects the paths that intersect with the entity. If the entity is a script_brushmodel then it must have DYNAMICPATH set to disconnect paths.
+CallOn: <entity> A dynamic blocking entity
+Example: level.ArmoredCar DisconnectPaths();
+

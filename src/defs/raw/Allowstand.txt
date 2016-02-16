@@ -1,0 +1,10 @@
+Name: AllowStand
+Function: AllowStand( <player stand> )
+Module: Player
+Restriction: SP Only
+Summary: Sets whether the player can stand up
+CallOn: The player
+Example: level.player AllowStand( false );
+RequiredArgs:
+1 : <player stand>: A boolean. true if the player can stand, and false otherwise
+

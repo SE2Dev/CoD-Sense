@@ -1,0 +1,12 @@
+Name: PlayLocalSound
+Function: PlayLocalSound( <sound name> )
+Module: Player
+Summary: Plays a sound locally to the player
+CallOn: The player
+Example: players[i] PlayLocalSound( "MP_announcer_round_draw" );
+RequiredArgs:
+1 : <sound name>: The name of the sound to play.
+OptionalArgs:
+1 : <notification string> If present, the sound will notify this string on this player when done. (Single player only)
+2 : <stoppable flag> If present and true, then this sound can be interrupted by another playlocalsound command with notification string.  It is a script error for a playsound that does not have this flag set to get interrupted by another playlocalsound with notify, or for a playlocalsound with notify that does not have this flag set to interrupt another playlocalsound with notify. (Single player only)"
+

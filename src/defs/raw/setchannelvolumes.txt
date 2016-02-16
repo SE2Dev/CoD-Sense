@@ -1,0 +1,12 @@
+Name: SetChannelVolumes
+Function: SetChannelVolumes( <priority>, <shock name>, <fade time> )
+Module: Player
+Summary: Set the channel volumes for the player (a way of fading volumes by type)
+CallOn: The player
+Example: level.player SetChannelVolumes( "snd_channelvolprio_pain", "pain", 1, .7, 3 );
+RequiredArgs:
+1 : <priority>: Valid priorities are "snd_channelvolprio_holdbreath", "snd_channelvolprio_pain", or "snd_channelvolprio_shellshock".
+2 : <shock name>: string describing the name of the .shock file w/ the channel volumes values to use.
+OptionalArgs:
+1 : <fade time>: in seconds.
+

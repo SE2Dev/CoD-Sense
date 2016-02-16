@@ -1,0 +1,8 @@
+Name: GetNormalizedMovement
+Function: GetNormalizedMovement()
+Module: Player
+Restriction: SP Only
+Summary: Get the player's normalized movement vector.  Returns [-1,1] for X(forward) and Y(right) based on player's input.
+CallOn: The player
+Example:  movement = self GetNormalizedMovement();
+

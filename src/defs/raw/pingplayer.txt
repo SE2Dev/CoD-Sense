@@ -1,0 +1,8 @@
+Name: PingPlayer
+Function: PingPlayer()
+Module: Objective
+Restriction: MP Only
+Summary: Flashes a player on their teammate's compasses
+CallOn: A player
+Example: self PingPlayer();
+

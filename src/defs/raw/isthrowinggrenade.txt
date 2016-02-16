@@ -1,0 +1,8 @@
+Name: IsThrowingGrenade
+Function: IsThrowingGrenade()
+Module: Player
+Restriction: SP Only
+Summary: Returns true if the player is currently throwing a grenade
+CallOn: The player
+Example: level.player IsThrowingGrenade();
+

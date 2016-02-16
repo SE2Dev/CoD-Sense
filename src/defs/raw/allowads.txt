@@ -1,0 +1,9 @@
+Name: AllowAds
+Function: AllowAds( <player ads> )
+Module: Player
+Summary: Sets whether the player can switch to ADS
+CallOn: The player
+Example: level.player AllowAds( false );
+RequiredArgs:
+1 : <player ads>: A boolean. true if the player can switch to ADS, and false otherwise.
+

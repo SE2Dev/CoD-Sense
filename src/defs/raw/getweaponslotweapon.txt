@@ -1,0 +1,9 @@
+Name: getweaponslotweapon
+Function: getweaponslotweapon( <weapon slot> )
+Module: Player
+Summary: Gets the name of the weapon in the given weapon slot.
+CallOn: The player
+Example: playerWeapon[0] = level.player getweaponslotweapon("primary");
+RequiredArgs:
+1 : <weapon slot>: Valid weaponslots are "primary" and "primaryb".
+

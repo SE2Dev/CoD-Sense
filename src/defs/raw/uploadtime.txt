@@ -1,0 +1,11 @@
+Name: UploadTime
+Function: UploadTime( <mission>, <time> )
+Module: Player
+Restriction: SP Only
+Summary: Upload a time to XBLIVE leaderboards
+CallOn: A Player
+Example: level.player UploadTime( 19, 15.2 );
+RequiredArgs:
+1 : <mission>: mission index.
+2 : <time>: time for this mission.
+

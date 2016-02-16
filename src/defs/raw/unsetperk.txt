@@ -1,0 +1,10 @@
+Name: UnSetPerk
+Function: UnSetPerk( <perk name> )
+Module: Player
+Restriction: MP Only
+Summary: takes the specified perk from the player
+CallOn: A player
+Example: player UnSetPerk( "specialty_gpsjammer" );
+RequiredArgs:
+1 : <perk name> the perk to unset
+

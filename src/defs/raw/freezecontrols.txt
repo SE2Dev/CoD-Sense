@@ -1,0 +1,9 @@
+Name: FreezeControls
+Function: FreezeControls( <freeze state> )
+Module: Player
+Summary: Blocks or unblocks control input from this player
+CallOn: The player
+Example: level.player freezeControls( true );
+RequiredArgs:
+1 : <freeze state>: true if the player's controls are frozen, false otherwise.
+

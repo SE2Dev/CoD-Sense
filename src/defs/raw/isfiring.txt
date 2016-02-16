@@ -1,0 +1,8 @@
+Name: IsFiring
+Function: IsFiring()
+Module: Player
+Restriction: SP Only
+Summary: Returns true if the player is currently using a weapon
+CallOn: The player
+Example: level.player IsFiring()
+

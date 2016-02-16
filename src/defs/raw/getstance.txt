@@ -1,0 +1,7 @@
+Name: GetStance
+Function: GetStance()
+Module: Player
+Summary: Gets the stance of the player. It only works for the player. Possible return values are 'crouch', 'prone' and 'stand'
+CallOn: The player
+Example: if ( level.player GetStance() == "crouch") )...
+

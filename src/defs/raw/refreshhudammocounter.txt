@@ -1,0 +1,7 @@
+Name: RefreshHudAmmoCounter
+Function: RefreshHudAmmoCounter()
+Module: Objective
+Restriction: SP Only
+Summary: Causes the HUD ammo counter and actionslots to show, as if the player had fired or otherwise caused it to show.  Will fade out as normal.
+Example: RefreshHudAmmoCounter();
+

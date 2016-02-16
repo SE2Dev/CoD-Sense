@@ -1,0 +1,10 @@
+Name: Objective_Current
+Function: Objective_Current( <objective_index>, <objective_index>, ... )
+Module: Objective
+Summary: Set which objective(s) are currently being done. If none specified, there's no current objective. Current objectives that are not specified to still be current, are set to active.
+Example: Objective_Current( aHardpointObjectives[0].obj, aHardpointObjectives[1].obj, aHardpointObjectives[2].obj );
+RequiredArgs:
+1 : <objective_index> The ID of the objective to set current.
+OptionalArgs:
+1 : <objective_index> Any number of additional IDs to set current.
+

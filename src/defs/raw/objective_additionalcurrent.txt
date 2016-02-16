@@ -1,0 +1,11 @@
+Name: Objective_AdditionalCurrent
+Function: Objective_AdditionalCurrent( <objective_index>, <objective_index>, ... )
+Module: Objective
+Restriction: SP Only
+Summary: Add additional objective(s) to the set of objectives currently being done. If none specified, there's no effect.Current objectives that are not specified are not affected by this call. Meant to be used when there are already current objective(s), but one or more additional objectives need to be made current in addition to the previously current objectives.
+Example: Objective_AdditionalCurrent( level.flakObjectiveID );
+RequiredArgs:
+1 : <objective_index> The ID of the objective to set current.
+OptionalArgs:
+1 : <objective_index> Any number of additional IDs to set current.
+

@@ -1,0 +1,10 @@
+Name: Target_StartReticleLockOn
+Function: Target_StartReticleLockOn( <target entity>, <duration> )
+Module: Objective
+Restriction: SP Only
+Summary: Begins the lock-on sequence for the target on the hud.  This affects the animation of the vehicle reticle.
+Example: Target_StartReticleLockOn( enemy_chopper, 4 );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+2 : <duration> The amount of time between now and fully locked-on, in seconds.
+
