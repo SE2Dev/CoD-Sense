@@ -1,7 +1,7 @@
 {
 	"name": "cod-sense",
 	"displayName": "CoD-Sense",
-	"description": "Syntax highlighting and Intellisense support for Call of Duty's GSC and CSC scripts",
+	"description": "Syntax highlighting and Intellisense support for Call of Duty scripts",
 	"version": "0.0.2",
 	"publisher": "SE2Dev",
 	"engines": {
