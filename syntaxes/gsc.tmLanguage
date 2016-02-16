@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>gsc</string>
+	</array>
+    
+	<key>name</key>
+	<string>gsc</string>
+    
+    <key>scopeName</key>
+	<string>source.gsc</string>
+    
+	<key>foldingStartMarker</key>
+	<string>\{</string>
+	<key>foldingStopMarker</key>
+	<string>\}</string>
+	
+	<key>patterns</key>
+	<array>    
+        <!-- #include PreProcessor Directive -->
+        <dict>
+            <key>begin</key>
+			<string>^\s*(#include\b)\s*(.*)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+				    <key>name</key>
+				    <string>keyword.control.import.include</string>
+				</dict>
+                
+                <key>2</key>
+				<dict>
+				    <key>name</key>
+				    <string>punctuation.definition.string</string>
+				</dict>
+			</dict>
+            
+			<key>end</key>
+			<string>\s</string>
+        </dict>
+        
+        <!-- #using_animtree PreProcessor Directive
+              behaves slightly differently than #include because of parentheses -->
+        <dict>
+            <key>match</key>
+            <string>#using_animtree\b</string>
+        
+            <key>name</key>
+            <string>meta.preprocessor.c</string>
+        </dict>
+    
+        <!-- Single Line Comments -->
+        <dict>
+            <key>match</key>
+            <string>//.*</string>
+        
+            <key>name</key>
+            <string>comment.line</string>
+        </dict>
+    
+        <!-- Block Comments -->
+		<dict>
+            <key>begin</key>
+			<string>/\*</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+				    <key>name</key>
+				    <string>comment.begin</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>\*/</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>comment.end</string>
+				</dict>
+			</dict>
+            <key>name</key>
+            <string>comment.block.gsc</string>
+        </dict>
+        
+        <!-- Developer Script Blocks 
+				string.regexp
+				punctuation.definition.string
+				string.other.link -->
+        <dict>
+            <key>begin</key>
+			<string>/#</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+				    <key>name</key>
+				    <string>comment.begin</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>#/</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>comment.end</string>
+				</dict>
+			</dict>
+            <key>name</key>
+            <string>comment.block.developerscript.gsc</string>
+        </dict>
+		
+        <!-- String Literals -->
+        <dict>    
+            <key>begin</key>
+			<string>"</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+				    <key>name</key>
+				    <string>punctuation.definition.string.begin</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>([^\\]"|\n|\r)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.end</string>
+				</dict>
+			</dict>
+            <key>name</key>
+            <string>punctuation.definition.string</string>
+        </dict>
+        
+         <!-- Numeric Literals -->
+        <dict>    
+            <key>match</key>
+            <string>(?&lt;![a-zA-Z]-)(?&lt;![a-zA-Z])\b\d+\.?f?</string>
+            <key>name</key>
+            <string>constant.numeric.c</string>
+        </dict>
+        
+        <dict>    
+            <key>match</key>
+            <string>(i*)\b(true|false)\b</string>
+            <key>name</key>
+            <string>constant.language.c</string>
+        </dict>
+        
+        <!-- Control Statements -->
+        <dict>
+            <key>match</key>
+            <string>\b(if|else|switch|case|break|continue|for|while|return)\b</string>
+                
+            <key>name</key>
+            <string>keyword.control.c</string>
+        </dict>
+        
+        <!-- Hardcoded Variables -->
+        <dict>
+            <key>match</key>
+            <string>\b(level|player|self)\b</string>
+            
+            <key>name</key>
+            <string>support.variable.gsc</string>
+        </dict>
+        
+         <dict>
+            <key>match</key>
+            <string>\bthread\b</string>
+            
+            <key>name</key>
+            <string>support.type.gsc</string>
+        </dict>
+		
+		<!-- Functions -->
+		<dict>
+            <key>match</key>
+            <string>(_?[a-zA-Z\-_]+[0-9]*)(?=\s*\(.*\).*)</string>
+            
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.function.c</string>
+				</dict>
+			</dict>
+        </dict>		
+    </array>
+</dict>
+</plist>
