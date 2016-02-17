@@ -1,9 +1,9 @@
-Name: setweaponclipammo
-Function: setweaponclipammo( <weapon name>, <ammunition> )
+Name: SetWeaponClipAmmo
+Function: SetWeaponClipAmmo( <weapon name>, <ammunition> )
 Module: Player
 Summary: Set the weapon clip ammunition for the given weapon.
 CallOn: The player
-Example:  level.player setweaponclipammo(true);
+Example:  level.player SetWeaponClipAmmo(true);
 RequiredArgs:
 1 : <weapon name>: (string) The weapon name for this weapon.
 2 : <ammunition>: (integer) The amount of ammunition in the clip.

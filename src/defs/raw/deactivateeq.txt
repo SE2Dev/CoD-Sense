@@ -1,10 +1,10 @@
-Name: DeactivateEq
-Function: DeactivateEq( <eqIndex>, <channelName>, <band> )
+Name: DeactivateEQ
+Function: DeactivateEQ( <eqIndex>, <channelName>, <band> )
 Module: Player
 Restriction: SP Only
 Summary: Deactivate the specified eq filter for the specified band
 CallOn: The player
-Example: level.player DeactivateEq( 0, "local", 0 );
+Example: level.player DeactivateEQ( 0, "local", 0 );
 RequiredArgs:
 1 : <eqIndex> : which eq index to deactivate (0,1)
 OptionalArgs:

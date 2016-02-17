@@ -1,9 +1,9 @@
-Name: Allowleanright
-Function: Allowleanright(<player lean right>)
+Name: AllowLeanRight
+Function: AllowLeanRight(<player lean right>)
 Module: Player
 Summary: Sets whether the player can lean right
 CallOn: The player
-Example: level.player allowleanright(false);
+Example: level.player AllowLeanRight(false);
 RequiredArgs:
 1 : <player lean right>: A boolean. true if the player can lean right, and false otherwise
 

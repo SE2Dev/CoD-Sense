@@ -1,9 +1,9 @@
-Name: setweaponslotclipammo
-Function: setweaponslotclipammo( <weapon slot>, <ammo count> )
+Name: SetWeaponSlotClipAmmo
+Function: SetWeaponSlotClipAmmo( <weapon slot>, <ammo count> )
 Module: Player
 Summary: Sets the clip ammunition for the weapon in the given weapon slot.
 CallOn: The player
-Example:  level.player setweaponslotclipammo("primary", 125);
+Example:  level.player SetWeaponSlotClipAmmo("primary", 125);
 RequiredArgs:
 1 : <weapon slot>: Valid weaponslots are "primary" and "primaryb".
 2 : <ammo count>: The amount of ammunition.
