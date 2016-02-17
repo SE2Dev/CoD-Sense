@@ -13,19 +13,19 @@ export class Def_Function
 export var defs = new Array<Def_Function>();
 
 var tmpDef = new Def_Function;
-tmpDef.name = "AdsButtonPressed";
-tmpDef.decl = "AdsButtonPressed()";
+tmpDef.name = "ADSButtonPressed";
+tmpDef.decl = "ADSButtonPressed()";
 tmpDef.desc = "Check if the player is pressing the 'ads' button.";
 tmpDef.callon = "The player";
-tmpDef.example = "while( self AdsButtonPressed() )...";
+tmpDef.example = "while( self ADSButtonPressed() )...";
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "AllowAds";
-tmpDef.decl = "AllowAds( <player ads> )";
+tmpDef.name = "AllowADS";
+tmpDef.decl = "AllowADS( <player ads> )";
 tmpDef.desc = "Sets whether the player can switch to ADS";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player AllowAds( false );";
+tmpDef.example = "level.player AllowADS( false );";
 tmpDef.reqArgs = [	"1 : <player ads>: A boolean. true if the player can switch to ADS, and false otherwise."];
 defs.push(tmpDef);
 
@@ -57,20 +57,20 @@ tmpDef.reqArgs = [	"1 : <player lean>: A boolean. true if the player can lean, a
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "Allowleanleft";
-tmpDef.decl = "Allowleanleft(<player lean left>)";
+tmpDef.name = "AllowLeanLeft";
+tmpDef.decl = "AllowLeanLeft(<player lean left>)";
 tmpDef.desc = "Sets whether the player can lean left";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player allowleanleft(false);";
+tmpDef.example = "level.player AllowLeanLeft(false);";
 tmpDef.reqArgs = [	"1 : <player lean left>: A boolean. True if the player can lean left, and false otherwise"];
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "Allowleanright";
-tmpDef.decl = "Allowleanright(<player lean right>)";
+tmpDef.name = "AllowLeanRight";
+tmpDef.decl = "AllowLeanRight(<player lean right>)";
 tmpDef.desc = "Sets whether the player can lean right";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player allowleanright(false);";
+tmpDef.example = "level.player AllowLeanRight(false);";
 tmpDef.reqArgs = [	"1 : <player lean right>: A boolean. true if the player can lean right, and false otherwise"];
 defs.push(tmpDef);
 
@@ -161,11 +161,11 @@ tmpDef.optArgs = [	"1 : <fade time>: the time spent fading to the next lowest ac
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "DeactivateEq";
-tmpDef.decl = "DeactivateEq( <eqIndex>, <channelName>, <band> )";
+tmpDef.name = "DeactivateEQ";
+tmpDef.decl = "DeactivateEQ( <eqIndex>, <channelName>, <band> )";
 tmpDef.desc = "Deactivate the specified eq filter for the specified band";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player DeactivateEq( 0, \"local\", 0 );";
+tmpDef.example = "level.player DeactivateEQ( 0, \"local\", 0 );";
 tmpDef.reqArgs = [	"1 : <eqIndex> : which eq index to deactivate (0,1)"];
 tmpDef.optArgs = [	"1 : <channelName>: the name of the channel.  channel names are specified in \"channels.def\"",
 					"2 : <band>: select which band to disable.  There are currently three bands (0,1,2)"];
@@ -380,29 +380,29 @@ tmpDef.example = "weapList = level.player GetWeaponsListPrimaries();";
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "getweaponslotammo";
-tmpDef.decl = "getweaponslotammo( <weapon slot> )";
+tmpDef.name = "GetWeaponSlotAmmo";
+tmpDef.decl = "GetWeaponSlotAmmo( <weapon slot> )";
 tmpDef.desc = "Gets the ammo count for the weapon in the given slot.";
 tmpDef.callon = "The player";
-tmpDef.example = "ammo = level.player getweaponslotammo(\"primary\");";
+tmpDef.example = "ammo = level.player GetWeaponSlotAmmo(\"primary\");";
 tmpDef.reqArgs = [	"1 : <weapon slot>: Valid weaponslots are \"primary\" and \"primaryb\"."];
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "getweaponslotclipammo";
-tmpDef.decl = "getweaponslotclipammo( <weapon slot> )";
+tmpDef.name = "GetWeaponSlotClipAmmo";
+tmpDef.decl = "GetWeaponSlotClipAmmo( <weapon slot> )";
 tmpDef.desc = "Gets the ammunition in the clip for the weapon in the given weapon slot.";
 tmpDef.callon = "The player";
-tmpDef.example = "ammo = level.player getweaponslotclipammo(\"primary\");";
+tmpDef.example = "ammo = level.player GetWeaponSlotClipAmmo(\"primary\");";
 tmpDef.reqArgs = [	"1 : <weapon slot>: Valid weaponslots are \"primary\" and \"primaryb\"."];
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "getweaponslotweapon";
-tmpDef.decl = "getweaponslotweapon( <weapon slot> )";
+tmpDef.name = "GetWeaponSlotWeapon";
+tmpDef.decl = "GetWeaponSlotWeapon( <weapon slot> )";
 tmpDef.desc = "Gets the name of the weapon in the given weapon slot.";
 tmpDef.callon = "The player";
-tmpDef.example = "playerWeapon[0] = level.player getweaponslotweapon(\"primary\");";
+tmpDef.example = "playerWeapon[0] = level.player GetWeaponSlotWeapon(\"primary\");";
 tmpDef.reqArgs = [	"1 : <weapon slot>: Valid weaponslots are \"primary\" and \"primaryb\"."];
 defs.push(tmpDef);
 
@@ -704,11 +704,11 @@ tmpDef.example = "self PingPlayer();";
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "PlayerAds";
-tmpDef.decl = "PlayerAds()";
+tmpDef.name = "PlayerADS";
+tmpDef.decl = "PlayerADS()";
 tmpDef.desc = "Return the player's weapon position fraction.";
 tmpDef.callon = "The player";
-tmpDef.example = "while( self PlayerAds() > 0.3 )...";
+tmpDef.example = "while( self PlayerADS() > 0.3 )...";
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
@@ -774,17 +774,17 @@ tmpDef.optArgs = [	"1 : <notification string> If present, the sound will notify 
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "RefreshHudAmmoCounter";
-tmpDef.decl = "RefreshHudAmmoCounter()";
+tmpDef.name = "RefreshHUDAmmoCounter";
+tmpDef.decl = "RefreshHUDAmmoCounter()";
 tmpDef.desc = "Causes the HUD ammo counter and actionslots to show, as if the player had fired or otherwise caused it to show.  Will fade out as normal.";
-tmpDef.example = "RefreshHudAmmoCounter();";
+tmpDef.example = "RefreshHUDAmmoCounter();";
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "RefreshHudCompass";
-tmpDef.decl = "RefreshHudCompass()";
+tmpDef.name = "RefreshHUDCompass";
+tmpDef.decl = "RefreshHUDCompass()";
 tmpDef.desc = "Causes the HUD compass to show, as if the player had moved or otherwise caused it to show.  Will fade out as normal.";
-tmpDef.example = "RefreshHudCompass();";
+tmpDef.example = "RefreshHUDCompass();";
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
@@ -915,11 +915,11 @@ tmpDef.reqArgs = [	"1 : <near start> Before this distance, near depth of field i
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "SetEq";
-tmpDef.decl = "SetEq( <channel>, <eqIndex>, <band>, <filter type>, <gain>, <frequency>, <q> )";
+tmpDef.name = "SetEQ";
+tmpDef.decl = "SetEQ( <channel>, <eqIndex>, <band>, <filter type>, <gain>, <frequency>, <q> )";
 tmpDef.desc = "Set a parametric filter for the player on a specified channel";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player SetEq( \"ambient\", 0, \"bell\", 3, 1000, 2.1 );";
+tmpDef.example = "level.player SetEQ( \"ambient\", 0, \"bell\", 3, 1000, 2.1 );";
 tmpDef.reqArgs = [	"1 : <channel>: the name of the audio channel to apply the eq to.",
 					"2 : <eqIndex> : the eq index to use (0 and 1).",
 					"3 : <band>: select which band, there are currently two bands (0 and 1).",
@@ -930,11 +930,11 @@ tmpDef.reqArgs = [	"1 : <channel>: the name of the audio channel to apply the eq
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "SetEqLerp";
-tmpDef.decl = "SetEqLerp( <eqLerp> <eqIndex> )";
+tmpDef.name = "SetEQLerp";
+tmpDef.decl = "SetEQLerp( <eqLerp> <eqIndex> )";
 tmpDef.desc = "Set the blend amount for the specified eqIndex, for eqIndex 0 if none is specified.  Automatically sets the blend amount of the other eqIndex to 1-eqLerp.";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player SetEqLerp( 0.25, 1 );  // now using 25% of eq 1 and 75% of eq 0.";
+tmpDef.example = "level.player SetEQLerp( 0.25, 1 );  // now using 25% of eq 1 and 75% of eq 0.";
 tmpDef.reqArgs = [	"1 : <eqLerp>: float value from 0 to 1, percentage of specified eqIndex, 0 if none specified.",
 					"2 : <eqIndex> : the eq index to use (0 and 1)."];
 defs.push(tmpDef);
@@ -1071,41 +1071,41 @@ tmpDef.reqArgs = [	"1 : <weapon name>: (string) The weapon name for this weapon.
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "setweaponclipammo";
-tmpDef.decl = "setweaponclipammo( <weapon name>, <ammunition> )";
+tmpDef.name = "SetWeaponClipAmmo";
+tmpDef.decl = "SetWeaponClipAmmo( <weapon name>, <ammunition> )";
 tmpDef.desc = "Set the weapon clip ammunition for the given weapon.";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player setweaponclipammo(true);";
+tmpDef.example = "level.player SetWeaponClipAmmo(true);";
 tmpDef.reqArgs = [	"1 : <weapon name>: (string) The weapon name for this weapon.",
 					"2 : <ammunition>: (integer) The amount of ammunition in the clip."];
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "setweaponslotammo";
-tmpDef.decl = "setweaponslotammo( <weapon slot>, <ammo count> )";
+tmpDef.name = "SetWeaponSlotAmmo";
+tmpDef.decl = "SetWeaponSlotAmmo( <weapon slot>, <ammo count> )";
 tmpDef.desc = "Sets the ammunition for the weapon in the given weapon slot.";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player setweaponslotammo(\"primary\", 125);";
+tmpDef.example = "level.player SetWeaponSlotAmmo(\"primary\", 125);";
 tmpDef.reqArgs = [	"1 : <weapon slot>: Valid weaponslots are \"primary\" and \"primaryb\".",
 					"2 : <ammo count>: The amount of ammunition."];
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "setweaponslotclipammo";
-tmpDef.decl = "setweaponslotclipammo( <weapon slot>, <ammo count> )";
+tmpDef.name = "SetWeaponSlotClipAmmo";
+tmpDef.decl = "SetWeaponSlotClipAmmo( <weapon slot>, <ammo count> )";
 tmpDef.desc = "Sets the clip ammunition for the weapon in the given weapon slot.";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player setweaponslotclipammo(\"primary\", 125);";
+tmpDef.example = "level.player SetWeaponSlotClipAmmo(\"primary\", 125);";
 tmpDef.reqArgs = [	"1 : <weapon slot>: Valid weaponslots are \"primary\" and \"primaryb\".",
 					"2 : <ammo count>: The amount of ammunition."];
 defs.push(tmpDef);
 
 tmpDef = new Def_Function;
-tmpDef.name = "setweaponslotweapon";
-tmpDef.decl = "setweaponslotweapon( <weapon slot> )";
+tmpDef.name = "SetWeaponSlotWeapon";
+tmpDef.decl = "SetWeaponSlotWeapon( <weapon slot> )";
 tmpDef.desc = "Sets the the weapon in the given weapon slot.";
 tmpDef.callon = "The player";
-tmpDef.example = "level.player setweaponslotweapon(\"primary\", weapon);";
+tmpDef.example = "level.player SetWeaponSlotWeapon(\"primary\", weapon);";
 tmpDef.reqArgs = [	"1 : <weapon slot>: Valid weaponslots are \"primary\" and \"primaryb\".",
 					"2 : <weapon name>: The name of the weapon to use in this slot."];
 defs.push(tmpDef);
