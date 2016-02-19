@@ -1,0 +1,8 @@
+Name: EnableTurretDismount
+Function: EnableTurretDismount()
+Module: Player
+Restriction: SP Only
+Summary: Player can dismount from turrets as normal.
+CallOn: A Player
+Example: level.player EnableTurretDismount();
+

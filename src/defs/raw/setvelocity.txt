@@ -1,0 +1,10 @@
+Name: SetVelocity
+Function: SetVelocity( <player origin> )
+Module: Player
+Restriction: SP Only
+Summary: Set the player's velocity
+CallOn: The player
+Example:  level.player SetVelocity( -400, 0, 100 );
+RequiredArgs:
+1 : <player velocity> The player's velocity (a vector)
+

@@ -1,0 +1,9 @@
+Name: AnyAmmoForWeaponModes
+Function: AnyAmmoForWeaponModes( <weapon name> )
+Module: Player
+Summary: Returns true if the player has any ammo available for the weapon or any of it's alt-modes (grenade launcher, etc).
+CallOn: The player
+Example: if ( level.player AnyAmmoForWeaponModes( "m4_grenadier" ) ) [...]
+RequiredArgs:
+1 : <weapon name>: (string) The weapon name for this weapon.
+

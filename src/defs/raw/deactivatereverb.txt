@@ -1,0 +1,11 @@
+Name: DeactivateReverb
+Function: DeactivateReverb( <priority>, <fade time> )
+Module: Player
+Summary: deactivate the sound reverberation for the player on the given priority level
+CallOn: The player
+Example: level.player DeactivateReverb( "snd_enveffectsprio_level", 3 );
+RequiredArgs:
+1 : <priority>: Valid priorities are "snd_enveffectsprio_level" or "snd_enveffectsprio_shellshock".
+OptionalArgs:
+1 : <fade time>: the time spent fading to the next lowest active reverb priority level in seconds.
+

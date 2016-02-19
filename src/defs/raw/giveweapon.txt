@@ -1,0 +1,9 @@
+Name: GiveWeapon
+Function: GiveWeapon(<weapon name>)
+Module: Player
+Summary: Give the player a weapon.
+CallOn: The player
+Example:  level.player giveWeapon("m1garand");
+RequiredArgs:
+1 : <weapon name> The weapon name to give to the player.
+

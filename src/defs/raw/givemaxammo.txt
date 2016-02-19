@@ -1,0 +1,9 @@
+Name: GiveMaxAmmo
+Function: GiveMaxAmmo( <weapon name> )
+Module: Player
+Summary: Set the player's ammunition to the weapon's maximum ammunition
+CallOn: The player
+Example:  self GiveMaxAmmo( self.pers["weapon"] );
+RequiredArgs:
+1 : <weapon name> The weapon name (a string)
+

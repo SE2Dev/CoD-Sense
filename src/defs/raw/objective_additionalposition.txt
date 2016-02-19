@@ -1,0 +1,11 @@
+Name: Objective_AdditionalPosition
+Function: Objective_AdditionalPosition( <objective_index>, <position_index>, <position> )
+Module: Objective
+Restriction: SP Only
+Summary: Set an additional position for objectives with multiple positions 
+Example: Objective_AdditionalPosition( level.mortarObjNumber, ent.index, nMortarCarrier.origin );
+RequiredArgs:
+1 : <objective_index> The ID of the objective to alter
+2 : <position_index> The position of the objective
+3 : <position> The position of the objective
+

@@ -1,0 +1,13 @@
+Name: Objective_Add
+Function: Objective_Add( <objective_number>, <state>, <text>, <position>, <iconshader> )
+Module: Objective
+Summary: Adds a new objective 
+Example: Objective_Add( objective_number, "active", objective_text, (closest.bomb.origin) );
+RequiredArgs:
+1 : <objective_number> The number of the objective to add
+2 : <state> A string value representing the state of the objective. Valid states are "empty", "active", "invisible", "done", "current" and "failed"
+OptionalArgs:
+1 : <text> The text to use for the objective. This should be a valid localized text reference 
+2 : <position> The position of the objective
+3 : <iconshader> The objective icon to embed
+

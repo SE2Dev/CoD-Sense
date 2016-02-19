@@ -1,0 +1,9 @@
+Name: GetFractionMaxAmmo
+Function: GetFractionMaxAmmo( <weapon name> )
+Module: Player
+Summary: Return the player's current ammunition amount as a fraction of the weapon's maximum ammunition
+CallOn: The player
+Example:  self GetFractionMaxAmmo( "m4_grenadier" );
+RequiredArgs:
+1 : <weapon name> The weapon name (a string)
+

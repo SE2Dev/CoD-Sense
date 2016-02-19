@@ -1,0 +1,7 @@
+Name: FragButtonPressed
+Function: FragButtonPressed()
+Module: Player
+Restriction: MP Only
+CallOn: The player
+Example: if ( self FragButtonPressed() ) ...
+

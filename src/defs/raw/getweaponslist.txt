@@ -1,0 +1,8 @@
+Name: GetWeaponsList
+Function: GetWeaponsList()
+Module: Player
+Restriction: SP Only
+Summary: Gets an array of all weapons that the player has.  Includes any alt-mode weapons (ex: m203_m4)
+CallOn: The player
+Example: weapList = level.player GetWeaponsList();
+

@@ -1,0 +1,7 @@
+Name: GetCurrentOffhand
+Function: GetCurrentOffhand()
+Module: Player
+Summary: Gets the player's current off-hand weapon( usually a grenade).
+CallOn: The player
+Example: currentweapon = level.player GetCurrentOffhand();
+

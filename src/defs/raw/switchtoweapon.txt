@@ -1,0 +1,9 @@
+Name: SwitchToWeapon
+Function: SwitchToWeapon(<weapon name>)
+Module: Player
+Summary: Switch to a different weapon
+CallOn: The player
+Example:  level.player SwitchToWeapon( "mosin_nagant" );
+RequiredArgs:
+1 : <weapon name> The weapon name (a string)
+

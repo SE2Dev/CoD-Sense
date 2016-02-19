@@ -1,0 +1,9 @@
+Name: IsLookingAt
+Function: IsLookingAt( <entity> )
+Module: Player
+Summary: Returns true if the entity is the same as the player's lookat entity.
+CallOn: The player
+Example:  level.player islookingat( trigger );
+RequiredArgs:
+1 : <entity>: An entity.
+

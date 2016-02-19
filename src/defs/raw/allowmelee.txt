@@ -1,0 +1,10 @@
+Name: AllowMelee
+Function: AllowMelee( <melee> )
+Module: Player
+Restriction: SP Only
+Summary: Sets whether the player can melee
+CallOn: The player
+Example: level.player AllowMelee(false);
+RequiredArgs:
+1 : <melee>: A boolean. True if the player can melee, and false otherwise
+

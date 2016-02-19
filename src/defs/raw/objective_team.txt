@@ -1,0 +1,10 @@
+Name: Objective_Team
+Function: Objective_Team( <objective_number>, <team> )
+Module: Objective
+Restriction: MP Only
+Summary: Sets the team that the objective is for. Allows having different objectives for each team
+Example: Objective_Team( 0, "allies" );
+RequiredArgs:
+1 : <objective_number> The ID of the objective to alter
+2 : <team> The team that the objective is for. Valid entries are 'allies', 'axis', or 'none'
+

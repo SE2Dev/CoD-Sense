@@ -1,0 +1,9 @@
+Name: SetOffhandSecondaryClass
+Function: SetOffhandSecondaryClass(<name>)
+Module: Player
+Summary: Set whether player can use smoke grenades or flashbangs.
+CallOn: The player
+Example:  level.player SetOffhandSecondaryClass( "flash" );
+RequiredArgs:
+1 : <name> Either "smoke" or "flash"
+

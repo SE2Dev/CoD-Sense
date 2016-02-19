@@ -1,0 +1,10 @@
+Name: SetAutoPickup
+Function: SetAutoPickup( <auto pickup> )
+Module: Player
+Restriction: SP Only
+Summary: Sets whether the player will automatically pick up pickups.
+CallOn: The player
+Example:  level.player SetAutoPickup( true );
+RequiredArgs:
+1 : <auto pickup>: (boolean) true if the player will automatically pickup pickups.
+

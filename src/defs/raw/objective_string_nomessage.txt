@@ -1,0 +1,10 @@
+Name: Objective_String_NoMessage
+Function: Objective_String_NoMessage( <objective_number>, <string>, ... )
+Module: Objective
+Restriction: SP Only
+Summary: Set the description string for an objective, without posting an "objectives updated" message 
+Example: Objective_String_NoMessage( index, &amp;"SCRIPT_OBJ_DESTROYFLAKPANZERS", level.flaks_remaining );
+RequiredArgs:
+1 : <objective_number> The ID of the objective to alter
+2 : <string> One or more (localised) objective strings
+

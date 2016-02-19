@@ -1,0 +1,10 @@
+Name: SetWeaponAmmoStock
+Function: SetWeaponAmmoStock( <weapon name>, <ammunition> )
+Module: Player
+Summary: Set the ammunition stockpile for the given weapon.
+CallOn: The player
+Example:  level.player SetWeaponAmmoStock( "m16", 300 );
+RequiredArgs:
+1 : <weapon name>: (string) The weapon name for this weapon.
+2 : <ammunition>: (integer) The amount of ammunition in the stockpile.
+

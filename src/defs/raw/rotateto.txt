@@ -1,0 +1,13 @@
+Name: RotateTo
+Function: RotateTo( <angles>, <time>, <acceleration time>, <deceleration time> )
+Module: Motion
+Summary: Rotate this entity to the given world rotation value
+CallOn: script_model, script_origin or script_brushmodel
+Example:  shutter RotateTo( (shutter.angles[0], newYaw, shutter.angles[2]), newTime );
+RequiredArgs:
+1 : <angles> The new world angle to rotate to
+2 : <time> The time to rotate in seconds
+OptionalArgs:
+1 : <acceleration time> The time spent accelerating in seconds
+2 : <deceleration time> The time spent decelerating in seconds
+

@@ -1,0 +1,11 @@
+Name: PhysicsExplosionCylinder
+Function: PhysicsExplosionCylinder( <center>, <outer radius>, <inner radius>, <magnitude> )
+Module: Physics
+Summary: Imparts a 1-frame impulse on physics objects radially outward in a cylinder (i.e., all the added forces are parallel to the ground). This can be used to simulate wind from a helicopter.
+Example: PhysicsExplosionCylinder( origin, 50, 40, 1 );
+RequiredArgs:
+1 : <center> The world position of the center of the cylinder
+2 : <outer radius> The radius beyond which the force is zero
+3 : <inner radius> The radius within which the force is maximum
+4 : <magnitude> The strength of the force.  1 = the default explosion
+

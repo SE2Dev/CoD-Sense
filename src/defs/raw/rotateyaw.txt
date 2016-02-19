@@ -1,0 +1,12 @@
+Name: RotateYaw
+Function: RotateYaw( <yaw angle>, <time>, <acceleration time>, <deceleration time> )
+Module: Motion
+Summary: Rotate this entity to the given yaw
+CallOn: script_model, script_origin or script_brushmodel
+RequiredArgs:
+1 : <yaw angle> The new yaw angle in degrees
+2 : <time> The time to rotate in seconds
+OptionalArgs:
+1 : <acceleration time> The time spent accelerating in seconds
+2 : <deceleration time> The time spent decelerating in seconds
+

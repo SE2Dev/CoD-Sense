@@ -1,0 +1,10 @@
+Name: AllowProne
+Function: AllowProne( <player prone> )
+Module: Player
+Restriction: SP Only
+Summary: Sets whether the player can go prone
+CallOn: The player
+Example: level.player AllowProne( false );
+RequiredArgs:
+1 : <player prone>: A boolean. true if the player can go prone, and false otherwise
+

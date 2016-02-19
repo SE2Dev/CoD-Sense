@@ -1,0 +1,9 @@
+Name: SetPlayerAngles
+Function: SetPlayerAngles( <player angles> )
+Module: Player
+Summary: Set the player's angles
+CallOn: The player
+Example:  level.player SetPlayerAngles( (0, 240, 0) );
+RequiredArgs:
+1 : <player angles> The player's angles in degrees.
+

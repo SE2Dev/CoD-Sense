@@ -1,0 +1,7 @@
+Name: TakeAllWeapons
+Function: TakeAllWeapons()
+Module: Player
+Summary: Remove all the weapons from the player.
+CallOn: The player
+Example:  level.player TakeAllWeapons();
+

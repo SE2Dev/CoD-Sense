@@ -1,0 +1,8 @@
+Name: NotifyOnCommand
+Function: NotifyOnCommand( <notify>, <command> )
+Module: Player
+Restriction: SP Only
+Summary: Whenever the console command processor encounters <command> for any reason, it will notify script with the string <notify> on the player entity.  Additionally, it will pass the arguments to the notify as strings, where the first argument is the initiating command.
+CallOn: The player
+Example:  player NotifyOnCommand( "changeweapon", "weapnext" ); waittill "changeweapon";
+

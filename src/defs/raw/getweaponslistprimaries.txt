@@ -1,0 +1,8 @@
+Name: GetWeaponsListPrimaries
+Function: GetWeaponsListPrimaries()
+Module: Player
+Restriction: SP Only
+Summary: Gets an array of all primary weapons that the player has.
+CallOn: The player
+Example: weapList = level.player GetWeaponsListPrimaries();
+

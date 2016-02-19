@@ -1,0 +1,10 @@
+Name: Target_SetOffscreenShader
+Function: Target_SetOffscreenShader( <target entity>, <materialname> )
+Module: Objective
+Restriction: SP Only
+Summary: Sets the material that is used when a target clamps to the edge of the screen.  The target must have already been created with target_set()
+Example: Target_SetOffscreenShader( enemy_chopper, "arrow" );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+2 : <materialname> The shader for the quad drawn over the target
+

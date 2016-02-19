@@ -1,0 +1,9 @@
+Name: GetWeaponSlotAmmo
+Function: GetWeaponSlotAmmo( <weapon slot> )
+Module: Player
+Summary: Gets the ammo count for the weapon in the given slot.
+CallOn: The player
+Example: ammo = level.player GetWeaponSlotAmmo("primary");
+RequiredArgs:
+1 : <weapon slot>: Valid weaponslots are "primary" and "primaryb".
+

@@ -1,0 +1,9 @@
+Name: TakeWeapon
+Function: TakeWeapon( <weapon name> )
+Module: Player
+Summary: Take a weapon from the player.
+CallOn: The player
+Example:  level.player TakeWeapon( "m16_grenadier" );
+RequiredArgs:
+1 : <weapon name> The weapon name to take from the player
+

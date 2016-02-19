@@ -1,0 +1,8 @@
+Name: Objective_Delete
+Function: Objective_Delete( <objective_number> )
+Module: Objective
+Summary: Removes an objective
+Example: Objective_Delete( 1 );
+RequiredArgs:
+1 : <objective_number> The number of the objective to remove
+

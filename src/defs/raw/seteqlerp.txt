@@ -1,0 +1,11 @@
+Name: SetEQLerp
+Function: SetEQLerp( <eqLerp> <eqIndex> )
+Module: Player
+Restriction: SP Only
+Summary: Set the blend amount for the specified eqIndex, for eqIndex 0 if none is specified.  Automatically sets the blend amount of the other eqIndex to 1-eqLerp.
+CallOn: The player
+Example: level.player SetEQLerp( 0.25, 1 );  // now using 25% of eq 1 and 75% of eq 0.
+RequiredArgs:
+1 : <eqLerp>: float value from 0 to 1, percentage of specified eqIndex, 0 if none specified.
+2 : <eqIndex> : the eq index to use (0 and 1).
+

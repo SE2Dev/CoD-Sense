@@ -1,0 +1,11 @@
+Name: UploadScore
+Function: UploadScore( <mission>, <score> )
+Module: Player
+Restriction: SP Only
+Summary: Upload arcade mode score to XBLIVE leaderboards
+CallOn: A Player
+Example: level.player UploadScore( 0, 100 );
+RequiredArgs:
+1 : <mission>: mission index.
+2 : <score>: score for that mission.
+

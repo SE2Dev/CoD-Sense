@@ -1,0 +1,9 @@
+Name: Objective_Position
+Function: Objective_Position( <objective_number>, <position> )
+Module: Objective
+Summary: Set the position of an objective, assumed to be the zeroth position, must use objective_additionalposition to set a different position index
+Example: Objective_Position( 4, get_objective_position( "plant_boilerbomb_trigger" ) );
+RequiredArgs:
+1 : <objective_number> The ID of the objective to alter
+2 : <position> The position of the objective
+

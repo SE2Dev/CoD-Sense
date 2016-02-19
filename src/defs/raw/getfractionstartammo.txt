@@ -1,0 +1,9 @@
+Name: GetFractionStartAmmo
+Function: GetFractionStartAmmo( <weapon name> )
+Module: Player
+Summary: Return the player's current ammunition amount as a fraction of the weapon's starting ammunition
+CallOn: The player
+Example:  self GetFractionStartAmmo( "mosin_nagant" );
+RequiredArgs:
+1 : <weapon name> The weapon name (a string)
+

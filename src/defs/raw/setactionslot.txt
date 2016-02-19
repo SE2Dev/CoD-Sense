@@ -1,0 +1,15 @@
+Name: SetActionSlot
+Function: SetActionSlot( <slot #>, <option name>, <extra parameter> )
+Module: Player
+Summary: Sets the option to perform when the player executes (for example) "+actionslot 1".
+CallOn: The player
+Example: level.player SetActionSlot( 1, "altmode" );  //switch between attached m203 grenade launcher, if available
+level.player SetActionSlot( 2, "nightvision" );  //toggle nightvision on and off
+level.player SetActionSlot( 4, "weapon", "c4" );
+level.player SetActionSlot( 3, "" );
+RequiredArgs:
+1 : <slot #>: 1 through 4, corresponding to bindings "+actionslot 1" through "+actionslot 4
+2 : <option name>: valid choices are "weapon", "nightVision", "altMode", and "" (blank).
+OptionalArgs:
+1 : <extra parameter>: Used by the "weapon" option, the name of the weapon to switch to.
+

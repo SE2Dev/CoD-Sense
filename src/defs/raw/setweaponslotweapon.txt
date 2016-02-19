@@ -1,0 +1,10 @@
+Name: SetWeaponSlotWeapon
+Function: SetWeaponSlotWeapon( <weapon slot> )
+Module: Player
+Summary: Sets the the weapon in the given weapon slot.
+CallOn: The player
+Example: level.player SetWeaponSlotWeapon("primary", weapon);
+RequiredArgs:
+1 : <weapon slot>: Valid weaponslots are "primary" and "primaryb".
+2 : <weapon name>: The name of the weapon to use in this slot.
+

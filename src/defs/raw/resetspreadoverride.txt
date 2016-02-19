@@ -1,0 +1,7 @@
+Name: ResetSpreadOverride
+Function: ResetSpreadOverride()
+Module: Player
+Summary: Resets the player spread value to the ones of the weapon in use.
+CallOn: A player
+Example: level.player ResetSpreadOverride();
+
