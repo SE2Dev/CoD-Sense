@@ -1,11 +1,10 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
 		"target": "es5",
-		"outDir": "out",
-		"noLib": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
 		"sourceMap": true,
-        "rootDir": "."
+		"outDir": "../client/server"
 	},
 	"exclude": [
 		"node_modules"
