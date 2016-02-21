@@ -35,4 +35,5 @@ export function activate(context: vscode.ExtensionContext)
 
 export function deactivate()
 {
+	console.log("Free: 'CoD-Sense'");
 }
