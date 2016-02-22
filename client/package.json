@@ -25,12 +25,28 @@
 			"language": "gsc",
 			"scopeName": "source.gsc",
 			"path": "./syntaxes/gsc.tmLanguage"
-		}]
+		}],
+		"configuration": {
+			"type": "object",
+			"title": "Example configuration",
+			"properties": {
+				"codsense.debugProperty": {
+					"type": "string",
+					"default": "test value",
+					"description": "A debug string"
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
+		"compileClient": "node ./node_modules/vscode/bin/compile -watch -p ./",
+		"compileAlt": "cd ../server && npm run compile && cd ../client && npm run compileClient",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install"
+	},
+	"dependencies": {
+		"vscode-languageclient": "^1.4.0"
 	},
 	"devDependencies": {
 		"typescript": "^1.7.5",

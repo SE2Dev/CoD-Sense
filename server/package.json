@@ -1,0 +1,19 @@
+{
+	"name": "cod-sense_server",
+	"description": "CoD-Sense Language Server",
+	"version": "0.0.1",
+	"publisher": "SE2Dev",
+	"engines": {
+		"node": "*"
+	},
+	"dependencies": {
+		"vscode-languageserver": "^1.4.0"
+	},
+	"devDependencies": {
+		"typescript": "^1.7.5"
+	},
+	"scripts": {
+		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
+		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc --watch -p ."
+	}
+}
