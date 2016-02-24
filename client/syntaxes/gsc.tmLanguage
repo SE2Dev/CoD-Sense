@@ -187,7 +187,7 @@
 		<!-- Functions Declarations -->
 		<dict>
             <key>match</key>
-            <string>(_?[a-zA-Z\-_]+[0-9]*)(?=\s*\(.*\).*)</string>
+            <string>(_?[a-zA-Z\-_]\w*)(?=\s*\(.*\).*)</string>
             
 			<key>captures</key>
 			<dict>
