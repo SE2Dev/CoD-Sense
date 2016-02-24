@@ -23,7 +23,7 @@
         <!-- #include PreProcessor Directive -->
         <dict>
             <key>begin</key>
-			<string>^\s*(#include\b)\s*(.*)</string>
+			<string>^\s*(#include\b)\s*([^;]*);?</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -35,7 +35,7 @@
                 <key>2</key>
 				<dict>
 				    <key>name</key>
-				    <string>punctuation.definition.string</string>
+				    <string>string.filename.gsc</string>
 				</dict>
 			</dict>
             
@@ -130,10 +130,10 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>([^\\]"|\n|\r)</string>
+			<string>(?&lt;!\\)["\n\r]</string>
 			<key>endCaptures</key>
 			<dict>
-				<key>0</key>
+				<key>1</key>
 				<dict>
 					<key>name</key>
 					<string>punctuation.definition.string.end</string>
