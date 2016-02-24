@@ -58,20 +58,31 @@ export function analyzeDocument(uri: string, contents?: string): Thenable<void>
 	});
 }
 
-export function analyzeWorkspace(files: string[]): Thenable<void>
+var gfiles
+function executeLoop (index)
 {
+    analyzeDocumentSync(gfiles[index]);
+    if (index++ < gfiles.length)
+        setTimeout(executeLoop, 1000, index);
+};
+        
+export function analyzeWorkspace(files: string[]): Thenable<void> {
     return new Promise<void>((resolve, reject) => {
-        console.log("Receive: " + files.length + " files");
-
         var startTime = new Date().getTime();
+        var index = 0;
+        setTimeout(function analyzeWorkspaceDocument() {
+            //console.log(`${index}: ${files[index]}`);
+            analyzeDocumentSync(files[index]);
 
-        files.forEach((path, index) => {
-            analyzeDocumentSync(path);
+            if (++index < files.length) {
+                setTimeout(analyzeWorkspaceDocument, 0);
+            }
+            else {
+                var endTime = new Date().getTime();
+                console.log("Found Workspace Symbols in " + (endTime - startTime) + "ms");
+            }
         });
 
-        var endTime = new Date().getTime();
-        console.log("Found Workspace Symbols in " + (endTime - startTime) + "ms");
-        
         resolve();
     });
 }
