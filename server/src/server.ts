@@ -50,17 +50,9 @@ import {sleep} from './util/utility'
 connection.onDidChangeConfiguration((params) => {
     connection.sendRequest(CoDSenseWorkspaceUrisRequest.type, "gsc").then
         (
-            function(uris) //Resolved
+            function(files) //Resolved
             {
-                console.log("Receive: " + uris.length + " files");
-
-                var startTime = new Date().getTime();
-                for (var i = 0; i < uris.length; i++) {
-                    ast.analyzeDocumentSync(uris[i]);
-                }
-
-                var endTime = new Date().getTime();
-                console.log("Found Workspace Symbols in " + (endTime - startTime) + "ms");
+                ast.analyzeWorkspace(files);
             },
             function(rejectReason) //Rejected
             {
@@ -70,15 +62,13 @@ connection.onDidChangeConfiguration((params) => {
         )
 });
 
-import {GetDocumentTokensMatchingScope, GetWorkspaceTokensMatchingScope} from "./analyzer/analyzer"
-
 connection.onDocumentSymbol((params) => {
-    return GetDocumentTokensMatchingScope(params.uri, "entity.name.function.c");
+    return ast.GetDocumentTokensMatchingScope(params.uri, "entity.name.function.c");
 });
 
 connection.onWorkspaceSymbol((params) => {
     var startTime = new Date().getTime();
-    var out = GetWorkspaceTokensMatchingScope("entity.name.function.c");
+    var out = ast.GetWorkspaceTokensMatchingScope("entity.name.function.c");
     var endTime = new Date().getTime();
     console.log("Found " + out.length + " Workspace Symbols in " + (endTime - startTime) + "ms");
     return out;

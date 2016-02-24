@@ -58,6 +58,24 @@ export function analyzeDocument(uri: string, contents?: string): Thenable<void>
 	});
 }
 
+export function analyzeWorkspace(files: string[]): Thenable<void>
+{
+    return new Promise<void>((resolve, reject) => {
+        console.log("Receive: " + files.length + " files");
+
+        var startTime = new Date().getTime();
+
+        files.forEach((path, index) => {
+            analyzeDocumentSync(path);
+        });
+
+        var endTime = new Date().getTime();
+        console.log("Found Workspace Symbols in " + (endTime - startTime) + "ms");
+        
+        resolve();
+    });
+}
+
 import {PathToURI} from "../util/uri"
 var fs = require('fs');
 export function analyzeDocumentSync(path: string, contents?: string) {
@@ -79,7 +97,7 @@ function PerformDocumentAnalysis(uri: string, text: string)
     var startTime = new Date().getTime();
     
     docTree[uri] = {};
-    //docTree[uri].index = DOC_COUNTER++;
+    
     docTree[uri].uri = uri;
     docTree[uri].lines = new Array();
 
@@ -92,6 +110,7 @@ function PerformDocumentAnalysis(uri: string, text: string)
 
         var r = grammar.tokenizeLine(lines[i], ruleStack);
         //console.log('Line: #' + i + ', tokens: ' + r.tokens);
+        
         docTree[uri].lines[i].tokens = r.tokens;
         //console.log('Line: #' + i + ', tokens: ' + docTree[uri].lines[i].tokens);
         ruleStack = r.ruleStack;
@@ -106,7 +125,7 @@ import {
      Location, Range, Position
 } from "vscode-languageserver"
 
-export function GetDocumentTokensMatchingScope(uri: string, scope: string) //""
+export function GetDocumentTokensMatchingScope(uri: string, scope: string)
 {
     var startTime = new Date().getTime();
 
@@ -115,7 +134,6 @@ export function GetDocumentTokensMatchingScope(uri: string, scope: string) //""
     let lines = docTree[uri].lines;
     for (var i = 0; i < lines.length; i++) {
         //console.log(lines[i]);
-        
         for (var t = 0; t < lines[i].tokens.length; t++) {
             var token = lines[i].tokens[t];
             for (var s = 1; s < token.scopes.length; s++) {
