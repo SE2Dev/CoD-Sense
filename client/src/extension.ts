@@ -4,8 +4,11 @@ import {completionItemProvider} from './features/completionItemProvider'
 
 import {
 	ServerOptions, NodeModule, TransportKind,
-	LanguageClient, LanguageClientOptions, SynchronizeOptions
+	LanguageClient, LanguageClientOptions, SynchronizeOptions,
+	RequestType
 } from 'vscode-languageclient';
+
+import {CoDSenseContentRequest, CoDSenseWorkspaceUrisRequest} from './request'
 
 export function activate(context: vscode.ExtensionContext)
 {
@@ -31,6 +34,32 @@ export function activate(context: vscode.ExtensionContext)
 	let server = new LanguageClient("codsense", serverOptions, clientOptions);
 	var disposable = server.start();
 	context.subscriptions.push(disposable);
+	
+	server.onRequest(CoDSenseContentRequest.type, (uri_string: string) => {
+		let uri = vscode.Uri.parse(uri_string);
+		return vscode.workspace.openTextDocument(uri).then(
+			doc => {
+				return doc.getText();
+			}, error => {
+				return Promise.reject(error);
+			});
+	});
+
+	server.onRequest(CoDSenseWorkspaceUrisRequest.type, (languageId: string) => {
+		let include = "**/*." + languageId;
+		return vscode.workspace.findFiles(include, "").then(
+			files => {
+				var out = new Array<string>();
+				for(var i = 0; i < files.length; i++)
+				{
+					out.push(files[i].fsPath);
+				}
+				
+				return out;
+			}, error => {
+				return Promise.reject(error);
+			});
+	});
 }
 
 export function deactivate()

@@ -9,8 +9,8 @@ import {
      Location, Range, Position
 } from "vscode-languageserver"
 
-let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
-var console = connection.console;
+export var connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
+export var console = connection.console;
 console.log("Connect: 'CoD-Sense Server'");
 
 //
@@ -24,127 +24,64 @@ connection.onInitialize((params): InitializeResult =>
     let serverFeatures: ServerCapabilities =
     {
         textDocumentSync: TextDocumentSyncKind.Full,
-        documentSymbolProvider: true
+        documentSymbolProvider: true,
+        workspaceSymbolProvider: true
     }
 
 	return {capabilities: serverFeatures};
 });
 
+import * as ast from "./analyzer/analyzer"
+
+//
+// Upon Opening a Document - Perform Background Analysis
+//
 connection.onDidOpenTextDocument((params) => 
 {
-    ParseDocument(params.uri, params.text);
+    ast.analyzeDocument(params.uri, params.text).then
+    (
+        () => { console.log(`Analyzed: ${params.uri}`) }
+    );
 });
 
-connection.onDidChangeConfiguration((params) => 
-{
-    //connection.console.log(params.settings);
-});
+import {CoDSenseWorkspaceUrisRequest} from './request'
+import {sleep} from './util/utility'
 
-connection.onDocumentSymbol((params) => 
-{
-    var startTime = new Date().getTime();
-    
-    var symbols = new Array<SymbolInformation>();
-    
-    let uri = params.uri;
-    
-    let lines = DOC_TREE[uri].lines;
-    for(var i = 0; i < lines.length; i++)
-    {
-        //console.log(lines[i]);
-        
-        for(var t = 0; t < lines[i].tokens.length; t++)
-        {
-            var token = lines[i].tokens[t];
-            for(var s = 1; s < token.scopes.length; s++)
+connection.onDidChangeConfiguration((params) => {
+    connection.sendRequest(CoDSenseWorkspaceUrisRequest.type, "gsc").then
+        (
+            function(uris) //Resolved
             {
-                //console.log(token.scopes[s]);
-                if(token.scopes[s] == "entity.name.function.c")
-                {
-                    let name: string = lines[i].text;
-                    name = name.substr(token.startIndex, token.endIndex - token.startIndex);
-                    
-                    let p1: Position = 
-                    {
-                        line: i,
-                        character: token.startIndex
-                    }
-                    
-                    let p2: Position = 
-                    {
-                        line: i,
-                        character: token.endIndex
-                    }
-                                       
-                    let loc: Location = 
-                    {
-                        uri: params.uri,
-                        range: {start: p1, end: p2}
-                    }
-                    
-                    let symbol: SymbolInformation = 
-                    {
-                        name: name,
-                        kind: SymbolKind.Function,
-                        location: loc
-                    }
-                    
-                    symbols.push(symbol);
+                console.log("Receive: " + uris.length + " files");
+
+                var startTime = new Date().getTime();
+                for (var i = 0; i < uris.length; i++) {
+                    ast.analyzeDocumentSync(uris[i]);
                 }
+
+                var endTime = new Date().getTime();
+                console.log("Found Workspace Symbols in " + (endTime - startTime) + "ms");
+            },
+            function(rejectReason) //Rejected
+            {
+                console.error("Rejected! - Couldn't the workspace file list");
+                return;
             }
-        }
-    }
-    
+        )
+});
+
+import {GetDocumentTokensMatchingScope, GetWorkspaceTokensMatchingScope} from "./analyzer/analyzer"
+
+connection.onDocumentSymbol((params) => {
+    return GetDocumentTokensMatchingScope(params.uri, "entity.name.function.c");
+});
+
+connection.onWorkspaceSymbol((params) => {
+    var startTime = new Date().getTime();
+    var out = GetWorkspaceTokensMatchingScope("entity.name.function.c");
     var endTime = new Date().getTime();
-    console.log("Found Symbols in " + (endTime - startTime) + "ms");
-    
-    return symbols;
+    console.log("Found " + out.length + " Workspace Symbols in " + (endTime - startTime) + "ms");
+    return out;
 });
 
 connection.listen();
-
-
-
-
-//////////////////////////////////////////////////////////
-
-/*
-    TODO:
-        Find a better way to locate the tmLanguage file
-*/
-
-import {BuiltInModule, extensionPath, StripDirectory} from './util/path';
-
-var Registry = require(BuiltInModule("vscode-textmate")).Registry;
-var registry = new Registry();
-var grammar = registry.loadGrammarFromPathSync(extensionPath + "syntaxes/gsc.tmLanguage");
-
-var DOC_TREE = {};
-var DOC_COUNTER = 0;
-
-function ParseDocument(uri: string, text: string)
-{  
-    var startTime = new Date().getTime();
-    
-    DOC_TREE[uri] = {};
-    DOC_TREE[uri].index = DOC_COUNTER++;
-    DOC_TREE[uri].uri = uri;
-    DOC_TREE[uri].lines = new Array();
-
-    var lines = text.split("\r\n");
-
-    var ruleStack = null;
-    for (var i = 0; i < lines.length; i++) {
-        DOC_TREE[uri].lines[i] = {};
-        DOC_TREE[uri].lines[i].text = lines[i];
-        
-        var r = grammar.tokenizeLine(lines[i], ruleStack);
-        //console.log('Line: #' + i + ', tokens: ' + r.tokens);
-        DOC_TREE[uri].lines[i].tokens = r.tokens;
-        //console.log('Line: #' + i + ', tokens: ' + DOC_TREE[uri].lines[i].tokens);
-        ruleStack = r.ruleStack;
-    }
-    
-    var endTime = new Date().getTime();
-    console.log("Parsed " + StripDirectory(uri) + " in " + (endTime - startTime) + "ms");
-}
