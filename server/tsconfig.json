@@ -4,7 +4,9 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"sourceMap": true,
-		"outDir": "../client/server"
+		"outDir": "../client/server",
+		"allowJs": true,
+		"allowUnreachableCode": true
 	},
 	"exclude": [
 		"node_modules"
