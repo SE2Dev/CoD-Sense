@@ -3,7 +3,7 @@
 import {
      IConnection, createConnection,
      IPCMessageReader, IPCMessageWriter,
-     TextDocumentSyncKind,
+     TextDocumentSyncKind, DidChangeTextDocumentParams,
 	 ServerCapabilities, InitializeResult,
      SymbolInformation, SymbolKind,
      Location, Range, Position
@@ -12,6 +12,7 @@ import {
 export var connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 export var console = connection.console;
 console.log("Connect: 'CoD-Sense Server'");
+
 
 //
 // The server gets re-initialized every time the workspace changes and the extension is activated
@@ -23,7 +24,7 @@ connection.onInitialize((params): InitializeResult =>
     let workspaceRoot = params.rootPath;
     let serverFeatures: ServerCapabilities =
     {
-        textDocumentSync: TextDocumentSyncKind.Full,
+        textDocumentSync: TextDocumentSyncKind.Incremental,
         documentSymbolProvider: true,
         workspaceSymbolProvider: true
     }
@@ -31,7 +32,19 @@ connection.onInitialize((params): InitializeResult =>
 	return {capabilities: serverFeatures};
 });
 
-import * as ast from "./analyzer/analyzer"
+import * as ast from "./analyzer"
+
+connection.onDidChangeTextDocument((params: DidChangeTextDocumentParams) =>
+{
+    params.contentChanges[0].range
+   console.log("Edit:");
+    params.contentChanges.forEach((v) =>
+   {
+       console.log(`"${v.text}" [${v.text.length}] from (${v.range.start.line}, ${v.range.start.character}) to (${v.range.end.line}, ${v.range.end.character})`)
+   });
+   
+});
+
 
 //
 // Upon Opening a Document - Perform Background Analysis
@@ -56,7 +69,7 @@ connection.onDidChangeConfiguration((params) => {
             },
             function(rejectReason) //Rejected
             {
-                console.error("Rejected! - Couldn't the workspace file list");
+                console.error("Rejected! - Couldn't get the workspace file list");
                 return;
             }
         )
