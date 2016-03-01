@@ -16,4 +16,6 @@ test(arg1, arg2)
     "stg"; 
 
     bla(1,2.3, grame("string"));
+    
+    return maps\_zombiemode_server_throttle::server_safe_ground_trace_ignore_water( "arg", 14 );
 }

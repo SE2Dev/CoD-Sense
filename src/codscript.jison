@@ -53,7 +53,8 @@
 "*"			return '*'
 "/="		return '/='
 "/"			return '/'
-":"			return ':'
+"::"		return '::'
+//":"			return ':'
 ";"			return ';'
 "?"			return '?'
 "@"			return '@'
@@ -144,6 +145,8 @@ FunctionParameterList
 FunctionExpression
 	: IDENTIFIER "(" FunctionParameterList ")"
 		-> {"type": "call", "name": $1, "params": $3};
+	| FILEPATH "::" IDENTIFIER "(" FunctionParameterList ")"
+		-> {"type": "call_external", "file": $1, "name": $3, "params": $5};
 	;
 
 Expression
