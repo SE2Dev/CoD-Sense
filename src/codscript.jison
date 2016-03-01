@@ -85,6 +85,11 @@ StringLiteral:
 		}
 	;
 
+NumericLiteral
+	: INTEGER_LITERAL
+	| FLOAT_LITERAL
+	;
+
 IncludeDirective:
 	INCLUDE FILEPATH ";"
 		-> {"type": "include", "arg": $2, "range": @$}
@@ -110,9 +115,41 @@ FormalParameterList
 		}
 	;
 
+Expression
+	: NumericLiteral
+	| StringLiteral
+	;
+
+ExpressionStatement
+	: Expression ";"
+		{
+			$$ = $1;
+		} //being debugged
+	;
+	
+EmptyStatement:
+	";"
+	;
+
+Statement
+	: ExpressionStatement
+	| EmptyStatement
+	;
+
+StatementList
+	: StatementList Statement
+		{
+			$$ = $1.concat($2);
+		}
+	|
+		{
+			$$ = [];	
+		}
+	;
+
 FunctionDeclaration:
-	IDENTIFIER "(" FormalParameterList ")" "{" "}"
-		-> {"type": "function", "name": $1, "params": $3, "range": @$};
+	IDENTIFIER "(" FormalParameterList ")" "{" StatementList "}"
+		-> {"type": "function", "name": $1, "params": $3, "range": @$, "statements": $6};
 	;
 
 SourceElement
