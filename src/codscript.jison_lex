@@ -1,8 +1,0 @@
-%%
-
-\s+                         /* skip whitespace */
-"//".*                      /* ignore comment */
-
-"."                         throw 'ILLEGAL';
-<<EOF>>                     return 'ENDOFFILE';
-

@@ -567,15 +567,15 @@ var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
 case 0:/* skip whitespace */
 break;
-case 1:/* ignore comment */
+case 1:/* skip single line comments */	
 break;
-case 2:throw 'ILLEGAL';
+case 2:return 'EOF'
 break;
-case 3:return 'ENDOFFILE';
+case 3:return 'INVALID'
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:\.)/,/^(?:$)/],
+rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:$)/,/^(?:.)/],
 conditions: {"INITIAL":{"rules":[0,1,2,3],"inclusive":true}}
 });
 return lexer;
