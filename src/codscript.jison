@@ -95,15 +95,35 @@ AnimtreeDirective:
 		-> {"type": "animtree", "arg": $3, "range": @$}
 	;
 
+FormalParameterList
+	: IDENTIFIER
+		{
+			$$ = [$1];
+		}
+	| FormalParameterList "," IDENTIFIER
+		{
+			$$ = $1.concat($3);
+		}
+	|
+		{
+			$$ = [];
+		}
+	;
+
+FunctionDeclaration:
+	IDENTIFIER "(" FormalParameterList ")" "{" "}"
+		-> {"type": "function", "name": $1, "params": $3, "range": @$};
+	;
+
 SourceElement
 	: IncludeDirective
 	| AnimtreeDirective
+	| FunctionDeclaration
 	;
 	
 SourceElements
 	: SourceElements SourceElement
 		{
-			$1.concat(@2);
 			//for(var key in @2) $2[key]=@2[key];
             $$ = $1.concat($2);
 		}

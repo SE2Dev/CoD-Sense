@@ -72,12 +72,12 @@
   }
 */
 var codscript = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[6,10,16];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[6,10,14,22],$V1=[12,15];
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"StringLiteral":3,"STRING_LITERAL":4,"IncludeDirective":5,"INCLUDE":6,"FILEPATH":7,";":8,"AnimtreeDirective":9,"USING_ANIMTREE":10,"(":11,")":12,"SourceElement":13,"SourceElements":14,"Program":15,"EOF":16,"$accept":0,"$end":1},
-terminals_: {2:"error",4:"STRING_LITERAL",6:"INCLUDE",7:"FILEPATH",8:";",10:"USING_ANIMTREE",11:"(",12:")",16:"EOF"},
-productions_: [0,[3,1],[5,3],[9,5],[13,1],[13,1],[14,2],[14,0],[15,2]],
+symbols_: {"error":2,"StringLiteral":3,"STRING_LITERAL":4,"IncludeDirective":5,"INCLUDE":6,"FILEPATH":7,";":8,"AnimtreeDirective":9,"USING_ANIMTREE":10,"(":11,")":12,"FormalParameterList":13,"IDENTIFIER":14,",":15,"FunctionDeclaration":16,"{":17,"}":18,"SourceElement":19,"SourceElements":20,"Program":21,"EOF":22,"$accept":0,"$end":1},
+terminals_: {2:"error",4:"STRING_LITERAL",6:"INCLUDE",7:"FILEPATH",8:";",10:"USING_ANIMTREE",11:"(",12:")",14:"IDENTIFIER",15:",",17:"{",18:"}",22:"EOF"},
+productions_: [0,[3,1],[5,3],[9,5],[13,1],[13,3],[13,0],[16,6],[19,1],[19,1],[19,1],[20,2],[20,0],[21,2]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -94,27 +94,39 @@ break;
 case 3:
 this.$ = {"type": "animtree", "arg": $$[$0-2], "range": this._$};
 break;
-case 6:
+case 4:
 
-			$$[$0-1].concat(_$[$0]);
-			//for(var key in _$[$0]) $$[$0][key]=_$[$0][key];
-            this.$ = $$[$0-1].concat($$[$0]);
+			this.$ = [$$[$0]];
 		
 break;
-case 7:
+case 5:
+
+			this.$ = $$[$0-2].concat($$[$0]);
+		
+break;
+case 6: case 12:
 
 			this.$ = [];
 		
 break;
-case 8:
+case 7:
+this.$ = {"type": "function", "name": $$[$0-5], "params": $$[$0-3], "range": this._$};;
+break;
+case 11:
+
+			//for(var key in _$[$0]) $$[$0][key]=_$[$0][key];
+            this.$ = $$[$0-1].concat($$[$0]);
+		
+break;
+case 13:
 
 		return this.$;
 	
 break;
 }
 },
-table: [o($V0,[2,7],{15:1,14:2}),{1:[3]},{5:5,6:[1,7],9:6,10:[1,8],13:4,16:[1,3]},{1:[2,8]},o($V0,[2,6]),o($V0,[2,4]),o($V0,[2,5]),{7:[1,9]},{11:[1,10]},{8:[1,11]},{3:12,4:[1,13]},o($V0,[2,2]),{12:[1,14]},{12:[2,1]},{8:[1,15]},o($V0,[2,3])],
-defaultActions: {3:[2,8],13:[2,1]},
+table: [o($V0,[2,12],{21:1,20:2}),{1:[3]},{5:5,6:[1,8],9:6,10:[1,9],14:[1,10],16:7,19:4,22:[1,3]},{1:[2,13]},o($V0,[2,11]),o($V0,[2,8]),o($V0,[2,9]),o($V0,[2,10]),{7:[1,11]},{11:[1,12]},{11:[1,13]},{8:[1,14]},{3:15,4:[1,16]},o($V1,[2,6],{13:17,14:[1,18]}),o($V0,[2,2]),{12:[1,19]},{12:[2,1]},{12:[1,20],15:[1,21]},o($V1,[2,4]),{8:[1,22]},{17:[1,23]},{14:[1,24]},o($V0,[2,3]),{18:[1,25]},o($V1,[2,5]),o($V0,[2,7])],
+defaultActions: {3:[2,13],16:[2,1]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -615,11 +627,11 @@ case 9:return '['
 break;
 case 10:return ']'
 break;
-case 11:return '{'
+case 11:return 17
 break;
-case 12:return '}'
+case 12:return 18
 break;
-case 13:return ','
+case 13:return 15
 break;
 case 14:return '.'
 break;
@@ -669,7 +681,7 @@ case 36:return 'RETURN'
 break;
 case 37:return 7
 break;
-case 38:return 'IDENTIFIER'
+case 38:return 14
 break;
 case 39:return 6
 break;
@@ -677,7 +689,7 @@ case 40:return 10
 break;
 case 41:return 'WAIT'
 break;
-case 42:return 16
+case 42:return 22
 break;
 case 43:return 'INVALID'
 break;
