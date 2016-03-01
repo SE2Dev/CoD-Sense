@@ -35,7 +35,14 @@
 "."			return '.'
 "!"			return '!'
 "%"			return '%'
+"=="		return '=='
 "="			return '='
+"<<"		return '<<'
+"<="		return '<='
+"<"			return '<'
+">>"		return '>>'
+">="		return '>='
+">"			return '>'
 "++"		return '++'
 "+="		return '+='
 "+"			return '+'
@@ -46,7 +53,6 @@
 "*"			return '*'
 "/="		return '/='
 "/"			return '/'
-"<<"		return '<<'
 ":"			return ':'
 ";"			return ';'
 "?"			return '?'
@@ -152,6 +158,13 @@ ExpressionStatement
 			$$ = $1;
 		} //being debugged
 	;
+
+ReturnStatement
+	: RETURN ";"
+		-> {"type": "return"};
+	| RETURN Expression ";"
+		-> {"type": "return", "expression": $2};
+	;
 	
 EmptyStatement:
 	";"
@@ -159,6 +172,7 @@ EmptyStatement:
 
 Statement
 	: ExpressionStatement
+	| ReturnStatement
 	| EmptyStatement
 	;
 
