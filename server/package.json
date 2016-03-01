@@ -10,12 +10,16 @@
 		"vscode-languageserver": "^1.4.0"
 	},
 	"devDependencies": {
-		"typescript": "^1.7.5",
-		"jison": "^0.4.17"
+		"copyfiles": "^0.2.1",
+		"jison": "^0.4.17",
+		"typescript": "^1.7.5"
 	},
 	"scripts": {
-		"postinstall": "jison src/parser/codscript.jison -o src/parser/codscript.js",
-		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
-		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc --watch -p ."
+        "compile-parser": "jison src/parser/codscript.jison -o src/parser/codscript.js",
+        "install-parser": "copyfiles -u 2 ./src/parser/codscript.js ../client/server/parser/",
+            
+        "postinstall": "npm run compile-parser && npm run install-parser",
+        "compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
+        "watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc --watch -p ."
 	}
 }
