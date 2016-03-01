@@ -22,7 +22,7 @@
 "/#"(.|\n|\r)*?"#/"		/* skip devscript (for now) */
 
 \".*\"|\'.*\'			return 'STRING_LITERAL'
-\d+\.(?:\d*f)?			return 'FLOAT_LITERAL'
+\d+\.(?:\d*)?f?			return 'FLOAT_LITERAL'
 \d+						return 'INTEGER_LITERAL'
 
 "("			return '('
