@@ -78,17 +78,32 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 %%
 /* Language Grammar */
 
+StringLiteral:
+	STRING_LITERAL
+		{
+			$$ = $1.substring(1, $1.length-1);
+		}
+	;
+
 IncludeDirective:
-	INCLUDE FILEPATH ";" -> {"type": "include", "file": $2}
+	INCLUDE FILEPATH ";"
+		-> {"type": "include", "arg": $2, "range": @$}
+	;
+
+AnimtreeDirective:
+	USING_ANIMTREE "(" StringLiteral ")" ";"
+		-> {"type": "animtree", "arg": $3, "range": @$}
 	;
 
 SourceElement
 	: IncludeDirective
+	| AnimtreeDirective
 	;
 	
 SourceElements
 	: SourceElements SourceElement
 		{
+			$1.concat(@2);
 			//for(var key in @2) $2[key]=@2[key];
             $$ = $1.concat($2);
 		}

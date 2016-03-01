@@ -72,40 +72,49 @@
   }
 */
 var codscript = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[4,10];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[6,10,16];
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"IncludeDirective":3,"INCLUDE":4,"FILEPATH":5,";":6,"SourceElement":7,"SourceElements":8,"Program":9,"EOF":10,"$accept":0,"$end":1},
-terminals_: {2:"error",4:"INCLUDE",5:"FILEPATH",6:";",10:"EOF"},
-productions_: [0,[3,3],[7,1],[8,2],[8,0],[9,2]],
+symbols_: {"error":2,"StringLiteral":3,"STRING_LITERAL":4,"IncludeDirective":5,"INCLUDE":6,"FILEPATH":7,";":8,"AnimtreeDirective":9,"USING_ANIMTREE":10,"(":11,")":12,"SourceElement":13,"SourceElements":14,"Program":15,"EOF":16,"$accept":0,"$end":1},
+terminals_: {2:"error",4:"STRING_LITERAL",6:"INCLUDE",7:"FILEPATH",8:";",10:"USING_ANIMTREE",11:"(",12:")",16:"EOF"},
+productions_: [0,[3,1],[5,3],[9,5],[13,1],[13,1],[14,2],[14,0],[15,2]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
-this.$ = {console.log("cheese")};
+
+			this.$ = $$[$0].substring(1, $$[$0].length-1);
+		
+break;
+case 2:
+this.$ = {"type": "include", "arg": $$[$0-1], "range": this._$};
 break;
 case 3:
+this.$ = {"type": "animtree", "arg": $$[$0-2], "range": this._$};
+break;
+case 6:
 
-			for(var key in _$[$0]) $$[$0][key]=_$[$0][key];
+			$$[$0-1].concat(_$[$0]);
+			//for(var key in _$[$0]) $$[$0][key]=_$[$0][key];
             this.$ = $$[$0-1].concat($$[$0]);
 		
 break;
-case 4:
+case 7:
 
 			this.$ = [];
 		
 break;
-case 5:
+case 8:
 
 		return this.$;
 	
 break;
 }
 },
-table: [o($V0,[2,4],{9:1,8:2}),{1:[3]},{3:5,4:[1,6],7:4,10:[1,3]},{1:[2,5]},o($V0,[2,3]),o($V0,[2,2]),{5:[1,7]},{6:[1,8]},o($V0,[2,1])],
-defaultActions: {3:[2,5]},
+table: [o($V0,[2,7],{15:1,14:2}),{1:[3]},{5:5,6:[1,7],9:6,10:[1,8],13:4,16:[1,3]},{1:[2,8]},o($V0,[2,6]),o($V0,[2,4]),o($V0,[2,5]),{7:[1,9]},{11:[1,10]},{8:[1,11]},{3:12,4:[1,13]},o($V0,[2,2]),{12:[1,14]},{12:[2,1]},{8:[1,15]},o($V0,[2,3])],
+defaultActions: {3:[2,8],13:[2,1]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -592,15 +601,15 @@ case 2:/* skip block comment */
 break;
 case 3:/* skip devscript (for now) */
 break;
-case 4:return 'STRING_LITERAL'
+case 4:return 4
 break;
 case 5:return 'FLOAT_LITERAL'
 break;
 case 6:return 'INTEGER_LITERAL'
 break;
-case 7:return '('
+case 7:return 11
 break;
-case 8:return ')'
+case 8:return 12
 break;
 case 9:return '['
 break;
@@ -634,7 +643,7 @@ case 23:return '/'
 break;
 case 24:return ':'
 break;
-case 25:return 6
+case 25:return 8
 break;
 case 26:return '?'
 break;
@@ -658,22 +667,24 @@ case 35:return 'CONTINUE'
 break;
 case 36:return 'RETURN'
 break;
-case 37:return 5
+case 37:return 7
 break;
 case 38:return 'IDENTIFIER'
 break;
-case 39:return 4
+case 39:return 6
 break;
-case 40:return 'USING_ANIMTREE'
+case 40:return 10
 break;
 case 41:return 'WAIT'
 break;
-case 42:return 10
+case 42:return 16
+break;
+case 43:return 'INVALID'
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:\/\*(.|\n|\r)*?\*\/)/,/^(?:\/#(.|\n|\r)*?#\/)/,/^(?:".*"|'.*')/,/^(?:\d+\.(?:\d*f)?)/,/^(?:\d+)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:\{)/,/^(?:\})/,/^(?:,)/,/^(?:\.)/,/^(?:!)/,/^(?:%)/,/^(?:=)/,/^(?:\+\+)/,/^(?:\+)/,/^(?:--)/,/^(?:-)/,/^(?:\*)/,/^(?:\/)/,/^(?::)/,/^(?:;)/,/^(?:\?)/,/^(?:@)/,/^(?:if\b)/,/^(?:else\b)/,/^(?:switch\b)/,/^(?:case\b)/,/^(?:break\b)/,/^(?:for\b)/,/^(?:while\b)/,/^(?:continue\b)/,/^(?:return\b)/,/^(?:(\w+[\/\\])+\w+)/,/^(?:_?[a-zA-Z\-_]\w*)/,/^(?:#include\b)/,/^(?:#using_animtree\b)/,/^(?:wait\b)/,/^(?:$)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42],"inclusive":true}}
+rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:\/\*(.|\n|\r)*?\*\/)/,/^(?:\/#(.|\n|\r)*?#\/)/,/^(?:".*"|'.*')/,/^(?:\d+\.(?:\d*f)?)/,/^(?:\d+)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:\{)/,/^(?:\})/,/^(?:,)/,/^(?:\.)/,/^(?:!)/,/^(?:%)/,/^(?:=)/,/^(?:\+\+)/,/^(?:\+)/,/^(?:--)/,/^(?:-)/,/^(?:\*)/,/^(?:\/)/,/^(?::)/,/^(?:;)/,/^(?:\?)/,/^(?:@)/,/^(?:if\b)/,/^(?:else\b)/,/^(?:switch\b)/,/^(?:case\b)/,/^(?:break\b)/,/^(?:for\b)/,/^(?:while\b)/,/^(?:continue\b)/,/^(?:return\b)/,/^(?:(\w+[\/\\])+\w+)/,/^(?:_?[a-zA-Z\-_]\w*)/,/^(?:#include\b)/,/^(?:#using_animtree\b)/,/^(?:wait\b)/,/^(?:$)/,/^(?:.)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43],"inclusive":true}}
 });
 return lexer;
 })();
