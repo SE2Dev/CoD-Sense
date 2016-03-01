@@ -115,8 +115,29 @@ FormalParameterList
 		}
 	;
 
+FunctionParameterList
+	: Expression
+		{
+			$$ = [$1];
+		}
+	| FunctionParameterList "," Expression
+		{
+			$$ = $1.concat($3);
+		}
+	|
+		{
+			$$ = [];
+		}
+	;
+
+FunctionExpression
+	: IDENTIFIER "(" FunctionParameterList ")"
+		-> {"type": "call", "name": $1, "params": $3};
+	;
+
 Expression
-	: NumericLiteral
+	: FunctionExpression
+	| NumericLiteral
 	| StringLiteral
 	;
 
