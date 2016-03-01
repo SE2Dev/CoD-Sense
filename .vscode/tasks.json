@@ -1,0 +1,7 @@
+{
+	"version": "0.1.0",
+	"command": "${workspaceRoot}/node_modules/.bin/jison",
+	"isShellCommand": true,
+	"showOutput": "always",
+	"args": ["${workspaceRoot}/src/codscript.jison", "${workspaceRoot}/src/codscript.jison_lex"]
+}

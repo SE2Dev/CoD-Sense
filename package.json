@@ -1,0 +1,8 @@
+{
+    "name": "codscript-parser",
+    "main": "./debug/main.js",
+    
+    "devDependencies": {
+        "jison": "*"
+    }
+}
