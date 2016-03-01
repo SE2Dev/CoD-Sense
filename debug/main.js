@@ -1,4 +1,4 @@
-var parser = require("../src/devscript");
+var parser = require("../codscript");
 var fs = require("fs");
 
 var source = fs.readFileSync("file.gsc", 'utf8');

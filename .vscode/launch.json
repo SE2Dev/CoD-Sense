@@ -8,7 +8,7 @@
 			"program": "${workspaceRoot}/debug/main.js",
 			"stopOnEntry": false,
 			"args": [],
-			"cwd": "${workspaceRoot}/src",
+			"cwd": "${workspaceRoot}/debug",
 			"runtimeExecutable": null,
 			"runtimeArgs": [
 				"--nolazy"

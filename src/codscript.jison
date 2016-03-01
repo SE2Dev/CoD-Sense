@@ -66,7 +66,7 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 "wait"				return 'WAIT'
 
 <<EOF>>				return 'EOF'
-//.					return 'INVALID'
+.					return 'INVALID'
 
 /lex
 
@@ -78,5 +78,28 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 %%
 /* Language Grammar */
 
-Program:
+IncludeDirective:
+	INCLUDE FILEPATH ";" -> {"type": "include", "file": $2}
 	;
+
+SourceElement
+	: IncludeDirective
+	;
+	
+SourceElements
+	: SourceElements SourceElement
+		{
+			//for(var key in @2) $2[key]=@2[key];
+            $$ = $1.concat($2);
+		}
+	|
+		{
+			$$ = [];
+		}
+	;
+
+Program:
+	SourceElements EOF 
+	{
+		return $$;
+	};

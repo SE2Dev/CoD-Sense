@@ -72,21 +72,40 @@
   }
 */
 var codscript = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o};
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[4,10];
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"Program":3,"$accept":0,"$end":1},
-terminals_: {2:"error"},
-productions_: [0,[3,0]],
+symbols_: {"error":2,"IncludeDirective":3,"INCLUDE":4,"FILEPATH":5,";":6,"SourceElement":7,"SourceElements":8,"Program":9,"EOF":10,"$accept":0,"$end":1},
+terminals_: {2:"error",4:"INCLUDE",5:"FILEPATH",6:";",10:"EOF"},
+productions_: [0,[3,3],[7,1],[8,2],[8,0],[9,2]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
 var $0 = $$.length - 1;
 switch (yystate) {
+case 1:
+this.$ = {console.log("cheese")};
+break;
+case 3:
+
+			for(var key in _$[$0]) $$[$0][key]=_$[$0][key];
+            this.$ = $$[$0-1].concat($$[$0]);
+		
+break;
+case 4:
+
+			this.$ = [];
+		
+break;
+case 5:
+
+		return this.$;
+	
+break;
 }
 },
-table: [{1:[2,1],3:1},{1:[3]}],
-defaultActions: {},
+table: [o($V0,[2,4],{9:1,8:2}),{1:[3]},{3:5,4:[1,6],7:4,10:[1,3]},{1:[2,5]},o($V0,[2,3]),o($V0,[2,2]),{5:[1,7]},{6:[1,8]},o($V0,[2,1])],
+defaultActions: {3:[2,5]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -569,14 +588,92 @@ case 0:/* skip whitespace */
 break;
 case 1:/* skip single line comments */	
 break;
-case 2:return 'EOF'
+case 2:/* skip block comment */
 break;
-case 3:return 'INVALID'
+case 3:/* skip devscript (for now) */
+break;
+case 4:return 'STRING_LITERAL'
+break;
+case 5:return 'FLOAT_LITERAL'
+break;
+case 6:return 'INTEGER_LITERAL'
+break;
+case 7:return '('
+break;
+case 8:return ')'
+break;
+case 9:return '['
+break;
+case 10:return ']'
+break;
+case 11:return '{'
+break;
+case 12:return '}'
+break;
+case 13:return ','
+break;
+case 14:return '.'
+break;
+case 15:return '!'
+break;
+case 16:return '%'
+break;
+case 17:return '='
+break;
+case 18:return '++'
+break;
+case 19:return '+'
+break;
+case 20:return '--'
+break;
+case 21:return '-'
+break;
+case 22:return '*'
+break;
+case 23:return '/'
+break;
+case 24:return ':'
+break;
+case 25:return 6
+break;
+case 26:return '?'
+break;
+case 27:return '@'
+break;
+case 28:return 'IF'
+break;
+case 29:return 'ELSE'
+break;
+case 30:return 'SWITCH'
+break;
+case 31:return 'CASE'
+break;
+case 32:return 'BREAK'
+break;
+case 33:return 'FOR'
+break;
+case 34:return 'WHILE'
+break;
+case 35:return 'CONTINUE'
+break;
+case 36:return 'RETURN'
+break;
+case 37:return 5
+break;
+case 38:return 'IDENTIFIER'
+break;
+case 39:return 4
+break;
+case 40:return 'USING_ANIMTREE'
+break;
+case 41:return 'WAIT'
+break;
+case 42:return 10
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:$)/,/^(?:.)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3],"inclusive":true}}
+rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:\/\*(.|\n|\r)*?\*\/)/,/^(?:\/#(.|\n|\r)*?#\/)/,/^(?:".*"|'.*')/,/^(?:\d+\.(?:\d*f)?)/,/^(?:\d+)/,/^(?:\()/,/^(?:\))/,/^(?:\[)/,/^(?:\])/,/^(?:\{)/,/^(?:\})/,/^(?:,)/,/^(?:\.)/,/^(?:!)/,/^(?:%)/,/^(?:=)/,/^(?:\+\+)/,/^(?:\+)/,/^(?:--)/,/^(?:-)/,/^(?:\*)/,/^(?:\/)/,/^(?::)/,/^(?:;)/,/^(?:\?)/,/^(?:@)/,/^(?:if\b)/,/^(?:else\b)/,/^(?:switch\b)/,/^(?:case\b)/,/^(?:break\b)/,/^(?:for\b)/,/^(?:while\b)/,/^(?:continue\b)/,/^(?:return\b)/,/^(?:(\w+[\/\\])+\w+)/,/^(?:_?[a-zA-Z\-_]\w*)/,/^(?:#include\b)/,/^(?:#using_animtree\b)/,/^(?:wait\b)/,/^(?:$)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42],"inclusive":true}}
 });
 return lexer;
 })();
