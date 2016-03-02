@@ -34,6 +34,7 @@
 ","			return ','
 "."			return '.'
 "!"			return '!'
+"!="		return '!='
 "%"			return '%'
 "=="		return '=='
 "="			return '='
@@ -83,7 +84,8 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 /lex
 
 /* Operator Associations and Precendence */
-/* There's nothing here right now... */
+%right '!' '=' '+=' '-=' '*=' '/='
+%left '+' '-' '*' '/'
 
 %start Program
 
@@ -149,10 +151,40 @@ FunctionExpression
 		-> {"type": "call_external", "file": $1, "name": $3, "params": $5};
 	;
 
+e
+	:
+	| IDENTIFIER
+	| Expression 
+	| e "+" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "-" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "*" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "/" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "+=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "-=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "*=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "/=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "==" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| '(' e ')'
+        -> {"A": $1, "PARENS": $2, "B": $3};
+	;
+	//| e "^" e
+
 Expression
 	: FunctionExpression
 	| NumericLiteral
 	| StringLiteral
+	| e
 	;
 
 ExpressionStatement
