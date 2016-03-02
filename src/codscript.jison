@@ -84,8 +84,8 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 /lex
 
 /* Operator Associations and Precendence */
-%right '!' '=' '+=' '-=' '*=' '/='
-%left '+' '-' '*' '/'
+//%right '!' '=' '+=' '-=' '*=' '/='
+//%left '+' '-' '*' '/'
 
 %start Program
 
@@ -151,7 +151,7 @@ FunctionExpression
 		-> {"type": "call_external", "file": $1, "name": $3, "params": $5};
 	;
 
-e
+/*e
 	:
 	| IDENTIFIER
 	| Expression 
@@ -179,12 +179,29 @@ e
         -> {"A": $1, "PARENS": $2, "B": $3};
 	;
 	//| e "^" e
+*/
+
+MemberExpression
+	: NonLiteralExpression "[" Expression "]"
+		-> {"type": "array", "expression": $1, "member": $3}
+	| NonLiteralExpression "." NonLiteralExpression
+		-> {"type": "class", "expression": $1, "member": $3}
+	;
+	
+NonLiteralExpression
+	: IDENTIFIER
+	| FunctionExpression
+	| MemberExpression
+	;
+	
+LiteralExpression
+	: NumericLiteral
+	| StringLiteral
+	;
 
 Expression
-	: FunctionExpression
-	| NumericLiteral
-	| StringLiteral
-	| e
+	: NonLiteralExpression
+	| LiteralExpression
 	;
 
 ExpressionStatement
