@@ -59,6 +59,7 @@
 "|"			return '|'
 "&&"		return '&&'
 //"&="		return '&='
+//"&"		return '&' disabled until it can be determined whether or not &, @, # all are used for localized strings, etc
 "::"		return '::'
 //":"			return ':'
 ";"			return ';'
@@ -121,7 +122,7 @@ AnimtreeDirective:
 
 Block
 	: "{" StatementList "}"
-		-> {"type": "block", "concent": $2};
+		-> {"type": "block", "content": $2, "range": @$};
 	;
 
 FormalParameterList
