@@ -54,6 +54,9 @@
 "*"			return '*'
 "/="		return '/='
 "/"			return '/'
+"|="		return '|='
+"|"			return '|'
+//"&="		return '&='
 "::"		return '::'
 //":"			return ':'
 ";"			return ';'
@@ -204,6 +207,14 @@ LiteralExpression
 	| StringLiteral
 	;
 
+OptionalExpression
+	: Expression
+	| 
+		{
+			$$ = [];
+		}
+	;
+
 Expression
 	: NonLiteralExpression
 	| LiteralExpression
@@ -242,20 +253,12 @@ IfStatement
 		}
 	;
 
-PotentialExpression
-	: Expression
-	| 
-		{
-			$$ = [];
-		}
-	;
-
 LoopStatement
 	: WHILE "(" Expression ")" Statement
 		{
 			$$ = yytext;
 		}
-	| FOR "(" PotentialExpression ";" PotentialExpression ";" PotentialExpression ")" Statement
+	| FOR "(" OptionalExpression ";" OptionalExpression ";" OptionalExpression ")" Statement
 		{
 			$$ = yytext;
 		}
