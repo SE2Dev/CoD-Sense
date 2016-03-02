@@ -114,6 +114,11 @@ AnimtreeDirective:
 		-> {"type": "animtree", "arg": $3, "range": @$}
 	;
 
+Block
+	: "{" StatementList "}"
+		-> {"type": "block", "concent": $2};
+	;
+
 FormalParameterList
 	: IDENTIFIER
 		{
@@ -222,8 +227,45 @@ EmptyStatement:
 	";"
 	;
 
+IfStatement
+	: IF "(" Expression ")" Statement
+		{
+			$$ = yytext;
+		}
+	| ELSE IF "(" Expression ")" Statement
+		{
+			$$ = yytext;
+		}
+	| ELSE "(" Expression ")" Statement
+		{
+			$$ = yytext;
+		}
+	;
+
+PotentialExpression
+	: Expression
+	| 
+		{
+			$$ = [];
+		}
+	;
+
+LoopStatement
+	: WHILE "(" Expression ")" Statement
+		{
+			$$ = yytext;
+		}
+	| FOR "(" PotentialExpression ";" PotentialExpression ";" PotentialExpression ")" Statement
+		{
+			$$ = yytext;
+		}
+	;
+
 Statement
-	: ExpressionStatement
+	: Block
+	| ExpressionStatement
+	| IfStatement
+	| LoopStatement
 	| ReturnStatement
 	| EmptyStatement
 	;
