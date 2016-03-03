@@ -14,6 +14,8 @@ test(arg1, arg2)
     44; // numeric statements
     4.3;
     "stg"; 
+b = 1+(2+3);
+a = (1,2,3);
 
     bla(1,2.3, grame("string"));
     

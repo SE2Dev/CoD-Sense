@@ -256,18 +256,34 @@ e
         -> {"A": $1, "PARENS": $2, "B": $3};
 	;
 
-
 MemberExpression
 	: NonLiteralExpression "[" Expression "]"
 		-> {"type": "array", "expression": $1, "member": $3}
 	| NonLiteralExpression "." NonLiteralExpression
 		-> {"type": "class", "expression": $1, "member": $3}
 	;
-	
+
+ElementList
+	: Expression "," Expression //Lists must have at least two elements
+		{
+			$$ = [$1, $3];
+		}
+	| ElementList "," Expression
+		{
+			$$ = $1.concat($3);
+		}
+	;
+
+ListExpression
+	: "(" ElementList ")"
+		-> {"type": "list", "elements": $2}
+	;
+
 NonLiteralExpression
 	: IDENTIFIER
 	| FunctionExpression
 	| MemberExpression
+	| ListExpression //used for things like vectors
 	;
 	
 LiteralExpression
