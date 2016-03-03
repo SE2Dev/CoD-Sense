@@ -16,6 +16,7 @@
 
 /* Lexical Grammar */
 %lex
+RX_STRING_LITERAL \".*\"|\'.*\'
 %%
 	
 \s+						/* skip whitespace */
@@ -23,7 +24,10 @@
 "/*"(.|\n|\r)*?"*/"		/* skip block comment */
 "/#"(.|\n|\r)*?"#/"		/* skip devscript (for now) */
 
-\".*\"|\'.*\'			return 'STRING_LITERAL'
+
+
+\&{RX_STRING_LITERAL}	return "STRING_LOCALIZED_LITERAL";
+{RX_STRING_LITERAL}		return 'STRING_LITERAL'
 \d+\.(?:\d*)?f?			return 'FLOAT_LITERAL'
 \d+						return 'INTEGER_LITERAL'
 
@@ -118,10 +122,14 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 %%
 /* Language Grammar */
 
-StringLiteral:
-	STRING_LITERAL
+StringLiteral
+	: STRING_LITERAL
 		{
 			$$ = $1.substring(1, $1.length-1);
+		}
+	| STRING_LOCALIZED_LITERAL
+		{
+			$$ = $1.substring(2, $1.length-1);
 		}
 	;
 
