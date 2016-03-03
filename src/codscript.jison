@@ -7,9 +7,11 @@
     GSC Supports:
 		Switch Statements
 		Ternary Operator
+		~, &=, |=, ^=, |, &, ^
 			
 	GSC Does NOT Support:
 		Initializer Lists
+		~=, <<=, >>=, %=, etc.
 */
 
 /* Lexical Grammar */
@@ -33,8 +35,8 @@
 "}"			return '}'
 ","			return ','
 "."			return '.'
-"!"			return '!'
 "!="		return '!='
+"!"			return '!'
 "%"			return '%'
 "=="		return '=='
 "="			return '='
@@ -54,17 +56,20 @@
 "*"			return '*'
 "/="		return '/='
 "/"			return '/'
-"|="		return '|='
 "||"		return '||'
+"|="		return '|='
 "|"			return '|'
 "&&"		return '&&'
-//"&="		return '&='
-//"&"		return '&' disabled until it can be determined whether or not &, @, # all are used for localized strings, etc
+"&="		return '&='
+"&"			return '&'
+"^="		return '^='
+"^"			return '^'
+"~"			return '~'
 "::"		return '::'
 //":"			return ':'
 ";"			return ';'
 "?"			return '?'
-"@"			return '@'
+//"@"			return '@'
 //"#"			return '#'
 
 "if"				return 'IF'
@@ -90,8 +95,21 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 /lex
 
 /* Operator Associations and Precendence */
-//%right '!' '=' '+=' '-=' '*=' '/='
-//%left '+' '-' '*' '/'
+// Based on: http://en.cppreference.com/w/c/language/operator_precedence
+
+%left "++" "--" "." //Postfixes
+%right "++" "--" UPLUS UMINUS "!" "~" //Prefixes
+%left "*" "/" "%"
+%left "+" "-"
+%left "<<" ">>"
+%left "<" "<=" ">" ">="
+%left "==" "!="
+%left "&"
+%left "^"
+%left "|"
+%left "&&"
+%left "||"
+%right "=" "+=" "-=" "*=" "/=" "&=" "^=" "|="
 
 %start Program
 
