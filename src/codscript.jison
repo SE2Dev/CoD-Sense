@@ -192,6 +192,14 @@ e
 		-> {"A": $1, "Prefix Op": $2};
 	| "--" e
 		-> {"A": $1, "Prefix Op": $2};
+	| "+" e %prec UPLUS
+		-> {"A": $1, "Prefix Op": $2};
+	| "-" e %prec UMINUS
+		-> {"A": $1, "Prefix Op": $2};
+	| "!" e
+		-> {"A": $1, "Prefix Op": $2};
+	| "~" e
+		-> {"A": $1, "Prefix Op": $2};
 	| e "*" e
 		-> {"A": $1, "Op": $2, "B": $3};
 	| e "/" e
