@@ -82,6 +82,8 @@
 "continue"			return 'CONTINUE'
 "return"			return 'RETURN'
 
+"thread"			return 'THREAD'
+
 (\w+[/\\])+\w+		return 'FILEPATH'
 _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 
@@ -173,11 +175,26 @@ FunctionParameterList
 		}
 	;
 
-FunctionExpression
+FunctionCall
 	: IDENTIFIER "(" FunctionParameterList ")"
 		-> {"type": "call", "name": $1, "params": $3};
 	| FILEPATH "::" IDENTIFIER "(" FunctionParameterList ")"
 		-> {"type": "call_external", "file": $1, "name": $3, "params": $5};
+	;
+
+FunctionExpression
+	: FunctionCall
+	| IDENTIFIER FunctionCall
+		{
+			$$ = $2;
+			$$.caller = $1;	
+		}
+	| IDENTIFIER THREAD FunctionCall
+		{
+			$$ = $3
+			$$.caller = $1
+			$$.type = "call_thread";
+		}
 	;
 
 e
