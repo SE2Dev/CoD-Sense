@@ -206,9 +206,7 @@ FunctionExpression
 	;
 
 e
-	:
-	| IDENTIFIER
-	| Expression 
+	: BasicExpression 
 	| e "++"
 		-> {"A": $1, "Postfix Op": $2};
 	| e "--"
@@ -282,9 +280,9 @@ e
 	;
 
 MemberExpression
-	: NonLiteralExpression "[" Expression "]"
+	: ObjectExpression "[" Expression "]"
 		-> {"type": "array", "expression": $1, "member": $3}
-	| NonLiteralExpression "." NonLiteralExpression
+	| ObjectExpression "." ObjectExpression
 		-> {"type": "class", "expression": $1, "member": $3}
 	;
 
@@ -304,11 +302,10 @@ ListExpression
 		-> {"type": "list", "elements": $2}
 	;
 
-NonLiteralExpression
+ObjectExpression
 	: IDENTIFIER
-	| FunctionExpression
+	| FunctionCall
 	| MemberExpression
-	| ListExpression //used for things like vectors
 	;
 	
 LiteralExpression
@@ -317,19 +314,25 @@ LiteralExpression
 	;
 
 OptionalExpression
-	: e //if Expression is used the for loop expressions break if operators are used
+	: Expression
 	| 
 		{
 			$$ = [];
 		}
 	;
 
-Expression
-	: NonLiteralExpression
+BasicExpression
+	: IDENTIFIER
+	| FunctionExpression
+	| MemberExpression
 	| LiteralExpression
-	| e
+	| ListExpression //used for things like vectors
 	;
 
+Expression
+	: e
+	;
+	
 ExpressionStatement
 	: Expression ";"
 		{

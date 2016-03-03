@@ -5,6 +5,9 @@
 
 main(ch, r)
 {
+	self thread print( "str" + val );
+
+
 "blab";
 }
 
