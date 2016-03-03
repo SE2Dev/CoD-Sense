@@ -317,7 +317,7 @@ LiteralExpression
 	;
 
 OptionalExpression
-	: Expression
+	: e //if Expression is used the for loop expressions break if operators are used
 	| 
 		{
 			$$ = [];
