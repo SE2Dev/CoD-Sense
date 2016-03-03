@@ -180,17 +180,53 @@ FunctionExpression
 		-> {"type": "call_external", "file": $1, "name": $3, "params": $5};
 	;
 
-/*e
+e
 	:
 	| IDENTIFIER
 	| Expression 
+	| e "++"
+		-> {"A": $1, "Postfix Op": $2};
+	| e "--"
+		-> {"A": $1, "Postfix Op": $2};
+	| "++" e
+		-> {"A": $1, "Prefix Op": $2};
+	| "--" e
+		-> {"A": $1, "Prefix Op": $2};
+	| e "*" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "/" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "%" e
+		-> {"A": $1, "Op": $2, "B": $3};
 	| e "+" e
 		-> {"A": $1, "Op": $2, "B": $3};
 	| e "-" e
 		-> {"A": $1, "Op": $2, "B": $3};
-	| e "*" e
+	| e "<<" e
 		-> {"A": $1, "Op": $2, "B": $3};
-	| e "/" e
+	| e ">>" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "<" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "<=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e ">" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e ">=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "==" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "!=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "&" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "^" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "|" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "&&" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "||" e
 		-> {"A": $1, "Op": $2, "B": $3};
 	| e "=" e
 		-> {"A": $1, "Op": $2, "B": $3};
@@ -202,13 +238,16 @@ FunctionExpression
 		-> {"A": $1, "Op": $2, "B": $3};
 	| e "/=" e
 		-> {"A": $1, "Op": $2, "B": $3};
-	| e "==" e
+	| e "&=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "^=" e
+		-> {"A": $1, "Op": $2, "B": $3};
+	| e "|=" e
 		-> {"A": $1, "Op": $2, "B": $3};
 	| '(' e ')'
         -> {"A": $1, "PARENS": $2, "B": $3};
 	;
-	//| e "^" e
-*/
+
 
 MemberExpression
 	: NonLiteralExpression "[" Expression "]"
@@ -239,6 +278,7 @@ OptionalExpression
 Expression
 	: NonLiteralExpression
 	| LiteralExpression
+	| e
 	;
 
 ExpressionStatement
