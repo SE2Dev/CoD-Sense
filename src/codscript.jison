@@ -205,86 +205,14 @@ FunctionExpression
 		}
 	;
 
-e
-	: BasicExpression 
-	| e "++"
-		-> {"A": $1, "Postfix Op": $2};
-	| e "--"
-		-> {"A": $1, "Postfix Op": $2};
-	| "++" e
-		-> {"A": $1, "Prefix Op": $2};
-	| "--" e
-		-> {"A": $1, "Prefix Op": $2};
-	| "+" e %prec UPLUS
-		-> {"A": $1, "Prefix Op": $2};
-	| "-" e %prec UMINUS
-		-> {"A": $1, "Prefix Op": $2};
-	| "!" e
-		-> {"A": $1, "Prefix Op": $2};
-	| "~" e
-		-> {"A": $1, "Prefix Op": $2};
-	| e "*" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "/" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "%" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "+" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "-" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "<<" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e ">>" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "<" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "<=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e ">" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e ">=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "==" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "!=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "&" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "^" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "|" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "&&" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "||" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "+=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "-=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "*=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "/=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "&=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "^=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| e "|=" e
-		-> {"A": $1, "Op": $2, "B": $3};
-	| '(' e ')'
-        -> {"A": $1, "PARENS": $2, "B": $3};
-	;
-
 MemberExpression
 	: ObjectExpression "[" Expression "]"
 		-> {"type": "array", "expression": $1, "member": $3}
 	| ObjectExpression "." ObjectExpression
 		-> {"type": "class", "expression": $1, "member": $3}
 	;
+
+
 
 ElementList
 	: Expression "," Expression //Lists must have at least two elements
@@ -327,6 +255,62 @@ BasicExpression
 	| MemberExpression
 	| LiteralExpression
 	| ListExpression //used for things like vectors
+	;
+
+OperatorPostfix
+	: "++"
+	| "--"
+	;
+	
+OperatorPrefix
+	: "++"
+	| "--"
+	| "+"
+	| "-"
+	| "~"
+	| "!"
+	;
+	
+OperatorMid
+	: "*"
+	| "/"
+	| "%"
+	| "+"
+	| "-"
+	| "<<"
+	| ">>"
+	| "<"
+	| "<="
+	| ">"
+	| ">="
+	| "=="
+	| "!="
+	| "&"
+	| "|"
+	| "&&"
+	| "||"
+	| "="
+	| "+="
+	| "-="
+	| "*="
+	| "/="
+	| "&="
+	| "^="
+	| "|="
+	;
+
+e
+	: BasicExpression
+	|e "." ObjectExpression
+		-> {"A": $1, "property": $2, "B": $3};
+	| e OperatorPostfix
+		-> {"A": $1, "Postfix Op": $2};
+	| OperatorPrefix e
+		-> {"A": $1, "Prefix Op": $2};
+	| e OperatorMid e
+		-> {"A": $1, "Mid Op": $2, "B": $3};
+	| '(' e ')'
+        -> {"A": $1, "PARENS": $2, "B": $3};
 	;
 
 Expression
