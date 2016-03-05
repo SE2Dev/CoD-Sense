@@ -345,7 +345,7 @@ IfStatement
 		{
 			$$ = yytext;
 		}
-	| ELSE "(" Expression ")" Statement
+	| ELSE Statement
 		{
 			$$ = yytext;
 		}
