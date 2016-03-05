@@ -24,7 +24,7 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 "/*"(.|\n|\r)*?"*/"		/* skip block comment */
 "/#"(.|\n|\r)*?"#/"		/* skip devscript (for now) */
 
-
+[\s*[.*]\s*]
 
 \&{RX_STRING_LITERAL}	return "STRING_LOCALIZED_LITERAL";
 {RX_STRING_LITERAL}		return 'STRING_LITERAL'
@@ -103,7 +103,7 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 /* Operator Associations and Precendence */
 // Based on: http://en.cppreference.com/w/c/language/operator_precedence
 
-%left "++" "--" "." //Postfixes
+%left "++" "--" "[" "]" "." //Postfixes
 %right "++" "--" UPLUS UMINUS "!" "~" //Prefixes
 %left "*" "/" "%"
 %left "+" "-"
@@ -186,33 +186,44 @@ FunctionParameterList
 FunctionCall
 	: IDENTIFIER "(" FunctionParameterList ")"
 		-> {"type": "call", "name": $1, "params": $3};
+	| THREAD IDENTIFIER "(" FunctionParameterList ")"
+		-> {"type": "thread", "name": $1, "params": $4};
+	| PointerExpression "(" FunctionParameterList ")"
+		-> {"type": "call", "name": $1, "params": $3};
+	| THREAD PointerExpression "(" FunctionParameterList ")"
+		-> {"type": "call", "name": $1, "params": $3};
 	| FILEPATH "::" IDENTIFIER "(" FunctionParameterList ")"
 		-> {"type": "call_external", "file": $1, "name": $3, "params": $5};
 	;
 
 FunctionExpression
-	: FunctionCall
-	| IDENTIFIER FunctionCall
+	: IDENTIFIER FunctionCall
 		{
 			$$ = $2;
 			$$.caller = $1;	
 		}
-	| IDENTIFIER THREAD FunctionCall
-		{
-			$$ = $3
-			$$.caller = $1
-			$$.type = "call_thread";
-		}
+	| FunctionCall
+	;
+
+PointerExpression
+	: "[" "[" ObjectExpression "]" "]"
+	;
+
+ArrayElementExpression
+	: "[" Expression "]"
+	//| PointerExpression
+	;
+
+PropertyExpression
+	: "." ObjectExpression
 	;
 
 MemberExpression
-	: ObjectExpression "[" Expression "]"
-		-> {"type": "array", "expression": $1, "member": $3}
-	| ObjectExpression "." ObjectExpression
-		-> {"type": "class", "expression": $1, "member": $3}
+	: ObjectExpression ArrayElementExpression
+		-> {"type": "array", "expression": $1, "member": $2}
+	| ObjectExpression PropertyExpression
+		-> {"type": "class", "expression": $1, "member": $2}
 	;
-
-
 
 ElementList
 	: Expression "," Expression //Lists must have at least two elements
@@ -232,7 +243,7 @@ ListExpression
 
 ObjectExpression
 	: IDENTIFIER
-	| FunctionCall
+	| FunctionExpression
 	| MemberExpression
 	;
 	
@@ -250,9 +261,7 @@ OptionalExpression
 	;
 
 BasicExpression
-	: IDENTIFIER
-	| FunctionExpression
-	| MemberExpression
+	: ObjectExpression
 	| LiteralExpression
 	| ListExpression //used for things like vectors
 	;
@@ -301,8 +310,8 @@ OperatorMid
 
 e
 	: BasicExpression
-	|e "." ObjectExpression
-		-> {"A": $1, "property": $2, "B": $3};
+	/*|e "." ObjectExpression
+		-> {"A": $1, "property": $2, "B": $3};*/
 	| e OperatorPostfix
 		-> {"A": $1, "Postfix Op": $2};
 	| OperatorPrefix e
