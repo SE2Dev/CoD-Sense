@@ -208,6 +208,11 @@ PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression "]" "]"
 	;
 
+ReferenceExpression
+	: "::" IDENTIFIER
+		-> {"type": "func_reference", "name": $2};
+	;
+
 MemberExpression
 	: ObjectExpression "[" Expression "]"
 		-> {"type": "array", "expression": $1, "member": $3}
@@ -253,6 +258,7 @@ OptionalExpression
 
 BasicExpression
 	: ObjectExpression
+	| ReferenceExpression
 	| LiteralExpression
 	| ListExpression //used for things like vectors
 	;
