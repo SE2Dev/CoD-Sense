@@ -24,9 +24,6 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 "/*"(.|\n|\r)*?"*/"		/* skip block comment */
 "/#"(.|\n|\r)*?"#/"		/* skip devscript (for now) */
 
-[\s*[.*]\s*]
-
-\&{RX_STRING_LITERAL}	return "STRING_LOCALIZED_LITERAL";
 {RX_STRING_LITERAL}		return 'STRING_LITERAL'
 \d+\.(?:\d*)?f?			return 'FLOAT_LITERAL'
 \d+						return 'INTEGER_LITERAL'
@@ -129,7 +126,7 @@ StringLiteral
 		{
 			$$ = $1.substring(1, $1.length-1);
 		}
-	| STRING_LOCALIZED_LITERAL
+	| "&" STRING_LITERAL
 		{
 			$$ = $1.substring(2, $1.length-1);
 		}
