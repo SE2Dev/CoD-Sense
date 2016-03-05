@@ -199,7 +199,7 @@ FunctionCall
 	;
 
 FunctionExpression
-	: IDENTIFIER FunctionCall
+	: ObjectExpression FunctionCall
 		{
 			$$ = $2;
 			$$.caller = $1;	
