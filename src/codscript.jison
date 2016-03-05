@@ -105,7 +105,7 @@ _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 /* Operator Associations and Precendence */
 // Based on: http://en.cppreference.com/w/c/language/operator_precedence
 
-%left "++" "--" "[" "]" "." //Postfixes
+%left "++" "--" "[" "]" "." //Postfixes and Brackets
 %right "++" "--" UPLUS UMINUS "!" "~" //Prefixes
 %left "*" "/" "%"
 %left "+" "-"
@@ -216,6 +216,7 @@ MemberExpression
 		-> {"type": "array", "expression": $1, "member": $3}
 	| ObjectExpression "." ObjectExpression
 		-> {"type": "property", "expression": $1, "member": $3}
+	| "[" "]"
 	;
 
 ElementList
@@ -367,6 +368,8 @@ Statement
 	| IfStatement
 	| LoopStatement
 	| ReturnStatement
+	| BREAK ";"
+	| CONTINUE ";"
 	| EmptyStatement
 	;
 
