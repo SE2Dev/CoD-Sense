@@ -89,13 +89,13 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 "return"			return 'RETURN'
 
 "thread"			return 'THREAD'
-
-(\w+[/\\])+\w+		return 'FILEPATH'
-_?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
+"wait"				return 'WAIT'
 
 "#include"			return 'INCLUDE'
 "#using_animtree"	return 'USING_ANIMTREE'
-"wait"				return 'WAIT'
+
+(\w+[/\\])+\w+		return 'FILEPATH'
+_?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 
 <<EOF>>				return 'EOF'
 .					return 'INVALID'
@@ -331,7 +331,12 @@ ReturnStatement
 	| RETURN Expression ";"
 		-> {"type": "return", "expression": $2};
 	;
-	
+
+WaitStatement
+	: WAIT NumericLiteral ";"
+	| WAIT "(" Expression ")"
+	;
+
 EmptyStatement:
 	";"
 	;
@@ -364,6 +369,7 @@ LoopStatement
 
 Statement
 	: Block
+	| WaitStatement
 	| ExpressionStatement
 	| IfStatement
 	| LoopStatement
