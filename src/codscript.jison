@@ -33,7 +33,9 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 
 "("			return '('
 ")"			return ')'
+\[\s*\[		return 'FUNC_POINTER_BEGIN'
 "["			return '['
+//\]\s*\]		return 'FUNC_POINTER_END' //Using this would override ']' in nested array expressions
 "]"			return ']'
 "{"			return '{'
 "}"			return '}'
@@ -206,23 +208,14 @@ FunctionExpression
 	;
 
 PointerExpression
-	: "[" "[" ObjectExpression "]" "]"
-	;
-
-ArrayElementExpression
-	: "[" Expression "]"
-	//| PointerExpression
-	;
-
-PropertyExpression
-	: "." ObjectExpression
+	: FUNC_POINTER_BEGIN ObjectExpression "]" "]"
 	;
 
 MemberExpression
-	: ObjectExpression ArrayElementExpression
-		-> {"type": "array", "expression": $1, "member": $2}
-	| ObjectExpression PropertyExpression
-		-> {"type": "class", "expression": $1, "member": $2}
+	: ObjectExpression "[" Expression "]"
+		-> {"type": "array", "expression": $1, "member": $3}
+	| ObjectExpression "." ObjectExpression
+		-> {"type": "property", "expression": $1, "member": $3}
 	;
 
 ElementList
@@ -310,8 +303,6 @@ OperatorMid
 
 e
 	: BasicExpression
-	/*|e "." ObjectExpression
-		-> {"A": $1, "property": $2, "B": $3};*/
 	| e OperatorPostfix
 		-> {"A": $1, "Postfix Op": $2};
 	| OperatorPrefix e
