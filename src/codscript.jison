@@ -72,7 +72,7 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 "^"			return '^'
 "~"			return '~'
 "::"		return '::'
-//":"			return ':'
+":"			return ':'
 ";"			return ';'
 "?"			return '?'
 //"@"			return '@'
@@ -82,6 +82,7 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 "else"				return 'ELSE'
 "switch"			return 'SWITCH'
 "case"				return 'CASE'
+"default"			return 'DEFAULT'
 "break"				return 'BREAK'
 "for"				return 'FOR'
 "while"				return 'WHILE'
@@ -364,6 +365,15 @@ IfStatement
 		}
 	;
 
+SwitchStatement
+	: SWITCH "(" Expression ")" Statement
+	;
+
+CaseStatement
+	: CASE LiteralExpression ":"
+	| DEFAULT ":"
+	;
+
 LoopStatement
 	: WHILE "(" Expression ")" Statement
 		{
@@ -380,6 +390,8 @@ Statement
 	| WaitStatement
 	| ExpressionStatement
 	| IfStatement
+	| SwitchStatement
+	| CaseStatement
 	| LoopStatement
 	| ReturnStatement
 	| BREAK ";"
