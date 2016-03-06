@@ -218,6 +218,8 @@ FunctionExpression
 PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression "]" "]"
 		-> {"type": "pointer", "expression": $2};
+	| FUNC_POINTER_BEGIN ReferenceExpression "]" "]"
+		-> {"type": "pointer", "expression": $2};
 	;
 
 ReferenceExpression
