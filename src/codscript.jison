@@ -25,7 +25,7 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 "/#"(.|\n|\r)*?"#/"		/* skip devscript (for now) */
 
 {RX_STRING_LITERAL}		return 'STRING_LITERAL'
-\d+\.(?:\d*)?f?			return 'FLOAT_LITERAL'
+\d+\.(?:\d*)?f?|\.\d+f?	return 'FLOAT_LITERAL'
 \d+						return 'INTEGER_LITERAL'
 
 "("			return '('
@@ -337,7 +337,8 @@ ReturnStatement
 
 WaitStatement
 	: WAIT NumericLiteral ";"
-	| WAIT "(" Expression ")"
+	| WAIT IDENTIFIER ";"
+	| WAIT "(" Expression ")" ";"
 	;
 
 EmptyStatement:
