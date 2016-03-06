@@ -30,6 +30,7 @@ RX_STRING_LITERAL \"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 
 "#include"			return 'INCLUDE'
 "#using_animtree"	return 'USING_ANIMTREE'
+"#animtree"			return 'ANIMTREE'
 
 "("			return '('
 ")"			return ')'
@@ -273,6 +274,7 @@ BasicExpression
 	| LiteralExpression
 	| ListExpression //used for things like vectors
 	| ReferenceExpression
+	| ANIMTREE
 	;
 
 OperatorPostfix
