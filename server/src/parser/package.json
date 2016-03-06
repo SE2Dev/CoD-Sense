@@ -1,10 +1,19 @@
 {
-    "version": "0.0.1",
+
     
     "name": "codscript-parser",
+    "description": "JISON Parser Generator for CoDScript",
+    "version": "0.0.1",
+    "publisher": "SE2Dev",
+    
     "main": "./debug/main.js",
     
     "devDependencies": {
-        "jison": "*"
-    }
+        "jison": "^0.4.17"
+    },
+    
+    "scripts": {        
+        "postinstall": "npm run compile",
+        "compile": "jison src/codscript.jison -o codscript.js"
+	}
 }
