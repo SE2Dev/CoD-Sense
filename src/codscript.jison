@@ -196,8 +196,10 @@ FunctionCall
 		-> {"type": "call", "name": $1, "params": $3};
 	| THREAD PointerExpression "(" FunctionParameterList ")"
 		-> {"type": "call", "name": $1, "params": $3};
-	| FILEPATH "::" IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "call_external", "file": $1, "name": $3, "params": $5};
+	| ReferenceExpression "(" FunctionParameterList ")"
+		-> {"type": "call_external", "file": $1.file, "name": $1.name, "params": $3};
+	| THREAD ReferenceExpression "(" FunctionParameterList ")"
+		-> {"type": "call_external", "file": $2.file, "name": $2.name, "params": $4};
 	;
 
 FunctionExpression
@@ -214,8 +216,10 @@ PointerExpression
 	;
 
 ReferenceExpression
-	: "::" IDENTIFIER
-		-> {"type": "func_reference", "name": $2};
+	: FILEPATH "::" IDENTIFIER
+		-> {"type": "reference", "file": $1, "name": $3};
+	| "::" IDENTIFIER
+		-> {"type": "reference", "file": "$this", "name": $2};
 	;
 
 MemberExpression
@@ -263,9 +267,9 @@ OptionalExpression
 
 BasicExpression
 	: ObjectExpression
-	| ReferenceExpression
 	| LiteralExpression
 	| ListExpression //used for things like vectors
+	| ReferenceExpression
 	;
 
 OperatorPostfix
