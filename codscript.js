@@ -100,7 +100,7 @@ case 7:
 this.$ = {"type": "animtree", "arg": $$[$0-2], "range": this._$};
 break;
 case 8:
-this.$ = {"type": "block", "content": $$[$0-1], "range": this._$};;
+this.$ = {"type": "block", "statements": $$[$0-1], "range": this._$};;
 break;
 case 9: case 12:
 
@@ -135,6 +135,9 @@ case 21:
 			this.$.caller = $$[$0-1];	
 		
 break;
+case 23:
+this.$ = {"type": "pointer", "expression": $$[$0-2]};;
+break;
 case 24:
 this.$ = {"type": "reference", "file": $$[$0-2], "name": $$[$0]};;
 break;
@@ -156,16 +159,16 @@ case 31:
 this.$ = {"type": "list", "elements": $$[$0-1]};
 break;
 case 77:
-this.$ = {"A": $$[$0-1], "Postfix Op": $$[$0]};;
+this.$ = {"type": "expression", "left": $$[$0-1], "operator": $$[$0]};;
 break;
 case 78:
-this.$ = {"A": $$[$0-1], "Prefix Op": $$[$0]};;
+this.$ = {"type": "expression", "operator": $$[$0-1], "right": $$[$0]};;
 break;
 case 79:
-this.$ = {"A": $$[$0-2], "Mid Op": $$[$0-1], "B": $$[$0]};;
+this.$ = {"type": "expression", "left": $$[$0-2], "operator": $$[$0-1], "right": $$[$0]};;
 break;
 case 80:
-this.$ = {"A": $$[$0-2], "PARENS": $$[$0-1], "B": $$[$0]};;
+this.$ = {"type": "expression", "parentheses": true, "expression": $$[$0-1]}; //used for debugging;
 break;
 case 82:
 
@@ -173,15 +176,40 @@ case 82:
 		
 break;
 case 83:
-this.$ = {"type": "return"};;
+this.$ = {"type": "return", "range": this._$};;
 break;
 case 84:
-this.$ = {"type": "return", "expression": $$[$0-1]};;
+this.$ = {"type": "return", "expression": $$[$0-1], "range": this._$};;
 break;
-case 89: case 90: case 91: case 95: case 96:
-
-			this.$ = yytext;
-		
+case 85: case 86:
+this.$ = {"type": "wait", "expression": $$[$0-1], "range": this._$};;
+break;
+case 87:
+this.$ = {"type": "wait", "expression": $$[$0-2], "range": this._$};;
+break;
+case 89:
+this.$ = {"type": "if", "expression": $$[$0-2], "statement": $$[$0], "range": this._$};;
+break;
+case 90:
+this.$ = {"type": "elif", "expression": $$[$0-2], "statement": $$[$0], "range": this._$};;
+break;
+case 91:
+this.$ = {"type": "else", "statement": $$[$0], "range": this._$};;
+break;
+case 92:
+this.$ = {"type": "switch", "expression": $$[$0-2], "statement": $$[$0], "range": this._$};;
+break;
+case 93:
+this.$ = {"type": "case", "expression": $$[$0-1], "range": this._$};;
+break;
+case 94:
+this.$ = {"type": "default", "expression": $$[$0-1], "range": this._$};;
+break;
+case 95:
+this.$ = {"type": "while", "expression": $$[$0-2], "statement": $$[$0], "range": this._$};;
+break;
+case 96:
+this.$ = {"type": "for", "expressions": [$$[$0-6],$$[$0-4],$$[$0-2]], "statement": $$[$0], "range": this._$};;
 break;
 case 108:
 
@@ -198,7 +226,6 @@ this.$ = {"type": "function", "name": $$[$0-6], "params": $$[$0-4], "range": thi
 break;
 case 114:
 
-			//for(var key in _$[$0]) $$[$0][key]=_$[$0][key];
             this.$ = $$[$0-1].concat($$[$0]);
 		
 break;
@@ -829,7 +856,7 @@ case 68:return 'INVALID'
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:\/\*(.|\n|\r)*?\*\/)/,/^(?:\/#(.|\n|\r)*?#\/)/,/^(?:("(?:\\.|[^\"])*"|'(?:\\.|[^\'])*'))/,/^(?:\d+\.(?:\d*)?f?|\.\d+f?)/,/^(?:\d+)/,/^(?:#include\b)/,/^(?:#using_animtree\b)/,/^(?:\()/,/^(?:\))/,/^(?:\[\s*\[)/,/^(?:\[)/,/^(?:\])/,/^(?:\{)/,/^(?:\})/,/^(?:,)/,/^(?:\.)/,/^(?:!=)/,/^(?:!)/,/^(?:%)/,/^(?:==)/,/^(?:=)/,/^(?:<<)/,/^(?:<=)/,/^(?:<)/,/^(?:>>)/,/^(?:>=)/,/^(?:>)/,/^(?:\+\+)/,/^(?:\+=)/,/^(?:\+)/,/^(?:--)/,/^(?:-=)/,/^(?:-)/,/^(?:\*=)/,/^(?:\*)/,/^(?:\/=)/,/^(?:\/)/,/^(?:\|\|)/,/^(?:\|=)/,/^(?:\|)/,/^(?:&&)/,/^(?:&=)/,/^(?:&)/,/^(?:\^=)/,/^(?:\^)/,/^(?:~)/,/^(?:::)/,/^(?::)/,/^(?:;)/,/^(?:\?)/,/^(?:#)/,/^(?:if\b)/,/^(?:else\b)/,/^(?:switch\b)/,/^(?:case\b)/,/^(?:default\b)/,/^(?:break\b)/,/^(?:for\b)/,/^(?:while\b)/,/^(?:continue\b)/,/^(?:return\b)/,/^(?:thread\b)/,/^(?:wait\b)/,/^(?:(\w+\\)+\w+)/,/^(?:_?[a-zA-Z\-_]\w*)/,/^(?:$)/,/^(?:.)/],
+rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:\/\*(.|\n|\r)*?\*\/)/,/^(?:\/#(.|\n|\r)*?#\/)/,/^(?:("(?:\\.|[^\"])*?"|'(?:\\.|[^\'])*?'))/,/^(?:\d+\.(?:\d*)?f?|\.\d+f?)/,/^(?:\d+)/,/^(?:#include\b)/,/^(?:#using_animtree\b)/,/^(?:\()/,/^(?:\))/,/^(?:\[\s*\[)/,/^(?:\[)/,/^(?:\])/,/^(?:\{)/,/^(?:\})/,/^(?:,)/,/^(?:\.)/,/^(?:!=)/,/^(?:!)/,/^(?:%)/,/^(?:==)/,/^(?:=)/,/^(?:<<)/,/^(?:<=)/,/^(?:<)/,/^(?:>>)/,/^(?:>=)/,/^(?:>)/,/^(?:\+\+)/,/^(?:\+=)/,/^(?:\+)/,/^(?:--)/,/^(?:-=)/,/^(?:-)/,/^(?:\*=)/,/^(?:\*)/,/^(?:\/=)/,/^(?:\/)/,/^(?:\|\|)/,/^(?:\|=)/,/^(?:\|)/,/^(?:&&)/,/^(?:&=)/,/^(?:&)/,/^(?:\^=)/,/^(?:\^)/,/^(?:~)/,/^(?:::)/,/^(?::)/,/^(?:;)/,/^(?:\?)/,/^(?:#)/,/^(?:if\b)/,/^(?:else\b)/,/^(?:switch\b)/,/^(?:case\b)/,/^(?:default\b)/,/^(?:break\b)/,/^(?:for\b)/,/^(?:while\b)/,/^(?:continue\b)/,/^(?:return\b)/,/^(?:thread\b)/,/^(?:wait\b)/,/^(?:(\w+\\)+\w+)/,/^(?:_?[a-zA-Z\-_]\w*)/,/^(?:$)/,/^(?:.)/],
 conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68],"inclusive":true}}
 });
 return lexer;

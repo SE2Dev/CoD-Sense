@@ -154,7 +154,7 @@ AnimtreeDirective:
 
 Block
 	: "{" StatementList "}"
-		-> {"type": "block", "content": $2, "range": @$};
+		-> {"type": "block", "statements": $2, "range": @$};
 	;
 
 FormalParameterList
@@ -213,6 +213,7 @@ FunctionExpression
 
 PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression "]" "]"
+		-> {"type": "pointer", "expression": $2};
 	;
 
 ReferenceExpression
@@ -317,13 +318,16 @@ OperatorMid
 e
 	: BasicExpression
 	| e OperatorPostfix
-		-> {"A": $1, "Postfix Op": $2};
+		-> {"type": "expression", "left": $1, "operator": $2};
 	| OperatorPrefix e
-		-> {"A": $1, "Prefix Op": $2};
+		-> {"type": "expression", "operator": $1, "right": $2};
 	| e OperatorMid e
-		-> {"A": $1, "Mid Op": $2, "B": $3};
+		-> {"type": "expression", "left": $1, "operator": $2, "right": $3};
 	| '(' e ')'
-        -> {"A": $1, "PARENS": $2, "B": $3};
+		-> {"type": "expression", "parentheses": true, "expression": $2}; //used for debugging
+        /*{
+			$$ = $2;
+		}*/
 	;
 
 Expression
@@ -334,20 +338,23 @@ ExpressionStatement
 	: Expression ";"
 		{
 			$$ = $1;
-		} //being debugged
+		}
 	;
 
 ReturnStatement
 	: RETURN ";"
-		-> {"type": "return"};
+		-> {"type": "return", "range": @$};
 	| RETURN Expression ";"
-		-> {"type": "return", "expression": $2};
+		-> {"type": "return", "expression": $2, "range": @$};
 	;
 
 WaitStatement
 	: WAIT NumericLiteral ";"
+		-> {"type": "wait", "expression": $2, "range": @$};
 	| WAIT IDENTIFIER ";"
+		-> {"type": "wait", "expression": $2, "range": @$};
 	| WAIT "(" Expression ")" ";"
+		-> {"type": "wait", "expression": $3, "range": @$};
 	;
 
 EmptyStatement:
@@ -356,37 +363,32 @@ EmptyStatement:
 
 IfStatement
 	: IF "(" Expression ")" Statement
-		{
-			$$ = yytext;
-		}
+		-> {"type": "if", "expression": $3, "statement": $5, "range": @$};
 	| ELSE IF "(" Expression ")" Statement
-		{
-			$$ = yytext;
-		}
+		-> {"type": "elif", "expression": $4, "statement": $6, "range": @$};
 	| ELSE Statement
-		{
-			$$ = yytext;
-		}
+		-> {"type": "else", "statement": $2, "range": @$};
 	;
 
 SwitchStatement
 	: SWITCH "(" Expression ")" Statement
+		-> {"type": "switch", "expression": $3, "statement": $5, "range": @$};
 	;
 
+// TODO: 
+//		Handle the statements that match a given case
 CaseStatement
 	: CASE LiteralExpression ":"
+		-> {"type": "case", "expression": $2, "range": @$};
 	| DEFAULT ":"
+		-> {"type": "default", "expression": $1, "range": @$};
 	;
 
 LoopStatement
 	: WHILE "(" Expression ")" Statement
-		{
-			$$ = yytext;
-		}
+		-> {"type": "while", "expression": $3, "statement": $5, "range": @$};
 	| FOR "(" OptionalExpression ";" OptionalExpression ";" OptionalExpression ")" Statement
-		{
-			$$ = yytext;
-		}
+		-> {"type": "for", "expressions": [$3,$5,$7], "statement": $9, "range": @$};
 	;
 
 Statement
@@ -428,7 +430,6 @@ SourceElement
 SourceElements
 	: SourceElements SourceElement
 		{
-			//for(var key in @2) $2[key]=@2[key];
             $$ = $1.concat($2);
 		}
 	|
