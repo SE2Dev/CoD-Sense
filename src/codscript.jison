@@ -33,8 +33,6 @@ RX_IDENTIFIER \_?[a-zA-Z\-_]\w*
 "#using_animtree"	return 'USING_ANIMTREE'
 "#animtree"			return 'ANIMTREE'
 
-//\%{RX_IDENTIFIER}	return 'ANIM_REFERENCE'
-
 "("			return '('
 ")"			return ')'
 \[\s*\[		return 'FUNC_POINTER_BEGIN'
