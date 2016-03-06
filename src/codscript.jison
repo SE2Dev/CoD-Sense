@@ -16,7 +16,7 @@
 
 /* Lexical Grammar */
 %lex
-RX_STRING_LITERAL \".*?\"|\'.*?\'
+RX_STRING_LITERAL \"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 %%
 	
 \s+						/* skip whitespace */
