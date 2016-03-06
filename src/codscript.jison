@@ -353,9 +353,7 @@ ReturnStatement
 	;
 
 WaitStatement
-	: WAIT NumericLiteral ";"
-		-> {"type": "wait", "expression": $2, "range": @$};
-	| WAIT IDENTIFIER ";"
+	: WAIT Expression ";"
 		-> {"type": "wait", "expression": $2, "range": @$};
 	| WAIT "(" Expression ")" ";"
 		-> {"type": "wait", "expression": $3, "range": @$};
