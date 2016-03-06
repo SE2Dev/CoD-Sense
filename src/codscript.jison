@@ -33,7 +33,7 @@ RX_IDENTIFIER \_?[a-zA-Z\-_]\w*
 "#using_animtree"	return 'USING_ANIMTREE'
 "#animtree"			return 'ANIMTREE'
 
-\%{RX_IDENTIFIER}	return 'ANIM_REFERENCE'
+//\%{RX_IDENTIFIER}	return 'ANIM_REFERENCE'
 
 "("			return '('
 ")"			return ')'
@@ -227,8 +227,12 @@ ReferenceExpression
 		-> {"type": "reference", "file": $1, "name": $3};
 	| "::" IDENTIFIER
 		-> {"type": "reference", "file": "$this", "name": $2};
-	| ANIM_REFERENCE
-		-> {"type": "reference", "file": "$xanim", "name": $1};
+	;
+
+//Used Independently from Normal References
+AnimReferenceExpression
+	: "%" IDENTIFIER
+		-> {"type": "reference", "name": $2};
 	;
 
 MemberExpression
@@ -332,6 +336,7 @@ e
 		-> {"type": "expression", "operator": $1, "right": $2};
 	| e OperatorMid e
 		-> {"type": "expression", "left": $1, "operator": $2, "right": $3};
+	| AnimReferenceExpression
 	| '(' e ')'
 		-> {"type": "expression", "parentheses": true, "expression": $2}; //used for debugging
         /*{
