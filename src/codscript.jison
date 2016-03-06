@@ -17,6 +17,7 @@
 /* Lexical Grammar */
 %lex
 RX_STRING_LITERAL \"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
+RX_IDENTIFIER \_?[a-zA-Z\-_]\w*
 %%
 	
 \s+						/* skip whitespace */
@@ -31,6 +32,8 @@ RX_STRING_LITERAL \"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 "#include"			return 'INCLUDE'
 "#using_animtree"	return 'USING_ANIMTREE'
 "#animtree"			return 'ANIMTREE'
+
+\%{RX_IDENTIFIER}	return 'ANIM_REFERENCE'
 
 "("			return '('
 ")"			return ')'
@@ -94,7 +97,7 @@ RX_STRING_LITERAL \"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 "wait"				return 'WAIT'
 
 (\w+\\)+\w+			return 'FILEPATH'
-_?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
+{RX_IDENTIFIER}		return 'IDENTIFIER'
 
 <<EOF>>				return 'EOF'
 .					return 'INVALID'
@@ -222,8 +225,8 @@ ReferenceExpression
 		-> {"type": "reference", "file": $1, "name": $3};
 	| "::" IDENTIFIER
 		-> {"type": "reference", "file": "$this", "name": $2};
-	| "%" IDENTIFIER
-		-> {"type": "reference", "file": "$xanim", "name": $2};
+	| ANIM_REFERENCE
+		-> {"type": "reference", "file": "$xanim", "name": $1};
 	;
 
 MemberExpression
