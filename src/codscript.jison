@@ -92,7 +92,7 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 "thread"			return 'THREAD'
 "wait"				return 'WAIT'
 
-(\w+[/\\])+\w+		return 'FILEPATH'
+(\w+\\)+\w+			return 'FILEPATH'
 _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
 
 <<EOF>>				return 'EOF'
