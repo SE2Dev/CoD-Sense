@@ -5,6 +5,6 @@
     "main": "./debug/main.js",
     
     "devDependencies": {
-        "jison": "*"
+        "jison": "^0.4.17"
     }
 }
