@@ -1,7 +1,7 @@
 {
 	"name": "cod-sense_server",
 	"description": "CoD-Sense Language Server",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "SE2Dev",
 	"engines": {
 		"node": "*"

@@ -126,17 +126,17 @@ function PerformDocumentAnalysis(uri: string, text: string) {
 
 
 
-function GetElementRange(elem): Range {
+function ElemRange(elemRange): Range {
     let p1: Position =
         {
-            line: elem.first_line - 1,
-            character: elem.first_column
+            line: elemRange.first_line - 1,
+            character: elemRange.first_column
         }
 
     let p2: Position =
         {
-            line: elem.last_line - 1,
-            character: elem.last_column
+            line: elemRange.last_line - 1,
+            character: elemRange.last_column
         }
 
     return { start: p1, end: p2 };
@@ -159,7 +159,7 @@ export function GetDocumentTokensMatchingScope(uri: string, scope: string) {
                 {
                     name: docTree[uri][i].name,
                     kind: SymbolKindEnum[docTree[uri][i].type],
-                    location: { uri: uri, range: GetElementRange(docTree[uri][i]) }
+                    location: { uri: uri, range: ElemRange(docTree[uri][i].range) }
                 };
 
             if (symbols.length == 0)
