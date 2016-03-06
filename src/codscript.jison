@@ -263,6 +263,7 @@ ObjectExpression
 	: IDENTIFIER
 	| FunctionExpression
 	| MemberExpression
+	| "(" ObjectExpression ")"
 	;
 	
 LiteralExpression
