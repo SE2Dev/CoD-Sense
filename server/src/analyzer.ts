@@ -115,7 +115,7 @@ function PerformDocumentAnalysis(uri: string, text: string) {
     try {
         docTree[uri] = parser.parse(text);
     } catch (exception) {
-        console.log("Parse Error:  " + exception.message);
+        console.error("ERROR in '" + StripDirectory(uri) + "'\n" + exception.message);
     }
 
     var endTime = new Date().getTime();
