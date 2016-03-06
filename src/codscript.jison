@@ -221,6 +221,8 @@ ReferenceExpression
 		-> {"type": "reference", "file": $1, "name": $3};
 	| "::" IDENTIFIER
 		-> {"type": "reference", "file": "$this", "name": $2};
+	| "%" IDENTIFIER
+		-> {"type": "reference", "file": "$xanim", "name": $2};
 	;
 
 MemberExpression

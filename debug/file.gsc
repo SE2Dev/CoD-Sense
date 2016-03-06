@@ -19,8 +19,8 @@ test(arg1, arg2)
     "stg"; 
 b = 1+(2+3);
 a = (1,2,3);
-
+a = 4 % 3;
     bla(1,2.3, grame("string"));
-    
+    a = %something;
     return maps\_zombiemode_server_throttle::server_safe_ground_trace_ignore_water( "arg", 14 );
 }
