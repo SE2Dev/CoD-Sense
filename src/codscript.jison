@@ -28,6 +28,9 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 \d+\.(?:\d*)?f?|\.\d+f?	return 'FLOAT_LITERAL'
 \d+						return 'INTEGER_LITERAL'
 
+"#include"			return 'INCLUDE'
+"#using_animtree"	return 'USING_ANIMTREE'
+
 "("			return '('
 ")"			return ')'
 \[\s*\[		return 'FUNC_POINTER_BEGIN'
@@ -73,7 +76,7 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 ";"			return ';'
 "?"			return '?'
 //"@"			return '@'
-//"#"			return '#'
+"#"			return '#'
 
 "if"				return 'IF'
 "else"				return 'ELSE'
@@ -87,9 +90,6 @@ RX_STRING_LITERAL \".*?\"|\'.*?\'
 
 "thread"			return 'THREAD'
 "wait"				return 'WAIT'
-
-"#include"			return 'INCLUDE'
-"#using_animtree"	return 'USING_ANIMTREE'
 
 (\w+[/\\])+\w+		return 'FILEPATH'
 _?[a-zA-Z\-_]\w*	return 'IDENTIFIER'
@@ -127,6 +127,10 @@ StringLiteral
 			$$ = $1.substring(1, $1.length-1);
 		}
 	| "&" STRING_LITERAL
+		{
+			$$ = $1.substring(2, $1.length-1);
+		}
+	| "#" STRING_LITERAL
 		{
 			$$ = $1.substring(2, $1.length-1);
 		}
