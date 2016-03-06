@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        "node_modules/": true,
+        "src/parser/.vscode": true,
+        "src/parser/debug": true,
+        "src/parser/.gitignore": true,
+        "src/parser/package.json": true
+    }
+}

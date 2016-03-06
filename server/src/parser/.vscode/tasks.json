@@ -1,0 +1,19 @@
+{
+	"version": "0.1.0",
+	"command": "${workspaceRoot}/node_modules/.bin/jison",
+	"isShellCommand": true,
+	"showOutput": "always",
+	"args": ["${workspaceRoot}/src/codscript.jison"]
+}
+
+
+//Alternative NPM Based build task (somewhat slower than the above task)
+/*
+{
+	"version": "0.1.0",
+	"command": "npm",
+	"isShellCommand": true,
+	"showOutput": "always",
+	"args": ["run", "compile"]
+}
+*/

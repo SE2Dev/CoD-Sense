@@ -33,23 +33,22 @@ export function analyzeNewDocument(uri: string, contents?: string) {
     analyzeDocument(uri, contents);
 }
 
-export function analyzeDocument(uri: string, contents?: string): Thenable<void> {
-    return new Promise<void>((resolve, reject) => {
+export function analyzeDocument(uri: string, contents?: string): Thenable<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
         if (!contents) {
-            console.log("You didnt send the file contents - attempting to get them automatically");
+            console.log("You didn't send the file contents - attempting to get them automatically");
             connection.sendRequest(CoDSenseContentRequest.type, uri).then
                 (
-                function(recievedValue) //Resolved
-                {
-                    console.log(`Receive: Contents for ${uri} with length ${recievedValue.length}`);
-                    PerformDocumentAnalysis(uri, recievedValue);
-                    resolve();
-                },
-                function(rejectReason) //Rejected
-                {
-                    console.error("Rejected: '" + uri + "' " + rejectReason);
-                    reject();
-                }
+                    function(receivedValue) //Resolved
+                    {
+                        console.log(`Receive: Contents for ${uri} with length ${receivedValue.length}`);
+                        resolve(PerformDocumentAnalysis(uri, receivedValue));
+                    },
+                    function(rejectReason) //Rejected
+                    {
+                        console.error("Rejected: '" + uri + "' " + rejectReason);
+                        reject(false);
+                    }
                 )
         }
         
@@ -59,10 +58,10 @@ export function analyzeDocument(uri: string, contents?: string): Thenable<void> 
         //      2: Contents have been recieved via the request
         //
         
-        PerformDocumentAnalysis(uri, contents);
+        let result = PerformDocumentAnalysis(uri, contents);
         
         //Theoretically if you removed this the function wouldn't exit because the promise was never resolved
-        resolve();
+        resolve(result);
     });
 }
 
@@ -101,11 +100,11 @@ export function analyzeDocumentSync(path: string, contents?: string) {
 
     if (contents.length) {
         let uri = PathToURI(path);
-        PerformDocumentAnalysis(uri, contents);
+        return PerformDocumentAnalysis(uri, contents);
     }
+    
+    return false;
 }
-
-
 
 function PerformDocumentAnalysis(uri: string, text: string) {
     var startTime = new Date().getTime();
@@ -115,14 +114,14 @@ function PerformDocumentAnalysis(uri: string, text: string) {
     try {
         docTree[uri] = parser.parse(text);
     } catch (exception) {
-        console.log("Parse Error:  " + exception.message);
+        console.error("Error in '" + StripDirectory(uri) + "':\n" + exception.message);
+        return false;
     }
 
     var endTime = new Date().getTime();
     console.log("Parsed " + StripDirectory(uri) + " in " + (endTime - startTime) + "ms");
+    return true;
 }
-
-
 
 
 

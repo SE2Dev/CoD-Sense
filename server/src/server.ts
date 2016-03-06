@@ -1,5 +1,8 @@
 'use strict';
 
+import * as server from "vscode-languageserver"
+import {StripDirectory} from './util/path';
+
 import {
      IConnection, createConnection,
      IPCMessageReader, IPCMessageWriter,
@@ -8,6 +11,8 @@ import {
      SymbolInformation, SymbolKind,
      Location, Range, Position
 } from "vscode-languageserver"
+
+
 
 export var connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 export var console = connection.console;
@@ -37,11 +42,11 @@ import * as ast from "./analyzer"
 connection.onDidChangeTextDocument((params: DidChangeTextDocumentParams) =>
 {
     params.contentChanges[0].range
-   console.log("Edit:");
+    console.log("Edit:");
     params.contentChanges.forEach((v) =>
-   {
+    {
        console.log(`"${v.text}" [${v.text.length}] from (${v.range.start.line}, ${v.range.start.character}) to (${v.range.end.line}, ${v.range.end.character})`)
-   });
+    });
    
 });
 
@@ -51,9 +56,16 @@ connection.onDidChangeTextDocument((params: DidChangeTextDocumentParams) =>
 //
 connection.onDidOpenTextDocument((params) => 
 {
-    ast.analyzeDocument(params.uri, params.text).then
-    (
-        () => { console.log(`Analyzed: ${params.uri}`) }
+    ast.analyzeDocument(params.uri, params.text).then(
+        (result) =>
+        {
+            if(result)
+                console.log(`Analyzed: ${params.uri}`);
+            else
+            {
+                connection.window.showErrorMessage(`Could not analyze '${StripDirectory(params.uri)}'`);
+            }
+        }
     );
 });
 
