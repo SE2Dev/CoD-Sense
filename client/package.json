@@ -4,6 +4,14 @@
 	"description": "Syntax highlighting and Intellisense support for Call of Duty scripts",
 	"version": "0.0.2",
 	"publisher": "SE2Dev",
+	"homepage": "https://github.com/SE2Dev/CoD-Sense/blob/development/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SE2Dev/CoD-Sense"
+	},
+	"bugs": {
+		"url": "https://github.com/SE2Dev/CoD-Sense/issues"
+	},
 	"engines": {
 		"vscode": "^0.10.6"
 	},
