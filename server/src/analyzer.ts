@@ -11,6 +11,8 @@ import {
 import {StripDirectory} from './util/path';
 import {PathToURI} from "./util/uri"
 
+import * as branch from "./ast/branch"
+
 var parser = require("./parser/codscript");
 var fs = require('fs');
 
@@ -126,26 +128,25 @@ function PerformDocumentAnalysis(uri: string, text: string) {
 
 
 function GetElementRange(elem): Range {
+    let range;
+    if(elem.range != undefined)
+        range = elem.range
+    else
+        range = elem;
+        
     let p1: Position =
         {
-            line: elem.first_line - 1,
-            character: elem.first_column
+            line: range.first_line - 1,
+            character: range.first_column
         }
 
     let p2: Position =
         {
-            line: elem.last_line - 1,
-            character: elem.last_column
+            line: range.last_line - 1,
+            character: range.last_column
         }
 
     return { start: p1, end: p2 };
-}
-
-var SymbolKindEnum =
-{
-    "include":          SymbolKind.File,
-    "using_animtree":   SymbolKind.String,
-    "function":         SymbolKind.Function,
 }
 
 export function GetDocumentTokensMatchingScope(uri: string, scope: string) {
@@ -153,13 +154,37 @@ export function GetDocumentTokensMatchingScope(uri: string, scope: string) {
     var symbols = new Array<SymbolInformation>();
 
     for (var i = 0; i < docTree[uri].length; i++) {
-        if (docTree[uri][i].type && docTree[uri][i].name) {
-            let symbol: SymbolInformation =
-                {
-                    name: docTree[uri][i].name,
-                    kind: SymbolKindEnum[docTree[uri][i].type],
-                    location: { uri: uri, range: GetElementRange(docTree[uri][i]) }
-                };
+        if (docTree[uri][i].type && branch.SymbolKindMap[docTree[uri][i].type] != undefined) {
+            let symbol: SymbolInformation;
+            
+            switch(docTree[uri][i].type)
+            {
+                case "function":
+                    symbol =
+                    {
+                        name: docTree[uri][i].name,
+                        kind: branch.SymbolKindMap[docTree[uri][i].type],
+                        location: { uri: uri, range: GetElementRange(docTree[uri][i]) }
+                    };
+                    break;
+                case "include":
+                    symbol =
+                    {
+                        name: docTree[uri][i].arg,
+                        kind: branch.SymbolKindMap[docTree[uri][i].type],
+                        location: { uri: uri, range: GetElementRange(docTree[uri][i]) }
+                    };
+                    break;
+                case "using_animtree":
+                    symbol =
+                    {
+                        name: docTree[uri][i].arg,
+                        kind: branch.SymbolKindMap[docTree[uri][i].type],
+                        location: { uri: uri, range: GetElementRange(docTree[uri][i]) }
+                    };
+                    break;
+            }
+            
 
             if (symbols.length == 0)
                 symbols = [symbol];
