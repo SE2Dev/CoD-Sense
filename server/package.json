@@ -15,8 +15,8 @@
 		"typescript": "^1.7.5"
 	},
 	"scripts": {
-        "compile-parser": "jison src/parser/src/codscript.jison -o src/parser/codscript.js",
-        "install-parser": "copyfiles -u 2 ./src/parser/codscript.js ../client/server/parser/",
+        "compile-parser": "jison ../parser/src/codscript.jison -o src/parser/codscript.js && tsc -d ../parser/src/types.ts",
+        "install-parser": "copyfiles -u 2 ./src/parser/codscript.js ../client/server/parser/ && copyfiles -u 3 ../parser/src/*.ts ./src/parser/",
             
         "postinstall": "npm run compile-parser && npm run install-parser",
         "compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
