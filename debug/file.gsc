@@ -1,3 +1,8 @@
+/*
+    This is a test file that is used (by /debug/main.js) to test specific cases, etc. for the parser
+*/
+
+
 #include maps\_vehicle;
 #include maps\_zombiemode_utility;
 
@@ -8,7 +13,7 @@ main(ch, r)
 	self thread print( "str" + val );
 
 
-"blab";
+    "blab";
 }
 
 test(arg1, arg2)
@@ -17,9 +22,11 @@ test(arg1, arg2)
     44; // numeric statements
     4.3;
     "stg"; 
-b = 1+(2+3);
-a = (1,2,3);
-a = 4 % 3;
+    
+    b = 1+(2+3);
+    a = (1,2,3);
+    a = 4 % 3;
+    
     bla(1,2.3, grame("string"));
     a = %something;
     return maps\_zombiemode_server_throttle::server_safe_ground_trace_ignore_water( "arg", 14 );

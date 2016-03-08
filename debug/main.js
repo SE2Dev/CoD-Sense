@@ -1,4 +1,4 @@
-var parser = require("../codscript");
+var parser = require("../out/codscript");
 var fs = require("fs");
 
 var source = fs.readFileSync("file.gsc", 'utf8');
@@ -10,5 +10,5 @@ try {
     //fs.writeFileSync("out.ast", JSON.stringify(ast), "utf8");
 }
 catch (exception) {
-    console.log("Parse Error:  " + exception.message);
+    console.error("Parse Error:  " + exception.message);
 }
