@@ -127,6 +127,7 @@ function PerformDocumentAnalysis(uri: string, text: string) {
 
 
 
+
 function GetElementRange(elem): Range {
     let range;
     if(elem.range != undefined)
@@ -184,7 +185,6 @@ export function GetDocumentTokensMatchingScope(uri: string, scope: string) {
                     };
                     break;
             }
-            
 
             if (symbols.length == 0)
                 symbols = [symbol];

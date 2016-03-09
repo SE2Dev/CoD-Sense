@@ -15,6 +15,8 @@
 */
 
 /* Lexical Grammar */
+
+
 %lex
 RX_STRING_LITERAL \"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 RX_IDENTIFIER \_?[a-zA-Z\-_]\w*
@@ -124,6 +126,17 @@ RX_IDENTIFIER \_?[a-zA-Z\-_]\w*
 %%
 /* Language Grammar */
 
+//
+// For any of the following rules (in order to prevent many unneccesary type strings for basic data types)
+// The member of the parent should have a identifier that describes the member type
+// For example in function.file the file property will always be a FILEPATH with the standard FILEPATH structure
+// This is the same for IDENTIFIERS, etc.
+//
+// The type prperty is only needed for these members if their presense isn't absolute
+// as is the case in a rule such as:
+//		MyRule: IDENTIFIER | OtherRule {...};
+//
+
 StringLiteral
 	: STRING_LITERAL
 		{
@@ -146,12 +159,12 @@ NumericLiteral
 
 IncludeDirective:
 	INCLUDE FILEPATH ";"
-		-> {"type": "include", "arg": $2, "range": @$}
+		-> {"type": "include", "file": {"name": $2, "range": @2}, "range": @$}
 	;
 
 AnimtreeDirective:
 	USING_ANIMTREE "(" StringLiteral ")" ";"
-		-> {"type": "animtree", "arg": $3, "range": @$}
+		-> {"type": "animtree", "arg": {"name": $3, "range": @3}, "range": @$}
 	;
 
 Block
@@ -162,11 +175,11 @@ Block
 FormalParameterList
 	: IDENTIFIER
 		{
-			$$ = [$1];
+			$$ = [{"type": "identifier", "identifier": $1, "range": @1}];
 		}
 	| FormalParameterList "," IDENTIFIER
 		{
-			$$ = $1.concat($3);
+			$$ = $1.concat([{"type": "identifier", "identifier": $3, "range": @3}]);
 		}
 	|
 		{
@@ -191,24 +204,24 @@ FunctionParameterList
 
 FunctionCall
 	: IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "call", "name": $1, "params": $3};
+		-> {"type": "call", "modifier": [], "identifier": {"name": $1, "range": @1}, "params": $3};
 	| THREAD IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "thread", "name": $1, "params": $4};
+		-> {"type": "call", "modifier": ["thread"], "identifier": {"name": $2, "range": @2}, "params": $4};
 	| PointerExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "name": $1, "params": $3};
+		-> {"type": "call", "modifier": ["pointer"], "identifier": $1, "params": $3};
 	| THREAD PointerExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "name": $1, "params": $3};
+		-> {"type": "call", "modifier": ["pointer", "thread"], "identifier": $1, "params": $3};
 	| ReferenceExpression "(" FunctionParameterList ")"
-		-> {"type": "call_external", "file": $1.file, "name": $1.name, "params": $3};
+		-> {"type": "call", "modifier": ["reference"], "file": $1.file, "identifier": $1.identifier, "params": $3};
 	| THREAD ReferenceExpression "(" FunctionParameterList ")"
-		-> {"type": "call_external", "file": $2.file, "name": $2.name, "params": $4};
+		-> {"type": "call", "modifier": ["reference", "thread"], "file": $2.file, "identifier": $2.identifier, "params": $4};
 	;
 
 FunctionExpression
 	: ObjectExpression FunctionCall
 		{
 			$$ = $2;
-			$$.caller = $1;	
+			$$.self = $1;	
 		}
 	| FunctionCall
 	;
@@ -222,20 +235,24 @@ PointerExpression
 
 ReferenceExpression
 	: FILEPATH "::" IDENTIFIER
-		-> {"type": "reference", "file": $1, "name": $3};
+		-> {"type": "reference", "file": {"name": $1, "range": @1}, "identifier": {"name": $3, "range": @3}};
 	| "::" IDENTIFIER
-		-> {"type": "reference", "file": "$this", "name": $2};
+		-> {"type": "reference", "file": {"name": ""}, "identifier": {"name": $2, "range": @2}};
 	;
 
 //Used Independently from Normal References
+//Structure is the same as an IDENTIFIER
 AnimReferenceExpression
 	: "%" IDENTIFIER
-		-> {"type": "reference", "name": $2};
+		-> {"type": "reference", "name": $1+$2, "range": @$};
 	;
 
 MemberExpression
 	: ObjectExpression "[" Expression "]"
-		-> {"type": "array", "expression": $1, "member": $3}
+		//-> {"type": "array", "expression": $1, "member": $3}
+		{
+			$$ = yy;
+		}
 	| ObjectExpression "." ObjectExpression
 		-> {"type": "property", "expression": $1, "member": $3}
 	| "[" "]"
@@ -259,9 +276,11 @@ ListExpression
 
 ObjectExpression
 	: IDENTIFIER
+		-> {"type": "identifier", "name": $1, "range": @1}
 	| FunctionExpression
 	| MemberExpression
 	| "(" ObjectExpression ")"
+		{$$ = $2}
 	;
 	
 LiteralExpression
@@ -337,10 +356,10 @@ e
 		-> {"type": "expression", "left": $1, "operator": $2, "right": $3};
 	| AnimReferenceExpression
 	| '(' e ')'
-		-> {"type": "expression", "parentheses": true, "expression": $2}; //used for debugging
-        /*{
+		//-> {"type": "expression", "parentheses": true, "expression": $2}; //used for debugging
+        {
 			$$ = $2;
-		}*/
+		}
 	;
 
 Expression
@@ -429,7 +448,7 @@ StatementList
 
 FunctionDeclaration:
 	IDENTIFIER "(" FormalParameterList ")" "{" StatementList "}"
-		-> {"type": "function", "name": $1, "params": $3, "range": @$, "statements": $6};
+		-> {"type": "function", "identifier": {"name": $1, "range": @1}, "params": $3, "range": @$, "statements": $6};
 	;
 
 SourceElement
@@ -454,3 +473,4 @@ Program:
 	{
 		return $$;
 	};
+	
