@@ -1,3 +1,5 @@
 node_modules
-src/ecmascript.jison
-codscript.js
+*.d.ts
+/src/types.js
+/out
+npm-debug.log
