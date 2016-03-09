@@ -65,7 +65,7 @@ connection.onDidChangeConfiguration((params) => {
         (
             function(files) //Resolved
             {
-                ast.analyzeWorkspace(files);
+                //ast.analyzeWorkspace(files);
             },
             function(rejectReason) //Rejected
             {
