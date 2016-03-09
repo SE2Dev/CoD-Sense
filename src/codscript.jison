@@ -162,11 +162,11 @@ Block
 FormalParameterList
 	: IDENTIFIER
 		{
-			$$ = [$1];
+			$$ = [{"type": "identifier", "name": $1, "range": @1}];
 		}
 	| FormalParameterList "," IDENTIFIER
 		{
-			$$ = $1.concat($3);
+			$$ = $1.concat([{"type": "identifier", "name": $3, "range": @3}]);
 		}
 	|
 		{
