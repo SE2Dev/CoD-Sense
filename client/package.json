@@ -44,19 +44,32 @@
 			"type": "object",
 			"title": "Example configuration",
 			"properties": {
-				"codsense.debugProperty": {
+				"cod-sense.libs": {
+					"type": "object",
+					"description": "List of script libraries (such as game raw directories) in the format: {\n'Name1': 'rawPath1', 'Name2': 'rawPath2', ...\n}",
+					"string-map": {
+						"type": "object",
+						"additionalProperties": false,
+						"patternProperties": {
+							".+": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"cod-sense.active_lib": {
 					"type": "string",
-					"default": "test value",
-					"description": "A debug string"
+					"description": "The name of the user defined library that is to be used for include's etc. (Must match a key in cod-sense.libs)"
 				}
 			}
 		}
 	},
+	
 	"scripts": {
 		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
 		"compileClient": "node ./node_modules/vscode/bin/compile -watch -p ./",
 		"compileAlt": "cd ../server && npm run compile && cd ../client && npm run compileClient",
-        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
 		"postinstall": "node ./node_modules/vscode/bin/install"
 	},
 	"dependencies": {

@@ -28,10 +28,10 @@ export function activate(context: vscode.ExtensionContext)
 	let serverOptions: ServerOptions = { run: releaseModule, debug: debugModule };
 	
 	// Syncronize the "codsense" configuration section to the language server
-	let syncOptions: SynchronizeOptions = {	configurationSection: "codsense" };
+	let syncOptions: SynchronizeOptions = {	configurationSection: "cod-sense" };
 	let clientOptions: LanguageClientOptions = {documentSelector: ["gsc"], synchronize: syncOptions};
 	
-	let server = new LanguageClient("codsense", serverOptions, clientOptions);
+	let server = new LanguageClient("cod-sense", serverOptions, clientOptions);
 	var disposable = server.start();
 	context.subscriptions.push(disposable);
 	
