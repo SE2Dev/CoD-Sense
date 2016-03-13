@@ -8,14 +8,17 @@ import {
 	RequestType
 } from 'vscode-languageclient';
 
-import {CoDSenseContentRequest, CoDSenseWorkspaceUrisRequest} from './request'
+import * as request from './request'
+
+export var server: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext)
 {
 	console.log("Init: 'CoD-Sense'");
 	
 	// Register the built-in function definitions
-	vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider())
+	//vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider())
+	vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider(), "\\")
 	
 	let module = context.asAbsolutePath("server/server.js");
 	
@@ -31,35 +34,12 @@ export function activate(context: vscode.ExtensionContext)
 	let syncOptions: SynchronizeOptions = {	configurationSection: "cod-sense" };
 	let clientOptions: LanguageClientOptions = {documentSelector: ["gsc"], synchronize: syncOptions};
 	
-	let server = new LanguageClient("cod-sense", serverOptions, clientOptions);
+	server = new LanguageClient("cod-sense", serverOptions, clientOptions);
 	var disposable = server.start();
 	context.subscriptions.push(disposable);
 	
-	server.onRequest(CoDSenseContentRequest.type, (uri_string: string) => {
-		let uri = vscode.Uri.parse(uri_string);
-		return vscode.workspace.openTextDocument(uri).then(
-			doc => {
-				return doc.getText();
-			}, error => {
-				return Promise.reject(error);
-			});
-	});
-
-	server.onRequest(CoDSenseWorkspaceUrisRequest.type, (languageId: string) => {
-		let include = "**/*." + languageId;
-		return vscode.workspace.findFiles(include, "").then(
-			files => {
-				var out = new Array<string>();
-				for(var i = 0; i < files.length; i++)
-				{
-					out.push(files[i].fsPath);
-				}
-				
-				return out;
-			}, error => {
-				return Promise.reject(error);
-			});
-	});
+	server.onRequest(request.CoDSenseContentRequest.type, request.HandleContentRequest);
+	server.onRequest(request.CoDSenseWorkspaceUrisRequest.type, request.HandleWorkspaceUrisRequest);
 }
 
 export function deactivate()

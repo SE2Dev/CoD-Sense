@@ -86,15 +86,15 @@ function ValidatePath(path: string): VirtualPathType {
 }
 
 /**
- * Resolve an absolute path from a virtual path - returns null if none could be resolved
+ * Resolve an absolute file path from a virtual path - returns null if none could be resolved
  */
-export function ResolvePath(path: string) {
+export function ResolveFilePath(path: string) {
 	for (var i = 0; i < targetPaths.length; i++) {
 		try {
 			let absPath = targetPaths[i] + path;
 			let stat = fs.lstatSync(absPath);
 			
-			if (stat.isFile() || stat.isDirectory())
+			if (stat.isFile())
 				return absPath;
 		}
 		catch (err) {
@@ -102,6 +102,30 @@ export function ResolvePath(path: string) {
 		}
 	}
 
-	console.warn(`VFS: Couldn't resolve virtual path: '${path}'`);
+	console.warn(`VFS: Couldn't resolve virtual file path: '${path}'`);
 	return null;
+}
+
+/**
+ * Resolve the contents of a virtual directory
+ */
+export function ResolveDirectoryContents(path: string): string[] {
+	let contents: string[] = [];
+	
+	for (var i = 0; i < targetPaths.length; i++) {
+		try {
+			let absPath = targetPaths[i] + path;
+			let stat = fs.lstatSync(absPath);
+			
+			if(stat.isDirectory())
+				contents = contents.concat(fs.readdirSync(absPath).filter(function(val) {
+					return contents.indexOf(val) == -1;
+				}));
+		}
+		catch (err) {
+			continue;
+		}
+	}
+
+	return contents;
 }

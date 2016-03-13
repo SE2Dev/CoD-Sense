@@ -43,9 +43,15 @@ import {DidChangeConfigurationHandler} from "./features/configurationHandler"
 
 connection.onDidOpenTextDocument(DidOpenTextDocumentHandler);
 connection.onDidChangeTextDocument(DidChangeTextDocumentHandler);
+
 connection.onDidChangeConfiguration(DidChangeConfigurationHandler);
 
 connection.onDocumentSymbol(provideDocumentSymbols);
 connection.onWorkspaceSymbol(provideWorkspaceSymbols);
+
+import {CoDSenseResolveDirectoryRequest} from "./request"
+connection.onRequest(CoDSenseResolveDirectoryRequest.type, (path: string) => {
+    return Promise.resolve(vfs.ResolveDirectoryContents(path));
+});
 
 connection.listen();
