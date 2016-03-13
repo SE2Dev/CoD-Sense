@@ -15,6 +15,8 @@ export var connection: IConnection = createConnection(new IPCMessageReader(proce
 export var console = connection.console;
 console.log("Connect: 'CoD-Sense Server'");
 
+import * as vfs from "./util/vfs";
+
 //
 // The server gets re-initialized every time the workspace changes and the extension is activated
 //
@@ -29,6 +31,8 @@ connection.onInitialize((params): InitializeResult => {
             workspaceSymbolProvider: true,
             completionProvider: { triggerCharacters: ["."] }
         }
+
+    vfs.InitializeWorkspace(params.rootPath);
 
     return { capabilities: serverFeatures };
 });

@@ -8,6 +8,7 @@ import {    DidChangeConfigurationParams,
 import {CoDSenseWorkspaceUrisRequest} from '../request'
 import * as ast from "../analyzer"
 
+import * as vfs from "../util/vfs"
 import fs = require('fs');
 
 export interface ISettings
@@ -27,6 +28,7 @@ export var config: IConfiguration = new IConfiguration;
 
 export function DidChangeConfigurationHandler(params: DidChangeConfigurationParams): void
 {
+    vss.WorkspaceChange
     config.settings = params.settings["cod-sense"];
     console.warn(JSON.stringify(config));
     if(config.settings.active_lib != "" && config.settings.libs[config.settings.active_lib])
@@ -48,4 +50,7 @@ export function DidChangeConfigurationHandler(params: DidChangeConfigurationPara
             config.libraryPath = "";
         }           
     }
+    
+    if(config.libraryPath != "")
+        vfs.AddPath(config.libraryPath);
 }
