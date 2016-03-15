@@ -5,6 +5,8 @@ import * as funcDefs from '../defs/defs'
 import {server} from "../extension"
 import {CoDSenseResolveDirectoryRequest} from "../request"
 
+import Path = require("path");
+
 var rxIncludeDirective_Part = /include\s+(\w[\w\\]*\\)/;
 
 export class completionItemProvider
@@ -27,7 +29,7 @@ export class completionItemProvider
         }
     }
     
-    provideCompletionItems(document: vscode.TextDocument, position, token): vscode.CompletionItem[]
+    provideCompletionItems(document: vscode.TextDocument, position, token): Thenable<vscode.CompletionItem[]>
 	{
         if (document.getText()[document.offsetAt(position) - 1] == "\\") {
             let r = rxIncludeDirective_Part.exec(document.lineAt(position).text);
@@ -41,30 +43,51 @@ export class completionItemProvider
 			(
 				function(files) //Resolved
 				{
-					console.log("RESOLVE");
+					//console.log("RESOLVE");
 					let completionItems: vscode.CompletionItem[] = [];
 					
 					for(var i = 0; i < files.length; i++)
 					{
-						let completionItem = new vscode.CompletionItem(files[i]);
-						completionItem.kind = vscode.CompletionItemKind.File;
+						let extension = Path.extname(files[i]);
+						let file = Path.basename(files[i], extension)
 						
-						completionItems.push(completionItem);
+						switch(extension.toUpperCase())
+						{
+							case ".GSC":
+							case ".CSC":
+							{
+								let completionItem = new vscode.CompletionItem(file);
+								completionItem.kind = vscode.CompletionItemKind.File;
+								completionItem.detail = files[i];
+						
+								completionItems.push(completionItem);
+								continue;
+							}
+							case "":
+							{
+								let completionItem = new vscode.CompletionItem(file);
+								completionItem.kind = vscode.CompletionItemKind.File;
+								completionItem.detail = file + "\\";
+						
+								completionItems.push(completionItem);
+								continue;
+							}
+							default:
+								continue;
+						}
 					}
 					
-					console.log(completionItems);
+					//console.log(completionItems);
 					return completionItems;
 				},
 
 				function(rejectReason) //Rejected
 				{
-					console.error("Rejected!" + rejectReason);
+					console.error("REJECTED" + rejectReason);
 					let completionItems: vscode.CompletionItem[] = [];
 					return completionItems;
 				}
 			);
-        }
-        //console.log(c);
-        
+        }      
     }
 }
