@@ -249,10 +249,7 @@ AnimReferenceExpression
 
 MemberExpression
 	: ObjectExpression "[" Expression "]"
-		//-> {"type": "array", "expression": $1, "member": $3}
-		{
-			$$ = yy;
-		}
+		-> {"type": "array", "expression": $1, "member": $3}
 	| ObjectExpression "." ObjectExpression
 		-> {"type": "property", "expression": $1, "member": $3}
 	| "[" "]"
