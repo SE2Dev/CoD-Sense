@@ -159,12 +159,12 @@ NumericLiteral
 
 IncludeDirective:
 	INCLUDE FILEPATH ";"
-		-> {"type": "include", "file": {"name": $2, "range": @2}, "range": @$}
+		-> {"type": "include", "children": {"file":{"name": $2, "range": @2}}, "range": @$}
 	;
 
 AnimtreeDirective:
 	USING_ANIMTREE "(" StringLiteral ")" ";"
-		-> {"type": "animtree", "arg": {"name": $3, "range": @3}, "range": @$}
+		-> {"type": "animtree", "children": {"arg": {"name": $3, "range": @3}}, "range": @$}
 	;
 
 Block
@@ -445,7 +445,16 @@ StatementList
 
 FunctionDeclaration:
 	IDENTIFIER "(" FormalParameterList ")" "{" StatementList "}"
-		-> {"type": "function", "identifier": {"name": $1, "range": @1}, "params": $3, "range": @$, "statements": $6};
+		{ $$ =
+			{	"type": "function",
+				"range": @$,
+				"children": {
+					"identifier": {"name": $1, "range": @1},
+					"params": {"range": @3, "children": $3},
+					"statements": {"range": @6, "children": $6}
+				}
+			};
+		}
 	;
 
 SourceElement
