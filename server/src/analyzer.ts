@@ -3,31 +3,26 @@
 import {connection, console} from './server'
 import {CoDSenseContentRequest} from './request'
 
+import {PathToURI} from "./util/uri"
+
+import * as branch from "./ast/branch"
+import * as cache from "./ast/cache"
+
 import {
     SymbolInformation, SymbolKind,
     Location, Range, Position
 } from "vscode-languageserver"
 
-import {StripDirectory} from './util/path';
-import {PathToURI} from "./util/uri"
+import Path = require("path");
+import fs = require("fs");
 
 var parser = require("./parser/codscript");
-var fs = require('fs');
 
-var docTree = {};
 
 console.log("Init: Analyzer");
 
-export function isCached(uri: string) {
-    return docTree[uri] != undefined;
-}
-
-export function remove(uri: string) {
-    delete docTree[uri];
-}
-
 export function analyzeNewDocument(uri: string, contents?: string) {
-    if (isCached(uri))
+    if (cache.IsCached(uri))
         return;
 
     analyzeDocument(uri, contents);
@@ -36,17 +31,17 @@ export function analyzeNewDocument(uri: string, contents?: string) {
 export function analyzeDocument(uri: string, contents?: string): Thenable<boolean> {
     return new Promise<boolean>((resolve, reject) => {
         if (!contents) {
-            console.log("You didn't send the file contents - attempting to get them automatically");
+            console.log(`REQUEST: Contents for ${Path.basename(uri)}`);
             connection.sendRequest(CoDSenseContentRequest.type, uri).then
                 (
                     function(receivedValue) //Resolved
                     {
-                        console.log(`Receive: Contents for ${uri} with length ${receivedValue.length}`);
+                        console.log(`RESOLVE: Contents for ${Path.basename(uri)} - Length: ${receivedValue.length}`);
                         resolve(PerformDocumentAnalysis(uri, receivedValue));
                     },
                     function(rejectReason) //Rejected
                     {
-                        console.error("Rejected: '" + uri + "' " + rejectReason);
+                        console.log(`REJECT: Contents for ${Path.basename(uri)}: ${rejectReason}`);
                         reject(false);
                     }
                 )
@@ -57,7 +52,6 @@ export function analyzeDocument(uri: string, contents?: string): Thenable<boolea
         //      1: Contents were provided via an argument
         //      2: Contents have been recieved via the request
         //
-        
         let result = PerformDocumentAnalysis(uri, contents);
         
         //Theoretically if you removed this the function wouldn't exit because the promise was never resolved
@@ -65,6 +59,7 @@ export function analyzeDocument(uri: string, contents?: string): Thenable<boolea
     });
 }
 
+//Deprecated
 var gfiles;
 function executeLoop(index) {
     analyzeDocumentSync(gfiles[index]);
@@ -72,6 +67,7 @@ function executeLoop(index) {
         setTimeout(executeLoop, 1000, index);
 };
 
+//Deprecated
 export function analyzeWorkspace(files: string[]): Thenable<void> {
     return new Promise<void>((resolve, reject) => {
         var startTime = new Date().getTime();
@@ -102,93 +98,22 @@ export function analyzeDocumentSync(path: string, contents?: string) {
         let uri = PathToURI(path);
         return PerformDocumentAnalysis(uri, contents);
     }
-    
+
     return false;
 }
 
 function PerformDocumentAnalysis(uri: string, text: string) {
     var startTime = new Date().getTime();
 
-    docTree[uri] = {};
-
     try {
-        docTree[uri] = parser.parse(text);
-    } catch (exception) {
-        console.error("Error in '" + StripDirectory(uri) + "':\n" + exception.message);
+        cache.Add(uri, parser.parse(text));
+    } catch (err) {
+        console.error(`ERROR: Could not parse '${Path.basename(uri)}'`);
+        console.error(err.message);
         return false;
     }
 
     var endTime = new Date().getTime();
-    console.log("Parsed " + StripDirectory(uri) + " in " + (endTime - startTime) + "ms");
+    console.log(`PARSED: ${Path.basename(uri)} in ${endTime - startTime} ms`);
     return true;
-}
-
-
-
-function GetElementRange(elem): Range {
-    let p1: Position =
-        {
-            line: elem.first_line - 1,
-            character: elem.first_column
-        }
-
-    let p2: Position =
-        {
-            line: elem.last_line - 1,
-            character: elem.last_column
-        }
-
-    return { start: p1, end: p2 };
-}
-
-var SymbolKindEnum =
-{
-    "include":          SymbolKind.File,
-    "using_animtree":   SymbolKind.String,
-    "function":         SymbolKind.Function,
-}
-
-export function GetDocumentTokensMatchingScope(uri: string, scope: string) {
-    var startTime = new Date().getTime();
-    var symbols = new Array<SymbolInformation>();
-
-    for (var i = 0; i < docTree[uri].length; i++) {
-        if (docTree[uri][i].type && docTree[uri][i].name) {
-            let symbol: SymbolInformation =
-                {
-                    name: docTree[uri][i].name,
-                    kind: SymbolKindEnum[docTree[uri][i].type],
-                    location: { uri: uri, range: GetElementRange(docTree[uri][i]) }
-                };
-
-            if (symbols.length == 0)
-                symbols = [symbol];
-            else
-                symbols.push(symbol);
-        }
-    }
-
-    var endTime = new Date().getTime();
-    console.log("Found " + symbols.length + " Symbols in " + (endTime - startTime) + "ms");
-
-    return symbols;
-}
-
-export function GetWorkspaceTokensMatchingScope(scope: string) {
-    var out: SymbolInformation[];
-
-    var i = 0;
-    for (var uri in docTree) {
-        if (i == 0) {
-            out = GetDocumentTokensMatchingScope(uri, scope);
-        }
-        else {
-            var docSymbols = GetDocumentTokensMatchingScope(uri, scope);
-            out = out.concat(docSymbols);
-        }
-
-        i++;
-    }
-
-    return out;
 }

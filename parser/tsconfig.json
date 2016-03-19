@@ -1,17 +1,13 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es5",
+		"target": "es6",
 		"outDir": "out",
 		"noLib": true,
 		"sourceMap": true,
         "rootDir": "."
 	},
-	"exclude": [
-		"node_modules",
-		"server",
-		"src/defs/.vscode",
-		"src/defs/build",
-		"src/defs/raw"
-	]
+	"files": [
+        "src/types,ts"
+    ]
 }

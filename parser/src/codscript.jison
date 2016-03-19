@@ -15,6 +15,8 @@
 */
 
 /* Lexical Grammar */
+
+
 %lex
 RX_STRING_LITERAL \"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 RX_IDENTIFIER \_?[a-zA-Z\-_]\w*
@@ -124,6 +126,17 @@ RX_IDENTIFIER \_?[a-zA-Z\-_]\w*
 %%
 /* Language Grammar */
 
+//
+// For any of the following rules (in order to prevent many unneccesary type strings for basic data types)
+// The member of the parent should have a identifier that describes the member type
+// For example in function.file the file property will always be a FILEPATH with the standard FILEPATH structure
+// This is the same for IDENTIFIERS, etc.
+//
+// The type prperty is only needed for these members if their presense isn't absolute
+// as is the case in a rule such as:
+//		MyRule: IDENTIFIER | OtherRule {...};
+//
+
 StringLiteral
 	: STRING_LITERAL
 		{
@@ -146,27 +159,27 @@ NumericLiteral
 
 IncludeDirective:
 	INCLUDE FILEPATH ";"
-		-> {"type": "include", "arg": $2, "range": @$}
+		-> {"type": "include", "children": {"file":{"name": $2, "range": @2}}, "range": @$}
 	;
 
 AnimtreeDirective:
 	USING_ANIMTREE "(" StringLiteral ")" ";"
-		-> {"type": "animtree", "arg": $3, "range": @$}
+		-> {"type": "animtree", "children": {"arg": {"name": $3, "range": @3}}, "range": @$}
 	;
 
 Block
 	: "{" StatementList "}"
-		-> {"type": "block", "statements": $2, "range": @$};
+		-> {"type": "block", "children": $2, "range": @$};
 	;
 
 FormalParameterList
 	: IDENTIFIER
 		{
-			$$ = [$1];
+			$$ = [{"type": "identifier", "identifier": $1, "range": @1}];
 		}
 	| FormalParameterList "," IDENTIFIER
 		{
-			$$ = $1.concat($3);
+			$$ = $1.concat([{"type": "identifier", "identifier": $3, "range": @3}]);
 		}
 	|
 		{
@@ -191,53 +204,54 @@ FunctionParameterList
 
 FunctionCall
 	: IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "call", "name": $1, "params": $3};
+		-> {"type": "call", "range": @$, "modifier": [], "children": {"self": null, "identifier": {"name": $1, "range": @1}, "params": {"children": $3, "range": @3}}};
 	| THREAD IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "thread", "name": $1, "params": $4};
+		-> {"type": "call", "range": @$, "modifier": ["thread"], "children": {"self": null, "identifier": {"name": $2, "range": @2}, "params": {"children": $4, "range": @4}}};
 	| PointerExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "name": $1, "params": $3};
+		-> {"type": "call", "range": @$, "modifier": ["pointer"], "children": {"self": null, "pointer": $1, "params": {"children": $3, "range": @3}}};
 	| THREAD PointerExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "name": $1, "params": $3};
+		-> {"type": "call", "range": @$, "modifier": ["pointer", "thread"], "children": {"self": null, "pointer": $2, "params": {"children": $4, "range": @4}}}
 	| ReferenceExpression "(" FunctionParameterList ")"
-		-> {"type": "call_external", "file": $1.file, "name": $1.name, "params": $3};
+		-> {"type": "call", "range": @$, "modifier": ["reference"], "children": {"self": null, "reference": $1, "params": {"children": $3, "range": @3}}};
 	| THREAD ReferenceExpression "(" FunctionParameterList ")"
-		-> {"type": "call_external", "file": $2.file, "name": $2.name, "params": $4};
+		-> {"type": "call", "range": @$, "modifier": ["reference", "thread"], "children": {"self": null, "reference": $2, "params": {"children": $4, "range": @4}}};
 	;
 
 FunctionExpression
 	: ObjectExpression FunctionCall
 		{
 			$$ = $2;
-			$$.caller = $1;	
+			$$.children.self = $1;	
 		}
 	| FunctionCall
 	;
 
 PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression "]" "]"
-		-> {"type": "pointer", "expression": $2};
+		-> {"type": "pointer", "range": @$, "children": $2};
 	| FUNC_POINTER_BEGIN ReferenceExpression "]" "]"
-		-> {"type": "pointer", "expression": $2};
+		-> {"type": "pointer", "range": @$, "children": $2};
 	;
 
 ReferenceExpression
 	: FILEPATH "::" IDENTIFIER
-		-> {"type": "reference", "file": $1, "name": $3};
+		-> {"type": "reference", "range": @$, "children": {"file": {"name": $1, "range": @1}, "identifier": {"name": $3, "range": @3}}};
 	| "::" IDENTIFIER
-		-> {"type": "reference", "file": "$this", "name": $2};
+		-> {"type": "reference", "range": @$, "children": {"file": {"name": ""}, "identifier": {"name": $2, "range": @2}}};
 	;
 
 //Used Independently from Normal References
+//Structure is the same as an IDENTIFIER
 AnimReferenceExpression
 	: "%" IDENTIFIER
-		-> {"type": "reference", "name": $2};
+		-> {"type": "reference", "name": $1+$2, "range": @$};
 	;
 
 MemberExpression
 	: ObjectExpression "[" Expression "]"
-		-> {"type": "array", "expression": $1, "member": $3}
+		-> {"type": "array", "range": @$, "children": {"expression": $1, "member": $3}}
 	| ObjectExpression "." ObjectExpression
-		-> {"type": "property", "expression": $1, "member": $3}
+		-> {"type": "property", "range": @$, "children": {"expression": $1, "member": $3}}
 	| "[" "]"
 	;
 
@@ -254,14 +268,16 @@ ElementList
 
 ListExpression
 	: "(" ElementList ")"
-		-> {"type": "list", "elements": $2}
+		-> {"type": "list", "range": @$, "children": {"elements": $2}};
 	;
 
 ObjectExpression
 	: IDENTIFIER
+		-> {"type": "identifier", "name": $1, "range": @1}
 	| FunctionExpression
 	| MemberExpression
 	| "(" ObjectExpression ")"
+		{$$ = $2; $$.range = @$}
 	;
 	
 LiteralExpression
@@ -330,17 +346,18 @@ OperatorMid
 e
 	: BasicExpression
 	| e OperatorPostfix
-		-> {"type": "expression", "left": $1, "operator": $2};
+		-> {"type": "expression", "range": @$, "children": {"left": $1, "operator": $2}};
 	| OperatorPrefix e
-		-> {"type": "expression", "operator": $1, "right": $2};
+		-> {"type": "expression", "range": @$, "children": {"operator": $1, "right": $2}};
 	| e OperatorMid e
-		-> {"type": "expression", "left": $1, "operator": $2, "right": $3};
+		-> {"type": "expression", "range": @$, "children": {"left": $1, "operator": $2, "right": $3}};
 	| AnimReferenceExpression
 	| '(' e ')'
-		-> {"type": "expression", "parentheses": true, "expression": $2}; //used for debugging
-        /*{
+		//-> {"type": "expression", "parentheses": true, "expression": $2}; //used for debugging
+        {
 			$$ = $2;
-		}*/
+			$$.range = @$;
+		}
 	;
 
 Expression
@@ -351,6 +368,7 @@ ExpressionStatement
 	: Expression ";"
 		{
 			$$ = $1;
+			$$.range = @$;
 		}
 	;
 
@@ -358,14 +376,14 @@ ReturnStatement
 	: RETURN ";"
 		-> {"type": "return", "range": @$};
 	| RETURN Expression ";"
-		-> {"type": "return", "expression": $2, "range": @$};
+		-> {"type": "return", "children": $2, "range": @$};
 	;
 
 WaitStatement
 	: WAIT Expression ";"
-		-> {"type": "wait", "expression": $2, "range": @$};
+		-> {"type": "wait", "range": @$, "children": $2};
 	| WAIT "(" Expression ")" ";"
-		-> {"type": "wait", "expression": $3, "range": @$};
+		-> {"type": "wait", "range": @$, "children": $3};
 	;
 
 EmptyStatement:
@@ -374,32 +392,32 @@ EmptyStatement:
 
 IfStatement
 	: IF "(" Expression ")" Statement
-		-> {"type": "if", "expression": $3, "statement": $5, "range": @$};
+		-> {"type": "if", "range": @$, "children": {"expression": $3, "statement": $5}};
 	| ELSE IF "(" Expression ")" Statement
-		-> {"type": "elif", "expression": $4, "statement": $6, "range": @$};
+		-> {"type": "elif", "range": @$, "children": {"expression": $4, "statement": $6}};
 	| ELSE Statement
-		-> {"type": "else", "statement": $2, "range": @$};
+		-> {"type": "else", "range": @$, "children": {"statement": $2}};
 	;
 
 SwitchStatement
 	: SWITCH "(" Expression ")" Statement
-		-> {"type": "switch", "expression": $3, "statement": $5, "range": @$};
+		-> {"type": "switch", "range": @$, "children": {"expression": $3, "statement": $5}};
 	;
 
 // TODO: 
 //		Handle the statements that match a given case
 CaseStatement
 	: CASE LiteralExpression ":"
-		-> {"type": "case", "expression": $2, "range": @$};
+		-> {"type": "case", "range": @$, "children": {"expression": $2}};
 	| DEFAULT ":"
-		-> {"type": "default", "expression": $1, "range": @$};
+		-> {"type": "default", "range": @$};
 	;
 
 LoopStatement
 	: WHILE "(" Expression ")" Statement
-		-> {"type": "while", "expression": $3, "statement": $5, "range": @$};
+		-> {"type": "while", "range": @$, "children": {"expression": $3, "statement": $5}};
 	| FOR "(" OptionalExpression ";" OptionalExpression ";" OptionalExpression ")" Statement
-		-> {"type": "for", "expressions": [$3,$5,$7], "statement": $9, "range": @$};
+		-> {"type": "for", "range": @$, "children": {"exp0": $3, "exp1": $5, "exp2": $7, "statement": $9}};
 	;
 
 Statement
@@ -429,7 +447,16 @@ StatementList
 
 FunctionDeclaration:
 	IDENTIFIER "(" FormalParameterList ")" "{" StatementList "}"
-		-> {"type": "function", "name": $1, "params": $3, "range": @$, "statements": $6};
+		{ $$ =
+			{	"type": "function",
+				"range": @$,
+				"children": {
+					"identifier": {"name": $1, "range": @1},
+					"params": {"range": @3, "children": $3},
+					"statements": {"range": @6, "children": $6}
+				}
+			};
+		}
 	;
 
 SourceElement
@@ -454,3 +481,4 @@ Program:
 	{
 		return $$;
 	};
+	

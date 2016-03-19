@@ -27,3 +27,4 @@ export function Normalize(path: string) {
 export function BuiltInModule(moduleName: string) {
     return vscodeModulesPath + moduleName;
 }
+
