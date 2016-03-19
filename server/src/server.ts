@@ -38,11 +38,14 @@ connection.onInitialize((params): InitializeResult => {
 });
 
 import {provideDocumentSymbols, provideWorkspaceSymbols} from "./features/symbolProvider"
-import {DidOpenTextDocumentHandler, DidChangeTextDocumentHandler} from "./features/documentHandler"
+import {DidOpenTextDocumentHandler, DidCloseTextDocumentHandler, DidChangeTextDocumentHandler} from "./features/documentHandler"
 import {DidChangeConfigurationHandler} from "./features/configurationHandler"
+import {CompletionHandler} from "./features/completionHandler"
 
 connection.onDidOpenTextDocument(DidOpenTextDocumentHandler);
 connection.onDidChangeTextDocument(DidChangeTextDocumentHandler);
+connection.onCompletion(CompletionHandler);
+//connection.onDidCloseTextDocument(DidCloseTextDocumentHandler)
 
 connection.onDidChangeConfiguration(DidChangeConfigurationHandler);
 

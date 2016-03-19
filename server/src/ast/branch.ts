@@ -7,120 +7,73 @@ import {
 
 import {connection, console} from '../server'
 
-export var SymbolKindMap =
-{
-    //The active file:  SymbolKind.File
-    
-    "include":          SymbolKind.File,
-    "using_animtree":   SymbolKind.String,
-    
-    "function":         SymbolKind.Function,
-    "var":              SymbolKind.Variable,
-
-    "const":            SymbolKind.Constant,
-    "bool":             SymbolKind.Boolean,
-    "number":           SymbolKind.Number,
-    "string":           SymbolKind.String,
-    
-    "property":         SymbolKind.Property
-}
-
-function GetChildKeyForBranchType(type: string): string
-{
-    switch(type)
-    {
-        case "function":
-            return "statements";
-    }
-    
-    return null;
-}
-
-export class BranchRange
+export interface IJRange
 {
     first_line: number;
     last_line: number;
     first_column: number;
     last_column: number;
-    any: any;
-    
-    Range(): Range
-    {
-        let p1: Position = { line: this.first_line - 1,
-                             character: this.first_column };
-        let p2: Position = { line: this.last_line - 1,
-                             character: this.last_column };
-        return { start: p1, end: p2 };
-    };
-    
-    ContainsPosition(pos: Position): boolean
-    {
-        if (pos.line < this.first_line || pos.line > this.last_line)
+}
+
+export interface IBranch
+{
+    type: string;
+    range: IJRange;
+    children?: IBranch[] | {};
+}
+
+export namespace NRange
+{
+    export function ContainsPosition(range: IJRange, pos: Position): boolean {
+        if (pos.line < range.first_line - 1 || pos.line > range.last_line - 1)
             return false;
-        if (pos.line == this.first_line && pos.character < this.first_column)
+        if (pos.line == range.first_line - 1 && pos.character < range.first_column)
             return false;
-        if (pos.line == this.last_line && pos.character < this.last_column)
+        if (pos.line == range.last_line - 1 && pos.character > range.last_column)
             return false;
         return true;
-    };
+    }
     
-    ContainsRange(range: Range): boolean
+    export function ConvertToRange(range: IJRange): Range
     {
-        if(this.ContainsPosition(range.start) && this.ContainsPosition(range.end))
+        let p1: Position = {    line: range.first_line - 1,
+                                character: range.first_column };
+        let p2: Position = {    line: range.last_line - 1,
+                                character: range.last_column };
+        return { start: p1, end: p2 };
+    };
+        
+    export function ContainsJRange(range: IJRange, arg: IJRange): boolean {
+        return ContainsRange(range, ConvertToRange(range));
+    };
+        
+    export function ContainsRange(range: IJRange, arg: Range): boolean {
+        if (ContainsPosition(range, arg.start) && ContainsPosition(range, arg.end))
             return true;
         return false;
     };
 }
 
-export class Branch
+export namespace NBranch
 {
-    type: string;
-    range: BranchRange;
-  
-    Range(): Range {
-        return this.range.Range();
-    };
-    
-    ContainsPosition(pos: Position): boolean {
-        return this.range.ContainsPosition(pos);
-    };
-
-    ContainsRange(range: Range): boolean {
-        return this.range.ContainsRange(range);
-    };
-    
-    Children(): Array<any>
+    export function ContainsPosition(branch: IBranch, pos: Position)
     {
-        let key: string = GetChildKeyForBranchType(this.type);
-        
-        if(!key)
-            return undefined;
-        
-        if(this[key] == undefined)
-            throw("ERROR: Couldnt Get Child With Key: '" + key + "' for Object: " + this + "\n");
-        
-        if(this[key].length != undefined)
-            return this[key];
-        
-        return [this[key]];
+        if(!branch || branch.range == undefined)
+            return false;
+        return NRange.ContainsPosition(branch.range, pos);
+    }
+    
+    export function ContainsJRange(branch: IBranch, range: IJRange): boolean
+    {
+        if(!branch || branch.range == undefined)
+            return false;
+        return NRange.ContainsJRange(branch.range, range); 
+    }
+    
+    export function ContainsRange(branch: IBranch, range: Range): boolean
+    {
+        if(!branch || branch.range == undefined)
+            return false;
+        return NRange.ContainsRange(branch.range, range);
     }
 }
-
-//
-// Interface for Include / UsingAnimtree Directives
-//
-export interface IBranch_Directive extends Branch
-{
-    arg: string[];
-};
-
-export interface IBranch_Block extends Branch
-{
-    statements: string[];
-};
-
-export interface IBranch_FunctionDecl extends Branch, IBranch_Block
-{
-    name: string;
-    params: string[];
-};

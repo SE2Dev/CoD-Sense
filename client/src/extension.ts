@@ -18,7 +18,7 @@ export function activate(context: vscode.ExtensionContext)
 	
 	// Register the built-in function definitions
 	//vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider())
-	vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider(), "\\")
+	vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider(), "\\");
 	
 	let module = context.asAbsolutePath("server/server.js");
 	

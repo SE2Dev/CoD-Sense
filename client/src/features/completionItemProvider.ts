@@ -29,15 +29,12 @@ export class completionItemProvider
         }
     }
     
-    provideCompletionItems(document: vscode.TextDocument, position, token): Thenable<vscode.CompletionItem[]>
+    provideCompletionItems(document: vscode.TextDocument, position, token): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[]
 	{
         if (document.getText()[document.offsetAt(position) - 1] == "\\") {
             let r = rxIncludeDirective_Part.exec(document.lineAt(position).text);
             if (r.length <= 1)
                 return null;
-
-				console.log(r.length);
-				console.log(r[1]);
 
             return server.sendRequest(CoDSenseResolveDirectoryRequest.type, r[1]).then
 			(
@@ -88,6 +85,10 @@ export class completionItemProvider
 					return completionItems;
 				}
 			);
-        }      
+        }
+		else
+		{
+			return this.completionItems;
+		}
     }
 }
