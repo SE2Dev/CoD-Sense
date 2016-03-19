@@ -159,17 +159,17 @@ NumericLiteral
 
 IncludeDirective:
 	INCLUDE FILEPATH ";"
-		-> {"type": "include", "file": {"name": $2, "range": @2}, "range": @$}
+		-> {"type": "include", "children": {"file":{"name": $2, "range": @2}}, "range": @$}
 	;
 
 AnimtreeDirective:
 	USING_ANIMTREE "(" StringLiteral ")" ";"
-		-> {"type": "animtree", "arg": {"name": $3, "range": @3}, "range": @$}
+		-> {"type": "animtree", "children": {"arg": {"name": $3, "range": @3}}, "range": @$}
 	;
 
 Block
 	: "{" StatementList "}"
-		-> {"type": "block", "statements": $2, "range": @$};
+		-> {"type": "block", "children": $2, "range": @$};
 	;
 
 FormalParameterList
@@ -204,40 +204,40 @@ FunctionParameterList
 
 FunctionCall
 	: IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "call", "modifier": [], "identifier": {"name": $1, "range": @1}, "params": $3};
+		-> {"type": "call", "range": @$, "modifier": [], "children": {"self": null, "identifier": {"name": $1, "range": @1}, "params": {"children": $3, "range": @3}}};
 	| THREAD IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "call", "modifier": ["thread"], "identifier": {"name": $2, "range": @2}, "params": $4};
+		-> {"type": "call", "range": @$, "modifier": ["thread"], "children": {"self": null, "identifier": {"name": $2, "range": @2}, "params": {"children": $4, "range": @4}}};
 	| PointerExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "modifier": ["pointer"], "identifier": $1, "params": $3};
+		-> {"type": "call", "range": @$, "modifier": ["pointer"], "children": {"self": null, "pointer": $1, "params": {"children": $3, "range": @3}}};
 	| THREAD PointerExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "modifier": ["pointer", "thread"], "identifier": $1, "params": $3};
+		-> {"type": "call", "range": @$, "modifier": ["pointer", "thread"], "children": {"self": null, "pointer": $2, "params": {"children": $4, "range": @4}}}
 	| ReferenceExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "modifier": ["reference"], "file": $1.file, "identifier": $1.identifier, "params": $3};
+		-> {"type": "call", "range": @$, "modifier": ["reference"], "children": {"self": null, "reference": $1, "params": {"children": $3, "range": @3}}};
 	| THREAD ReferenceExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "modifier": ["reference", "thread"], "file": $2.file, "identifier": $2.identifier, "params": $4};
+		-> {"type": "call", "range": @$, "modifier": ["reference", "thread"], "children": {"self": null, "reference": $2, "params": {"children": $4, "range": @4}}};
 	;
 
 FunctionExpression
 	: ObjectExpression FunctionCall
 		{
 			$$ = $2;
-			$$.self = $1;	
+			$$.children.self = $1;	
 		}
 	| FunctionCall
 	;
 
 PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression "]" "]"
-		-> {"type": "pointer", "expression": $2};
+		-> {"type": "pointer", "range": @$, "children": $2};
 	| FUNC_POINTER_BEGIN ReferenceExpression "]" "]"
-		-> {"type": "pointer", "expression": $2};
+		-> {"type": "pointer", "range": @$, "children": $2};
 	;
 
 ReferenceExpression
 	: FILEPATH "::" IDENTIFIER
-		-> {"type": "reference", "file": {"name": $1, "range": @1}, "identifier": {"name": $3, "range": @3}};
+		-> {"type": "reference", "range": @$, "children": {"file": {"name": $1, "range": @1}, "identifier": {"name": $3, "range": @3}}};
 	| "::" IDENTIFIER
-		-> {"type": "reference", "file": {"name": ""}, "identifier": {"name": $2, "range": @2}};
+		-> {"type": "reference", "range": @$, "children": {"file": {"name": ""}, "identifier": {"name": $2, "range": @2}}};
 	;
 
 //Used Independently from Normal References
@@ -249,12 +249,9 @@ AnimReferenceExpression
 
 MemberExpression
 	: ObjectExpression "[" Expression "]"
-		//-> {"type": "array", "expression": $1, "member": $3}
-		{
-			$$ = yy;
-		}
+		-> {"type": "array", "range": @$, "children": {"expression": $1, "member": $3}}
 	| ObjectExpression "." ObjectExpression
-		-> {"type": "property", "expression": $1, "member": $3}
+		-> {"type": "property", "range": @$, "children": {"expression": $1, "member": $3}}
 	| "[" "]"
 	;
 
@@ -271,7 +268,7 @@ ElementList
 
 ListExpression
 	: "(" ElementList ")"
-		-> {"type": "list", "elements": $2}
+		-> {"type": "list", "range": @$, "children": {"elements": $2}};
 	;
 
 ObjectExpression
@@ -280,7 +277,7 @@ ObjectExpression
 	| FunctionExpression
 	| MemberExpression
 	| "(" ObjectExpression ")"
-		{$$ = $2}
+		{$$ = $2; $$.range = @$}
 	;
 	
 LiteralExpression
@@ -349,16 +346,17 @@ OperatorMid
 e
 	: BasicExpression
 	| e OperatorPostfix
-		-> {"type": "expression", "left": $1, "operator": $2};
+		-> {"type": "expression", "range": @$, "children": {"left": $1, "operator": $2}};
 	| OperatorPrefix e
-		-> {"type": "expression", "operator": $1, "right": $2};
+		-> {"type": "expression", "range": @$, "children": {"operator": $1, "right": $2}};
 	| e OperatorMid e
-		-> {"type": "expression", "left": $1, "operator": $2, "right": $3};
+		-> {"type": "expression", "range": @$, "children": {"left": $1, "operator": $2, "right": $3}};
 	| AnimReferenceExpression
 	| '(' e ')'
 		//-> {"type": "expression", "parentheses": true, "expression": $2}; //used for debugging
         {
 			$$ = $2;
+			$$.range = @$;
 		}
 	;
 
@@ -370,6 +368,7 @@ ExpressionStatement
 	: Expression ";"
 		{
 			$$ = $1;
+			$$.range = @$;
 		}
 	;
 
@@ -377,14 +376,14 @@ ReturnStatement
 	: RETURN ";"
 		-> {"type": "return", "range": @$};
 	| RETURN Expression ";"
-		-> {"type": "return", "expression": $2, "range": @$};
+		-> {"type": "return", "children": $2, "range": @$};
 	;
 
 WaitStatement
 	: WAIT Expression ";"
-		-> {"type": "wait", "expression": $2, "range": @$};
+		-> {"type": "wait", "range": @$, "children": $2};
 	| WAIT "(" Expression ")" ";"
-		-> {"type": "wait", "expression": $3, "range": @$};
+		-> {"type": "wait", "range": @$, "children": $3};
 	;
 
 EmptyStatement:
@@ -393,32 +392,32 @@ EmptyStatement:
 
 IfStatement
 	: IF "(" Expression ")" Statement
-		-> {"type": "if", "expression": $3, "statement": $5, "range": @$};
+		-> {"type": "if", "range": @$, "children": {"expression": $3, "statement": $5}};
 	| ELSE IF "(" Expression ")" Statement
-		-> {"type": "elif", "expression": $4, "statement": $6, "range": @$};
+		-> {"type": "elif", "range": @$, "children": {"expression": $4, "statement": $6}};
 	| ELSE Statement
-		-> {"type": "else", "statement": $2, "range": @$};
+		-> {"type": "else", "range": @$, "children": {"statement": $2}};
 	;
 
 SwitchStatement
 	: SWITCH "(" Expression ")" Statement
-		-> {"type": "switch", "expression": $3, "statement": $5, "range": @$};
+		-> {"type": "switch", "range": @$, "children": {"expression": $3, "statement": $5}};
 	;
 
 // TODO: 
 //		Handle the statements that match a given case
 CaseStatement
 	: CASE LiteralExpression ":"
-		-> {"type": "case", "expression": $2, "range": @$};
+		-> {"type": "case", "range": @$, "children": {"expression": $2}};
 	| DEFAULT ":"
-		-> {"type": "default", "expression": $1, "range": @$};
+		-> {"type": "default", "range": @$};
 	;
 
 LoopStatement
 	: WHILE "(" Expression ")" Statement
-		-> {"type": "while", "expression": $3, "statement": $5, "range": @$};
+		-> {"type": "while", "range": @$, "children": {"expression": $3, "statement": $5}};
 	| FOR "(" OptionalExpression ";" OptionalExpression ";" OptionalExpression ")" Statement
-		-> {"type": "for", "expressions": [$3,$5,$7], "statement": $9, "range": @$};
+		-> {"type": "for", "range": @$, "children": {"exp0": $3, "exp1": $5, "exp2": $7, "statement": $9}};
 	;
 
 Statement
@@ -448,7 +447,16 @@ StatementList
 
 FunctionDeclaration:
 	IDENTIFIER "(" FormalParameterList ")" "{" StatementList "}"
-		-> {"type": "function", "identifier": {"name": $1, "range": @1}, "params": $3, "range": @$, "statements": $6};
+		{ $$ =
+			{	"type": "function",
+				"range": @$,
+				"children": {
+					"identifier": {"name": $1, "range": @1},
+					"params": {"range": @3, "children": $3},
+					"statements": {"range": @6, "children": $6}
+				}
+			};
+		}
 	;
 
 SourceElement
