@@ -492,7 +492,7 @@ function RangeTransform(range)
 	return {
 		"first_line": range.first_line - 1,
 		"last_line": range.last_line - 1,
-		"first_column": range.first_column - 1,
-		"last_column": range.last_column - 1
+		"first_column": range.first_column,
+		"last_column": range.last_column
 	};
 }
