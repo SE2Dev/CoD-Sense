@@ -485,14 +485,17 @@ Program:
 %%
 
 //
-// Convert JISON Range Data to Zero-Based Data
+// Convert JISON Range Data to VSCode Style Zero-Based Data
 //
-function RangeTransform(range)
-{
-	return {
-		"first_line": range.first_line - 1,
-		"last_line": range.last_line - 1,
-		"first_column": range.first_column,
-		"last_column": range.last_column
-	};
+function RangeTransform(range) {
+    return {
+        start: {
+            line: range.first_line - 1,
+            character: range.first_column
+        },
+        end: {
+            line: range.last_line - 1,
+            character: range.last_column
+        },
+    };
 }
