@@ -14,7 +14,7 @@ import * as tree from '../ast/tree'
 //
 export function CompletionHandler(params: TextDocumentPosition): CompletionItem[]
 {
-    console.log("COMPLETION");
+    console.log("COMPLETION for " + JSON.stringify(params.position));
     var startTime = new Date().getTime();
     
     console.log(tree.ResolveElement(params.uri, params.position));

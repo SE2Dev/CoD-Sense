@@ -8,7 +8,7 @@ import {
 } from "vscode-languageserver"
 
 import * as cache from "./cache";
-import {IBranch, IJRange, NRange, NBranch} from "./branch";
+import {IBranch, NRange, NBranch} from "./branch";
 
 export interface Tree
 {
@@ -75,8 +75,7 @@ export function ResolveFunctionSymbols(uri: string)
             continue;
         
         let name: string = item.children.identifier.name;
-        let range: Range = NRange.ConvertToRange(item.range);
-        let symbol = SymbolInformation.create(name, SymbolKind.Function, range);
+        let symbol = SymbolInformation.create(name, SymbolKind.Function, item.range);
         symbols.push(symbol);
     }
     
