@@ -9,6 +9,9 @@
 	},
 	"exclude": [
 		"node_modules",
-		"server"
+		"server",
+		"src/defs/.vscode",
+		"src/defs/build",
+		"src/defs/raw"
 	]
 }
