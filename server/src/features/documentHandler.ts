@@ -6,7 +6,6 @@ import {    DidOpenTextDocumentParams, TextDocumentIdentifier,
 
 import Path = require("path");
 import * as ast from "../analyzer"
-
 import * as cache from '../ast/cache'
 
 // Upon Opening a Document - Perform Background Analysis
