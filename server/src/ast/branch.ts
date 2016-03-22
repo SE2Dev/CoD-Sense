@@ -26,7 +26,7 @@ export namespace NPos
     export function Translate(origin: Position, delta: Position): Position
     {
         let out = {line: origin.line, character: origin.character};
-        if(origin.line == delta.line)
+        if(delta.line == 0)
             out.character += delta.character;
         else
         {
