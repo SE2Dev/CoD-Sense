@@ -124,8 +124,6 @@ function PerformDocumentAnalysis(uri: string, text: string) {
         return false;
     }
 
-    
-    
     console.log(`PARSED: ${Path.basename(uri)} in ${parseTime + genTime} ms (${parseTime} ms + ${genTime} ms)`);
     return true;
 }

@@ -168,13 +168,10 @@ function ResolveElementInternal_Relative(pos: Position, branch: IBranch, origin:
     {
         for(var key in branch.children)
         {
-            //console.warn(key);
             if(branch.children[key].rel == undefined)
                 continue;
             
             let crange = NRange.Absolute(branch.children[key].rel, orig);
-            //console.log(crange);
-            //console.log(branch.children[key]);
             if(NRange.ContainsPosition(crange, pos))
             {
                 //If this returns null it has no idea where youre typing (should only occur between functions)
@@ -186,7 +183,9 @@ function ResolveElementInternal_Relative(pos: Position, branch: IBranch, origin:
 
     for(var i = 0; i < branch.children.length; i++)
     {
-        //console.error(i);
+        if(branch.children[i].rel == undefined)
+                continue;
+                
         let crange = NRange.Absolute(branch.children[i].rel, orig);
         if(NRange.ContainsPosition(crange, pos))
         {
@@ -195,9 +194,7 @@ function ResolveElementInternal_Relative(pos: Position, branch: IBranch, origin:
         }
         orig = crange.end;
     }
-    
-    //console.warn(JSON.stringify(range));
-    //console.log(branch);
+
     return null;
 }
 
