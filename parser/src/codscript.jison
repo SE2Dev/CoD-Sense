@@ -159,27 +159,27 @@ NumericLiteral
 
 IncludeDirective:
 	INCLUDE FILEPATH ";"
-		-> {"type": "include", "children": {"file":{"name": $2, "range": @2}}, "range": @$}
+		-> {"type": "include", "children": {"file":{"name": $2, "range": RangeTransform(@2)}}, "range": RangeTransform(@$)}
 	;
 
 AnimtreeDirective:
 	USING_ANIMTREE "(" StringLiteral ")" ";"
-		-> {"type": "animtree", "children": {"arg": {"name": $3, "range": @3}}, "range": @$}
+		-> {"type": "animtree", "children": {"arg": {"name": $3, "range": RangeTransform(@3)}}, "range": RangeTransform(@$)}
 	;
 
 Block
 	: "{" StatementList "}"
-		-> {"type": "block", "children": $2, "range": @$};
+		-> {"type": "block", "children": $2, "range": RangeTransform(@$)};
 	;
 
 FormalParameterList
 	: IDENTIFIER
 		{
-			$$ = [{"type": "identifier", "identifier": $1, "range": @1}];
+			$$ = [{"type": "identifier", "identifier": $1, "range": RangeTransform(@1)}];
 		}
 	| FormalParameterList "," IDENTIFIER
 		{
-			$$ = $1.concat([{"type": "identifier", "identifier": $3, "range": @3}]);
+			$$ = $1.concat([{"type": "identifier", "identifier": $3, "range": RangeTransform(@3)}]);
 		}
 	|
 		{
@@ -204,17 +204,17 @@ FunctionParameterList
 
 FunctionCall
 	: IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "call", "range": @$, "modifier": [], "children": {"self": null, "identifier": {"name": $1, "range": @1}, "params": {"children": $3, "range": @3}}};
+		-> {"type": "call", "range": RangeTransform(@$), "modifier": [], "children": {"self": null, "identifier": {"name": $1, "range": RangeTransform(@1)}, "params": {"children": $3, "range": RangeTransform(@3)}}};
 	| THREAD IDENTIFIER "(" FunctionParameterList ")"
-		-> {"type": "call", "range": @$, "modifier": ["thread"], "children": {"self": null, "identifier": {"name": $2, "range": @2}, "params": {"children": $4, "range": @4}}};
+		-> {"type": "call", "range": RangeTransform(@$), "modifier": ["thread"], "children": {"self": null, "identifier": {"name": $2, "range": RangeTransform(@2)}, "params": {"children": $4, "range": RangeTransform(@4)}}};
 	| PointerExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "range": @$, "modifier": ["pointer"], "children": {"self": null, "pointer": $1, "params": {"children": $3, "range": @3}}};
+		-> {"type": "call", "range": RangeTransform(@$), "modifier": ["pointer"], "children": {"self": null, "pointer": $1, "params": {"children": $3, "range": RangeTransform(@3)}}};
 	| THREAD PointerExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "range": @$, "modifier": ["pointer", "thread"], "children": {"self": null, "pointer": $2, "params": {"children": $4, "range": @4}}}
+		-> {"type": "call", "range": RangeTransform(@$), "modifier": ["pointer", "thread"], "children": {"self": null, "pointer": $2, "params": {"children": $4, "range": RangeTransform(@4)}}}
 	| ReferenceExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "range": @$, "modifier": ["reference"], "children": {"self": null, "reference": $1, "params": {"children": $3, "range": @3}}};
+		-> {"type": "call", "range": RangeTransform(@$), "modifier": ["reference"], "children": {"self": null, "reference": $1, "params": {"children": $3, "range": RangeTransform(@3)}}};
 	| THREAD ReferenceExpression "(" FunctionParameterList ")"
-		-> {"type": "call", "range": @$, "modifier": ["reference", "thread"], "children": {"self": null, "reference": $2, "params": {"children": $4, "range": @4}}};
+		-> {"type": "call", "range": RangeTransform(@$), "modifier": ["reference", "thread"], "children": {"self": null, "reference": $2, "params": {"children": $4, "range": RangeTransform(@4)}}};
 	;
 
 FunctionExpression
@@ -228,30 +228,30 @@ FunctionExpression
 
 PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression "]" "]"
-		-> {"type": "pointer", "range": @$, "children": $2};
+		-> {"type": "pointer", "range": RangeTransform(@$), "children": $2};
 	| FUNC_POINTER_BEGIN ReferenceExpression "]" "]"
-		-> {"type": "pointer", "range": @$, "children": $2};
+		-> {"type": "pointer", "range": RangeTransform(@$), "children": $2};
 	;
 
 ReferenceExpression
 	: FILEPATH "::" IDENTIFIER
-		-> {"type": "reference", "range": @$, "children": {"file": {"name": $1, "range": @1}, "identifier": {"name": $3, "range": @3}}};
+		-> {"type": "reference", "range": RangeTransform(@$), "children": {"file": {"name": $1, "range": RangeTransform(@1)}, "identifier": {"name": $3, "range": RangeTransform(@3)}}};
 	| "::" IDENTIFIER
-		-> {"type": "reference", "range": @$, "children": {"file": {"name": ""}, "identifier": {"name": $2, "range": @2}}};
+		-> {"type": "reference", "range": RangeTransform(@$), "children": {"file": {"name": ""}, "identifier": {"name": $2, "range": RangeTransform(@2)}}};
 	;
 
 //Used Independently from Normal References
 //Structure is the same as an IDENTIFIER
 AnimReferenceExpression
 	: "%" IDENTIFIER
-		-> {"type": "reference", "name": $1+$2, "range": @$};
+		-> {"type": "reference", "name": $1+$2, "range": RangeTransform(@$)};
 	;
 
 MemberExpression
 	: ObjectExpression "[" Expression "]"
-		-> {"type": "array", "range": @$, "children": {"expression": $1, "member": $3}}
+		-> {"type": "array", "range": RangeTransform(@$), "children": {"expression": $1, "member": $3}}
 	| ObjectExpression "." ObjectExpression
-		-> {"type": "property", "range": @$, "children": {"expression": $1, "member": $3}}
+		-> {"type": "property", "range": RangeTransform(@$), "children": {"expression": $1, "member": $3}}
 	| "[" "]"
 	;
 
@@ -268,16 +268,16 @@ ElementList
 
 ListExpression
 	: "(" ElementList ")"
-		-> {"type": "list", "range": @$, "children": {"elements": $2}};
+		-> {"type": "list", "range": RangeTransform(@$), "children": {"elements": $2}};
 	;
 
 ObjectExpression
 	: IDENTIFIER
-		-> {"type": "identifier", "name": $1, "range": @1}
+		-> {"type": "identifier", "name": $1, "range": RangeTransform(@1)}
 	| FunctionExpression
 	| MemberExpression
 	| "(" ObjectExpression ")"
-		{$$ = $2; $$.range = @$}
+		{$$ = $2; $$.range = RangeTransform(@$)}
 	;
 	
 LiteralExpression
@@ -346,17 +346,17 @@ OperatorMid
 e
 	: BasicExpression
 	| e OperatorPostfix
-		-> {"type": "expression", "range": @$, "children": {"left": $1, "operator": $2}};
+		-> {"type": "expression", "range": RangeTransform(@$), "children": {"left": $1, "operator": $2}};
 	| OperatorPrefix e
-		-> {"type": "expression", "range": @$, "children": {"operator": $1, "right": $2}};
+		-> {"type": "expression", "range": RangeTransform(@$), "children": {"operator": $1, "right": $2}};
 	| e OperatorMid e
-		-> {"type": "expression", "range": @$, "children": {"left": $1, "operator": $2, "right": $3}};
+		-> {"type": "expression", "range": RangeTransform(@$), "children": {"left": $1, "operator": $2, "right": $3}};
 	| AnimReferenceExpression
 	| '(' e ')'
 		//-> {"type": "expression", "parentheses": true, "expression": $2}; //used for debugging
         {
 			$$ = $2;
-			$$.range = @$;
+			$$.range = RangeTransform(@$);
 		}
 	;
 
@@ -368,22 +368,22 @@ ExpressionStatement
 	: Expression ";"
 		{
 			$$ = $1;
-			$$.range = @$;
+			$$.range = RangeTransform(@$);
 		}
 	;
 
 ReturnStatement
 	: RETURN ";"
-		-> {"type": "return", "range": @$};
+		-> {"type": "return", "range": RangeTransform(@$)};
 	| RETURN Expression ";"
-		-> {"type": "return", "children": $2, "range": @$};
+		-> {"type": "return", "children": $2, "range": RangeTransform(@$)};
 	;
 
 WaitStatement
 	: WAIT Expression ";"
-		-> {"type": "wait", "range": @$, "children": $2};
+		-> {"type": "wait", "range": RangeTransform(@$), "children": $2};
 	| WAIT "(" Expression ")" ";"
-		-> {"type": "wait", "range": @$, "children": $3};
+		-> {"type": "wait", "range": RangeTransform(@$), "children": $3};
 	;
 
 EmptyStatement:
@@ -392,32 +392,32 @@ EmptyStatement:
 
 IfStatement
 	: IF "(" Expression ")" Statement
-		-> {"type": "if", "range": @$, "children": {"expression": $3, "statement": $5}};
+		-> {"type": "if", "range": RangeTransform(@$), "children": {"expression": $3, "statement": $5}};
 	| ELSE IF "(" Expression ")" Statement
-		-> {"type": "elif", "range": @$, "children": {"expression": $4, "statement": $6}};
+		-> {"type": "elif", "range": RangeTransform(@$), "children": {"expression": $4, "statement": $6}};
 	| ELSE Statement
-		-> {"type": "else", "range": @$, "children": {"statement": $2}};
+		-> {"type": "else", "range": RangeTransform(@$), "children": {"statement": $2}};
 	;
 
 SwitchStatement
 	: SWITCH "(" Expression ")" Statement
-		-> {"type": "switch", "range": @$, "children": {"expression": $3, "statement": $5}};
+		-> {"type": "switch", "range": RangeTransform(@$), "children": {"expression": $3, "statement": $5}};
 	;
 
 // TODO: 
 //		Handle the statements that match a given case
 CaseStatement
 	: CASE LiteralExpression ":"
-		-> {"type": "case", "range": @$, "children": {"expression": $2}};
+		-> {"type": "case", "range": RangeTransform(@$), "children": {"expression": $2}};
 	| DEFAULT ":"
-		-> {"type": "default", "range": @$};
+		-> {"type": "default", "range": RangeTransform(@$)};
 	;
 
 LoopStatement
 	: WHILE "(" Expression ")" Statement
-		-> {"type": "while", "range": @$, "children": {"expression": $3, "statement": $5}};
+		-> {"type": "while", "range": RangeTransform(@$), "children": {"expression": $3, "statement": $5}};
 	| FOR "(" OptionalExpression ";" OptionalExpression ";" OptionalExpression ")" Statement
-		-> {"type": "for", "range": @$, "children": {"exp0": $3, "exp1": $5, "exp2": $7, "statement": $9}};
+		-> {"type": "for", "range": RangeTransform(@$), "children": {"exp0": $3, "exp1": $5, "exp2": $7, "statement": $9}};
 	;
 
 Statement
@@ -449,11 +449,11 @@ FunctionDeclaration:
 	IDENTIFIER "(" FormalParameterList ")" "{" StatementList "}"
 		{ $$ =
 			{	"type": "function",
-				"range": @$,
+				"range": RangeTransform(@$),
 				"children": {
-					"identifier": {"name": $1, "range": @1},
-					"params": {"range": @3, "children": $3},
-					"statements": {"range": @6, "children": $6}
+					"identifier": {"name": $1, "range": RangeTransform(@1)},
+					"params": {"range": RangeTransform(@3), "children": $3},
+					"statements": {"range": RangeTransform(@6), "children": $6}
 				}
 			};
 		}
@@ -482,3 +482,20 @@ Program:
 		return $$;
 	};
 	
+%%
+
+//
+// Convert JISON Range Data to VSCode Style Zero-Based Data
+//
+function RangeTransform(range) {
+    return {
+        start: {
+            line: range.first_line - 1,
+            character: range.first_column
+        },
+        end: {
+            line: range.last_line - 1,
+            character: range.last_column
+        },
+    };
+}
