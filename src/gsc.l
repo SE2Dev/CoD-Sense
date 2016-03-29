@@ -31,7 +31,7 @@
 RX_T_STRING			\"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 RX_T_FLOAT			[0-9]+\.(?:[0-9]*)?f?|\.[0-9]+f?
 RX_T_INT			[0-9]+
-RX_T_IDENTIFIER		\_?[a-zA-Z\-_]\w*
+RX_T_IDENTIFIER		\_?[a-zA-Z\-_][a-zA-Z\-_0-9]*
 
 %%
 
@@ -109,7 +109,7 @@ RX_T_IDENTIFIER		\_?[a-zA-Z\-_]\w*
 "thread"			{ printf("T_THREAD, "); return T_THREAD; }
 "wait"				{ printf("T_WAIT, "); return T_WAIT; }
 
-(\w+\\)+\w+			{ printf("T_FILEPATH, "); return T_FILEPATH; }
+([a-zA-Z0-9]+\\)+[a-zA-Z0-9]+			{ printf("T_FILEPATH, "); return T_FILEPATH; }
 {RX_T_IDENTIFIER}	{ printf("T_IDENTIFIER, "); return T_IDENTIFIER; }
 
 [.]			{ fprintf(stderr, "Unrecognized Token!, ");  return T_INVALID; } 

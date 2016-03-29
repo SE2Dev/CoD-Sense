@@ -113,8 +113,14 @@
 
 Program: SourceElements T_EOF 
 
+
+
 SourceElement
 	: T_STRING
+	{
+		printf("AT %d %d %d %d\n", @1.first_line, @1.first_column, @1.last_line, @1.last_column);
+		//return $1;
+	}
 	;
 	
 SourceElements
