@@ -1,0 +1,158 @@
+%{
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <iostream>
+
+	#include <vector>
+
+	int yylex();
+	extern FILE* yyin;
+	extern int yyparse();
+
+	void yyerror(const char* s);
+%}
+
+
+%locations
+%initial-action
+{
+	@$.first_line = @$.last_line = 0;
+	@$.first_column = @$.last_column = 0;
+}
+
+%union {
+	int		literal_int;
+	float	literal_float;
+	char*	literal_string;
+	void*	vector;
+}
+
+%token<literal_string> T_STRING
+%token<literal_float> T_FLOAT
+%token<literal_string> T_INT
+
+%token INCLUDE
+%token USING_ANIMTREE
+%token ANIMTREE
+
+%token OP_LPAREN
+%token OP_RPAREN
+%token FUNC_POINTER_BEGIN
+
+%token OP_LBRACKET
+%token OP_RBRACKET
+%token OP_LBRACE
+%token OP_RBRACE
+%token OP_COMMA
+%token OP_INC
+%token OP_DEC
+
+%token OP_COLON_DOUBLE
+%token OP_COLON
+%token OP_COLON_SEMI
+%token OP_QMARK
+%token OP_HASH
+
+%token T_IF
+%token T_ELSE
+%token T_SWITCH
+%token T_CASE
+%token T_DEFAULT
+%token T_BREAK
+%token T_FOR
+%token T_WHILE
+%token T_CONTINUE
+%token T_RETURN
+%token T_THREAD
+%token T_WAIT
+%token T_FILEPATH
+%token T_IDENTIFIER
+
+// Define Token
+%token OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
+%token OP_INC_PRE OP_DEC_PRE OP_UPLUS OP_UMINUS OP_NOT OP_BW_NOT
+%token OP_MULT OP_DIV OP_MOD
+%token OP_ADD OP_SUB
+%token OP_LSHIFT OP_RSHIFT
+%token OP_CMP_LT OP_CMP_LE OP_CMP_GT OP_CMP_GE
+%token OP_CMP_EQ OP_CMP_NEQ
+%token OP_BW_AND
+%token OP_BW_XOR
+%token OP_BW_OR
+%token OP_CMP_AND
+%token OP_CMP_OR
+//ternary
+%token OP_ASSIGN OP_ASSIGN_ADD OP_ASSIGN_SUB OP_ASSIGN_MULT OP_ASSIGN_DIV OP_ASSIGN_BW_AND OP_ASSIGN_BW_XOR OP_ASSIGN_BW_OR
+
+%token T_INVALID
+%token T_EOF
+
+// Operator Precedence
+/*%left OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
+%right OP_INC_PRE OP_DEC_PRE OP_UPLUS OP_UMINUS OP_NOT OP_BW_NOT
+%left OP_MULT OP_DIV OP_MOD
+%left OP_ADD OP_SUB
+%left OP_LSHIFT OP_RSHIFT
+%left OP_CMP_LT OP_CMP_LE OP_CMP_GT OP_CMP_GE
+%left OP_CMP_EQ OP_CMP_NEQ
+%left OP_BW_AND
+%left OP_BW_XOR
+%left OP_BW_OR
+%left OP_CMP_AND
+%left OP_CMP_OR
+//ternary
+%right OP_ASSIGN OP_ASSIGN_ADD OP_ASSIGN_SUB OP_ASSIGN_MULT OP_ASSIGN_DIV OP_ASSIGN_BW_AND OP_ASSIGN_BW_XOR OP_ASSIGN_BW_OR
+*/
+//%type<ival> expression
+//%type<fval> mixed_expression
+%type<literal_string> SourceElement;
+%type<vector> SourceElements;
+%start Program
+
+%%
+
+Program: SourceElements T_EOF 
+
+SourceElement
+	: T_STRING
+	;
+	
+SourceElements
+	: SourceElements SourceElement
+		{
+            ((std::vector<char*>*)$$)->push_back($2);
+		}
+	|
+		{
+			$$ = new std::vector<char*>;
+		}
+	;
+
+%%
+
+#define DEBUG 1
+
+void yyerror(const char* err) {
+	fprintf(stderr, "PARSE ERROR: %s\n", err);
+#if !(DEBUG)
+	exit(1);
+#endif
+}
+
+int main(int argc, char** argv) {
+	yyin = (argc <= 1) ? stdin : fopen(argv[1], "r");
+	
+#if DEBUG
+	while(1)
+	{
+#endif
+		yyparse();
+
+#if DEBUG
+	}
+#endif
+	printf("PRESS ANY KEY TO EXIT");
+	std::cin.get();
+
+	return 0;
+}

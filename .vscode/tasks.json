@@ -11,11 +11,11 @@
 			"isBuildCommand": true
 		},
 		{
-			"taskName": "test"
+			"taskName": "test",
+			"isTestCommand": true
 		},
 		{
-			"taskName": "debug",
-			"isTestCommand": true
+			"taskName": "test-file"
 		}
 	]
 }
