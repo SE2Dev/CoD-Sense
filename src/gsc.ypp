@@ -10,8 +10,41 @@
 	extern int yyparse();
 
 	void yyerror(const char* s);
+	
+	#include "gsc.tab.hpp"
+	
+	#include <string.h>
+	class Symbol
+	{
+		public:
+			Symbol* prev;
+			Symbol* next;
+			
+			YYLTYPE location;
+			char* string;
+		public:
+		
+			Symbol(void) : prev(NULL), next(NULL)
+			{
+				this->location.first_line = this->location.last_line = 0;
+				this->location.first_column = this->location.last_column = 0;
+				this->string = (char*)"";
+			}
+			
+			Symbol(char* str, YYLTYPE loc) : prev(NULL), next(NULL), location(loc)
+			{
+				this->string = strdup(str);
+			}
+			
+			~Symbol()
+			{
+				printf("DTOR\n");
+			}
+	};
 %}
 
+//%define api.pure full
+%define parse.error verbose
 
 %locations
 %initial-action
@@ -24,7 +57,7 @@
 	int		literal_int;
 	float	literal_float;
 	char*	literal_string;
-	void*	vector;
+	void*	src_elem;
 }
 
 %token<literal_string> T_STRING
@@ -65,7 +98,7 @@
 %token T_RETURN
 %token T_THREAD
 %token T_WAIT
-%token T_FILEPATH
+%token<literal_string> T_FILEPATH
 %token T_IDENTIFIER
 
 // Define Token
@@ -105,19 +138,20 @@
 */
 //%type<ival> expression
 //%type<fval> mixed_expression
+%type<literal_string> IncludeDirective;
+
 %type<literal_string> SourceElement;
-%type<vector> SourceElements;
+%type<src_elem> SourceElements;
 %start Program
 
 %%
 
 Program: SourceElements T_EOF 
 
-
-
 SourceElement
-	: T_STRING
+	: IncludeDirective
 	{
+		//printf("0x%X %s", $1, $1);
 		printf("AT %d %d %d %d\n", @1.first_line, @1.first_column, @1.last_line, @1.last_column);
 		//return $1;
 	}
@@ -126,17 +160,56 @@ SourceElement
 SourceElements
 	: SourceElements SourceElement
 		{
-            ((std::vector<char*>*)$$)->push_back($2);
+			if($1 == NULL)
+			{
+				$$ = new Symbol($2, @2);
+			}
+			else
+			{
+				Symbol* last = (Symbol*)$1;
+				Symbol* next = new Symbol($2, @2);
+				
+				last->next = next;
+				next->prev = last;
+				
+				$$ = next;
+			}
+			
+			for(Symbol* me = (Symbol*)$$; me; me = me->prev)
+			{
+				printf("%d(%d) - %d(%d) %s\n",
+					me->location.first_line,
+					me->location.first_column,
+					me->location.last_line,
+					me->location.last_column,
+					me->string);
+			}
 		}
 	|
 		{
-			$$ = new std::vector<char*>;
+			$$ = NULL;
+		}
+	| SourceElements error
+		{
+			fprintf(stderr, "ERROR AT %d(%d) - %d(%d)\n",
+				@2.first_line,
+				@2.first_column,
+				@2.last_line,
+				@2.last_column);
+			//YYABORT;
 		}
 	;
 
+	IncludeDirective:
+		INCLUDE T_FILEPATH OP_COLON_SEMI
+		{
+			printf("FILE: %s\n", $2);
+			$$ = $2;
+		}
+	;
 %%
 
-#define DEBUG 1
+#define DEBUG 0
 
 void yyerror(const char* err) {
 	fprintf(stderr, "PARSE ERROR: %s\n", err);
