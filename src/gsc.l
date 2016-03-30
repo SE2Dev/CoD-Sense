@@ -1,8 +1,13 @@
 %{
 	#include <stdio.h>
 	#include "gsc.tab.hpp"
+	
+	#define YY_DECL int yylex (YYSTYPE *yylval_param, YYLTYPE *llocp, void* yyscanner)
+	//, void* scanner)
+	
+	//#include "lex.yy.h"
 
-	#define YY_DECL int yylex()
+	/*#define YY_DECL int yylex()
 	#define YY_USER_ACTION yy_update_loc();
 		
 	void yy_update_loc()
@@ -22,8 +27,11 @@
 				yylloc.last_column++;
 			}
 		}
-	}	
+	}*/	
 %}
+
+%option reentrant
+%option bison-bridge
 
 %option noyywrap
 %option yylineno

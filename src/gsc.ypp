@@ -2,16 +2,15 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <iostream>
-
 	#include <vector>
 
-	int yylex();
-	extern FILE* yyin;
-	extern int yyparse();
-
-	void yyerror(const char* s);
-	
 	#include "gsc.tab.hpp"
+	//#include "lex.yy.h"
+
+	int yylex(YYSTYPE *yylval_param, YYLTYPE *llocp, void* yyscanner);
+	//extern int yyparse();
+	void yyerror(YYLTYPE* loc, void* scanner, const char* err);
+	
 	
 	#include <string.h>
 	class Symbol
@@ -43,7 +42,10 @@
 	};
 %}
 
-//%define api.pure full
+%define api.pure full
+%lex-param { void* scanner }
+%parse-param { void* scanner }
+
 %define parse.error verbose
 
 %locations
@@ -138,80 +140,18 @@
 */
 //%type<ival> expression
 //%type<fval> mixed_expression
-%type<literal_string> IncludeDirective;
 
-%type<literal_string> SourceElement;
-%type<src_elem> SourceElements;
 %start Program
 
 %%
 
-Program: SourceElements T_EOF 
+Program: T_STRING T_EOF 
 
-SourceElement
-	: IncludeDirective
-	{
-		//printf("0x%X %s", $1, $1);
-		printf("AT %d %d %d %d\n", @1.first_line, @1.first_column, @1.last_line, @1.last_column);
-		//return $1;
-	}
-	;
-	
-SourceElements
-	: SourceElements SourceElement
-		{
-			if($1 == NULL)
-			{
-				$$ = new Symbol($2, @2);
-			}
-			else
-			{
-				Symbol* last = (Symbol*)$1;
-				Symbol* next = new Symbol($2, @2);
-				
-				last->next = next;
-				next->prev = last;
-				
-				$$ = next;
-			}
-			
-			for(Symbol* me = (Symbol*)$$; me; me = me->prev)
-			{
-				printf("%d(%d) - %d(%d) %s\n",
-					me->location.first_line,
-					me->location.first_column,
-					me->location.last_line,
-					me->location.last_column,
-					me->string);
-			}
-		}
-	|
-		{
-			$$ = NULL;
-		}
-	| SourceElements error
-		{
-			fprintf(stderr, "ERROR AT %d(%d) - %d(%d)\n",
-				@2.first_line,
-				@2.first_column,
-				@2.last_line,
-				@2.last_column);
-			//YYABORT;
-		}
-	;
-
-	IncludeDirective:
-		INCLUDE T_FILEPATH OP_COLON_SEMI
-		{
-			printf("FILE: %s\n", $2);
-			$$ = $2;
-		}
-	;
 %%
 
 #define DEBUG 0
 
-void yyerror(const char* err) {
+void yyerror(YYLTYPE* loc, void* scanner, const char* err) {
 	fprintf(stderr, "PARSE ERROR: %s\n", err);
 #if !(DEBUG)
 	exit(1);
@@ -219,17 +159,7 @@ void yyerror(const char* err) {
 }
 
 int main(int argc, char** argv) {
-	yyin = (argc <= 1) ? stdin : fopen(argv[1], "r");
 	
-#if DEBUG
-	while(1)
-	{
-#endif
-		yyparse();
-
-#if DEBUG
-	}
-#endif
 	printf("PRESS ANY KEY TO EXIT");
 	std::cin.get();
 
