@@ -168,7 +168,7 @@ Program: T_STRING
 
 %%
 
-#define DEBUG 0
+#define DEBUG 1
 
 void yyerror(YYLTYPE* loc, void* scanner, const char* err) {
 	fprintf(stderr, "PARSE ERROR: %s\n", err);
@@ -181,12 +181,18 @@ extern int yylex_init(void** ptr_yy_globals);
 extern int yylex_destroy(void* yyscanner);
 
 int main(int argc, char** argv) {
-	void* myscanner;
 
+#if DEBUG
+while(1){
+#endif
+	void* myscanner;
     yylex_init(&myscanner);
     yyparse(myscanner);
     yylex_destroy(myscanner);
-	
+#if DEBUG
+}
+#endif
+
 	printf("PRESS ANY KEY TO EXIT");
 	std::cin.get();
 
