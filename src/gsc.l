@@ -2,22 +2,24 @@
 	#include <stdio.h>
 	#include "gsc.tab.hpp"
 	
-	#define YY_DECL int yylex (YYSTYPE *yylval_param, YYLTYPE *llocp, void* yyscanner)
-	//, void* scanner)
+	#define YY_DECL int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, void* yyscanner)
+	#define YY_USER_ACTION yy_update_loc(yyscanner);
 	
-	//#include "lex.yy.h"
-
-	/*#define YY_DECL int yylex()
-	#define YY_USER_ACTION yy_update_loc();
+	YYLTYPE *yyget_lloc  (yyscan_t yyscanner);
+	void yyset_lloc (YYLTYPE *  yylloc_param , void* yyscanner);
+	char *yyget_text (void* yyscanner );
 		
-	void yy_update_loc()
+	void yy_update_loc(void* yyscanner)
 	{
+		YYLTYPE& yylloc = *yyget_lloc(yyscanner);
+		char* text = yyget_text(yyscanner);
+		
 		yylloc.first_line = yylloc.last_line;
 		yylloc.first_column = yylloc.last_column;
 		
-		for(int i = 0; yytext[i] != '\0'; i++)
+		for(int i = 0; text[i] != '\0'; i++)
 		{
-			if(yytext[i] == '\n')
+			if(text[i] == '\n')
 			{
 				yylloc.last_line++;
 				yylloc.last_column = 0;
@@ -27,14 +29,16 @@
 				yylloc.last_column++;
 			}
 		}
-	}*/	
+	}
 %}
 
 %option reentrant
 %option bison-bridge
 
+%option bison-locations
+
 %option noyywrap
-%option yylineno
+
 
 RX_T_STRING			\"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 RX_T_FLOAT			[0-9]+\.(?:[0-9]*)?f?|\.[0-9]+f?
@@ -48,7 +52,7 @@ RX_T_IDENTIFIER		\_?[a-zA-Z\-_][a-zA-Z\-_0-9]*
 "/*"(.|\n|\r)*?"*/"	/* skip block comment */
 "/#"(.|\n|\r)*?"#/"	/* skip devscript (for now) */
 
-{RX_T_STRING}			{ printf("T_STRING, "); return T_STRING; }
+{RX_T_STRING}			{ printf("T_STRING, "); yylval->literal_string = strdup(yytext); return T_STRING; }
 {RX_T_FLOAT}			{ printf("T_FLOAT, "); return T_FLOAT; }
 {RX_T_INT}				{ printf("T_INT, "); return T_INT; }
 

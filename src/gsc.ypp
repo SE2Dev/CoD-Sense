@@ -7,7 +7,7 @@
 	#include "gsc.tab.hpp"
 	//#include "lex.yy.h"
 
-	int yylex(YYSTYPE *yylval_param, YYLTYPE *llocp, void* yyscanner);
+	int yylex(YYSTYPE *yylval_param, YYLTYPE *yylloc_param, void* yyscanner);
 	//extern int yyparse();
 	void yyerror(YYLTYPE* loc, void* scanner, const char* err);
 	
@@ -145,7 +145,26 @@
 
 %%
 
-Program: T_STRING T_EOF 
+Program: T_STRING
+	{
+		printf("0x%X %s\t", $1, $1);
+		printf("%d(%d) - %d(%d)\n",
+			@1.first_line,
+			@1.first_column,
+			@1.last_line,
+			@1.last_column);
+	}
+	|
+	
+	Program T_STRING
+	{
+		printf("0x%X %s\t", $2, $2);
+		printf("%d(%d) - %d(%d)\n",
+			@2.first_line,
+			@2.first_column,
+			@2.last_line,
+			@2.last_column);
+	}
 
 %%
 
@@ -158,7 +177,15 @@ void yyerror(YYLTYPE* loc, void* scanner, const char* err) {
 #endif
 }
 
+extern int yylex_init(void** ptr_yy_globals);
+extern int yylex_destroy(void* yyscanner);
+
 int main(int argc, char** argv) {
+	void* myscanner;
+
+    yylex_init(&myscanner);
+    yyparse(myscanner);
+    yylex_destroy(myscanner);
 	
 	printf("PRESS ANY KEY TO EXIT");
 	std::cin.get();
