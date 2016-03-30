@@ -122,9 +122,10 @@ RX_T_IDENTIFIER		\_?[a-zA-Z\-_][a-zA-Z\-_0-9]*
 "wait"			{ printf("T_WAIT, "); return T_WAIT; }
 
 ([a-zA-Z0-9]+\\)+[a-zA-Z0-9]+			{ printf("T_FILEPATH, "); return T_FILEPATH; }
-{RX_T_IDENTIFIER}	{ printf("T_IDENTIFIER, "); return T_IDENTIFIER; }
+{RX_T_IDENTIFIER}	{ printf("T_IDENTIFIER, "); return T_IDENTIFIER; } /*
 
-[.]			{ fprintf(stderr, "Unrecognized Token!, ");  return T_INVALID; } 
+.*			{ fprintf(stderr, "UNEXPECTED TOKEN '%s'", yytext);  return T_INVALID; } */ 
+
 <<EOF>>		{ return T_EOF; }
 
 %%
