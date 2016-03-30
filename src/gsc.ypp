@@ -171,7 +171,10 @@ Program: T_STRING
 #define DEBUG 1
 
 void yyerror(YYLTYPE* loc, void* scanner, const char* err) {
-	fprintf(stderr, "PARSE ERROR: %s\n", err);
+	fprintf(stderr, "PARSE ERROR AT LINE %d(%d): %s\n",
+		loc->first_line, loc->first_column,
+		err);
+		//loc->last_line, loc->last_column,
 #if !(DEBUG)
 	exit(1);
 #endif
