@@ -1,0 +1,28 @@
+#ifndef __SYMBOL_ENUM_H__
+
+#if SYMBOL_TYPE_ENUM_STRING
+	#undef SYMBOL_TYPE_ENUM_STRING
+	#include "symbol_enum.h"
+	#define SYMBOL_TYPE_ENUM_STRING 1
+	
+	#define REGISTER_SYMBOL_TYPE(X) #X
+#else
+	#define REGISTER_SYMBOL_TYPE(X) X
+#endif
+
+#if SYMBOL_TYPE_ENUM_STRING
+	static const char* SYMBOL_TYPE_STRINGS[] = {
+#else
+	enum SYMBOL_TYPE {
+#endif
+		REGISTER_SYMBOL_TYPE( S_TYPE_NONE ),
+		REGISTER_SYMBOL_TYPE( S_TYPE_STRING ),
+		REGISTER_SYMBOL_TYPE( S_TYPE_INT )
+	};
+
+	#undef REGISTER_SYMBOL_TYPE
+
+const char* SYMBOL_TYPE_STRING(SYMBOL_TYPE type);
+
+#define __SYMBOL_ENUM_H__
+#endif

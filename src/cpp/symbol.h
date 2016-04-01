@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -5,11 +7,14 @@
 #include <string.h>
 
 #include "gsc.tab.hpp"
+#include "symbol_enum.h"
 #include "location.h"
 
 class Symbol
 {
 	public:
+		SYMBOL_TYPE type;
+	
 		Symbol* parent;
 		
 		//Siblings
@@ -19,15 +24,8 @@ class Symbol
 		Range location;
 	public:
 	
-		Symbol(void) : prev(NULL), next(NULL) { }
+		Symbol(void);
+		Symbol(YYLTYPE loc);
 		
-		Symbol(YYLTYPE loc) : prev(NULL), next(NULL), location(loc)
-		{
-			printf("CTOR\n");
-		}
-		
-		~Symbol()
-		{
-			printf("DTOR\n");
-		}
+		~Symbol();
 };
