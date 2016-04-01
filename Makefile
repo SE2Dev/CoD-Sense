@@ -6,7 +6,7 @@ default:
 	flex  src/gsc.l #--header-file="lex.yy.h"
 	mv -f -t out/ *.cpp *.c *.hpp *.h 2>/dev/null; true
 	cd out
-	g++ -g -o bin/parser out/*
+	g++ -Wall -g -o bin/parser out/*
 
 test:
 	make
