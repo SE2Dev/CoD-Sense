@@ -2,44 +2,15 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <iostream>
-	#include <vector>
 
 	#include "gsc.tab.hpp"
 	//#include "lex.yy.h"
+	
+	#include "symbols.h"
 
 	int yylex(YYSTYPE *yylval_param, YYLTYPE *yylloc_param, void* yyscanner);
 	//extern int yyparse();
 	void yyerror(YYLTYPE* loc, void* scanner, const char* err);
-	
-	
-	#include <string.h>
-	class Symbol
-	{
-		public:
-			Symbol* prev;
-			Symbol* next;
-			
-			YYLTYPE location;
-			char* string;
-		public:
-		
-			Symbol(void) : prev(NULL), next(NULL)
-			{
-				this->location.first_line = this->location.last_line = 0;
-				this->location.first_column = this->location.last_column = 0;
-				this->string = (char*)"";
-			}
-			
-			Symbol(char* str, YYLTYPE loc) : prev(NULL), next(NULL), location(loc)
-			{
-				this->string = strdup(str);
-			}
-			
-			~Symbol()
-			{
-				printf("DTOR\n");
-			}
-	};
 %}
 
 %define api.pure full
