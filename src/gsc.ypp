@@ -3,10 +3,10 @@
 	#include <stdlib.h>
 	#include <iostream>
 
-	#include "gsc.tab.hpp"
 	//#include "lex.yy.h"
 	
 	#include "symbol.h"
+	#include "gsc.tab.hpp"
 
 	int yylex(YYSTYPE *yylval_param, YYLTYPE *yylloc_param, void* yyscanner);
 	//extern int yyparse();
@@ -26,11 +26,25 @@
 	@$.first_column = @$.last_column = 0;
 }
 
+%code requires
+{
+	//
+	// Forward declarations for any custom classes used in YYSTYPE
+	//
+	class Symbol;
+	class Include;
+	class String;
+	class Animtree;
+}
+
 %union {
-	int		literal_int;
-	float	literal_float;
-	char*	literal_string;
-	void*	src_elem;
+	int			literal_int;
+	float		literal_float;
+	char*		literal_string;
+	
+	Symbol*		symbol;
+	Include*	include;
+	Animtree*	animtree;
 }
 
 %token<literal_string> T_STRING
@@ -112,21 +126,52 @@
 //%type<ival> expression
 //%type<fval> mixed_expression
 
+%type<include> IncludeDirective;
+%type<animtree> AnimtreeDirective;
+
+%type<symbol> SourceElements;
+%type<symbol> SourceElement;
+
 %start Program
 
 %%
 
-Program: T_STRING
+IncludeDirective: INCLUDE T_FILEPATH
+		{
+			$$ = new Include(new String($2, @2), @$); 
+		}
+		
+AnimtreeDirective: USING_ANIMTREE OP_LPAREN T_STRING OP_RPAREN OP_COLON_SEMI
+		{
+			$$ = new Animtree(new String($3, @3), @$); 
+		}
+
+SourceElement: IncludeDirective
+		{
+			$$ = (Symbol*)$1;
+			$1->location.Print();
+		}
+	| AnimtreeDirective
+		{
+			$$ = (Symbol*)$1;
+			$1->location.Print();
+		}
+
+SourceElements: SourceElements SourceElement
+		{
+			/*$$ = new Include($2);
+			$$->location = @$;
+		   	//$$ = new Include(@1);
+			$$->location.Print();*/
+		}
+	| SourceElement
+		{
+			$$ = $1;
+		}
+	;
+
+Program: SourceElements T_EOF
 	{
-		Range r(@1);
-		r.Print();
-	}
-	|
-	
-	Program T_STRING
-	{
-		Range r(@2);
-		r.Print();
 	}
 
 %%
@@ -152,9 +197,9 @@ int main(int argc, char** argv) {
 while(1){
 #endif
 	void* myscanner;
-    yylex_init(&myscanner);
-    yyparse(myscanner);
-    yylex_destroy(myscanner);
+	yylex_init(&myscanner);
+	yyparse(myscanner);
+	yylex_destroy(myscanner);
 #if DEBUG
 }
 #endif

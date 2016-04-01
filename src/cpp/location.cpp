@@ -69,7 +69,7 @@ bool Position::operator>=(const Position& arg)
 
 Range::Range(void) { };
 
-Range::Range(YYLTYPE& loc) :
+Range::Range(const YYLTYPE& loc) :
 	start(loc.first_line, loc.first_column),
 	end(loc.last_line, loc.last_column)
 	{ };

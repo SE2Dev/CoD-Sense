@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include <string.h>
-
 #include "gsc.tab.hpp"
 
 class Position
@@ -36,7 +35,7 @@ public:
 	Position end;
 
 	Range(void);
-	Range(YYLTYPE& loc);
+	Range(const YYLTYPE& loc);
 
 	Range(Position start, Position end);
 	Range(Position start, int endLine, int endChar);
@@ -47,8 +46,8 @@ public:
 
 	void Print(void);
 	
-	/*operator=(const Position&);
-	operator==(const Position&);
+	//const Range& operator=(const YYLTYPE& loc);
+	/*operator==(const Position&);
 	operator<(const Position&);
 	operator>(const Position&);
 	operator<=(const Position&);
