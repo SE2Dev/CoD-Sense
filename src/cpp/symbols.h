@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "gsc.tab.hpp"
+#include "location.h"
 
 class Symbol
 {
@@ -15,17 +16,14 @@ class Symbol
 		Symbol* prev;
 		Symbol* next;
 		
-		YYLTYPE location;
+		Range location;
 	public:
 	
-		Symbol(void) : prev(NULL), next(NULL)
-		{
-			this->location.first_line = this->location.last_line = 0;
-			this->location.first_column = this->location.last_column = 0;
-		}
+		Symbol(void) : prev(NULL), next(NULL) { }
 		
-		Symbol(char* str, YYLTYPE loc) : prev(NULL), next(NULL), location(loc)
+		Symbol(YYLTYPE loc) : prev(NULL), next(NULL), location(loc)
 		{
+			printf("CTOR\n");
 		}
 		
 		~Symbol()

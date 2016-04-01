@@ -118,23 +118,15 @@
 
 Program: T_STRING
 	{
-		printf("0x%X %s\t", $1, $1);
-		printf("%d(%d) - %d(%d)\n",
-			@1.first_line,
-			@1.first_column,
-			@1.last_line,
-			@1.last_column);
+		Range r(@1);
+		r.Print();
 	}
 	|
 	
 	Program T_STRING
 	{
-		printf("0x%X %s\t", $2, $2);
-		printf("%d(%d) - %d(%d)\n",
-			@2.first_line,
-			@2.first_column,
-			@2.last_line,
-			@2.last_column);
+		Range r(@2);
+		r.Print();
 	}
 
 %%
@@ -145,7 +137,7 @@ void yyerror(YYLTYPE* loc, void* scanner, const char* err) {
 	fprintf(stderr, "PARSE ERROR AT LINE %d(%d): %s\n",
 		loc->first_line, loc->first_column,
 		err);
-		//loc->last_line, loc->last_column,
+		
 #if !(DEBUG)
 	exit(1);
 #endif
