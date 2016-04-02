@@ -122,7 +122,7 @@ RX_T_IDENTIFIER		\_?[a-zA-Z\-_][a-zA-Z\-_0-9]*
 "thread"		{ printf("T_THREAD, "); return T_THREAD; }
 "wait"			{ printf("T_WAIT, "); return T_WAIT; }
 
-([a-zA-Z0-9]+\\)+[a-zA-Z0-9]+			{ printf("T_FILEPATH, "); yylval->literal_string = yytext; return T_FILEPATH; }
+([_a-zA-Z0-9]+\\)+[_a-zA-Z0-9]+			{ printf("T_FILEPATH, "); yylval->literal_string = yytext; return T_FILEPATH; }
 {RX_T_IDENTIFIER}	{ printf("T_IDENTIFIER, "); return T_IDENTIFIER; } /*
 
 .*			{ fprintf(stderr, "UNEXPECTED TOKEN '%s'", yytext);  return T_INVALID; } */ 

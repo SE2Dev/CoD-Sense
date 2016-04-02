@@ -1,3 +1,3 @@
-#include maps\_utility.gsc
+#include maps\_utility
 
 #using_animtree("human");
