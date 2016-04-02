@@ -31,6 +31,9 @@
 			}
 		}
 	}
+	
+	#define PRINT_TOKEN(S) 
+	//#define PRINT_TOKEN(S) printf(S)
 %}
 
 %option reentrant
@@ -53,78 +56,78 @@ RX_T_IDENTIFIER		\_?[a-zA-Z\-_][a-zA-Z\-_0-9]*
 "/*"(.|\n|\r)*?"*/"	/* skip block comment */
 "/#"(.|\n|\r)*?"#/"	/* skip devscript (for now) */
 
-{RX_T_STRING}			{ printf("T_STRING, "); yylval->literal_string = yytext; return T_STRING; }
-{RX_T_FLOAT}			{ printf("T_FLOAT, "); return T_FLOAT; }
-{RX_T_INT}				{ printf("T_INT, "); return T_INT; }
+{RX_T_STRING}			{ PRINT_TOKEN("T_STRING, "); yylval->literal_string = yytext; return T_STRING; }
+{RX_T_FLOAT}			{ PRINT_TOKEN("T_FLOAT, "); return T_FLOAT; }
+{RX_T_INT}				{ PRINT_TOKEN("T_INT, "); return T_INT; }
 
-"#include"				{ printf("INCLUDE, "); return INCLUDE; }
-"#using_animtree"		{ printf("USING_ANIMTREE, "); return USING_ANIMTREE; }
-"#animtree"				{ printf("ANIMTREE, "); return ANIMTREE; }
+"#include"				{ PRINT_TOKEN("INCLUDE, "); return INCLUDE; }
+"#using_animtree"		{ PRINT_TOKEN("USING_ANIMTREE, "); return USING_ANIMTREE; }
+"#animtree"				{ PRINT_TOKEN("ANIMTREE, "); return ANIMTREE; }
 
-\(			{ printf("OP_LPAREN, "); return OP_LPAREN; }
-\)			{ printf("OP_RPAREN, "); return OP_RPAREN; }
-\[\s*\[		{ printf("FUNC_POINTER_BEGIN, "); return FUNC_POINTER_BEGIN; }
-\[			{ printf("OP_LBRACKET, "); return OP_LBRACKET; }	/*
-\]\s*\]		{ printf("FUNC_POINTER_END, "); return FUNC_POINTER_END; } //Using this would override ']' in nested array expressions */
-\]			{ printf("OP_RBRACKET, "); return OP_RBRACKET; }
-\{			{ printf("OP_LBRACE, "); return OP_LBRACE; }
-\}			{ printf("OP_RBRACE, "); return OP_RBRACE; }
-\,			{ printf("OP_COMMA, "); return OP_COMMA; }
-\.			{ printf("OP_DOT, "); return OP_DOT; }
-\!\=		{ printf("OP_CMP_NEQ, "); return OP_CMP_NEQ; }
-\!			{ printf("OP_NOT, "); return OP_NOT; }
-%			{ printf("OP_MOD, "); return OP_MOD; }
-\=\=		{ printf("OP_CMP_EQ, "); return OP_CMP_EQ; }
-\=			{ printf("OP_ASSIGN, "); return OP_ASSIGN; }
-\<\<		{ printf("OP_LSHIFT, "); return OP_LSHIFT; }
-\<\=		{ printf("OP_CMP_LE, "); return OP_CMP_LE; }
-\<			{ printf("OP_CMP_LT, "); return OP_CMP_LT; }
-\>\>		{ printf("OP_RSHIFT, "); return OP_RSHIFT; }
-\>\=		{ printf("OP_CMP_GE, "); return OP_CMP_GE; }
-\>			{ printf("OP_CMP_GT, "); return OP_CMP_GT; }
-\+\+		{ printf("OP_INC, "); return OP_INC; } //neither post nor pre
-\+\=		{ printf("OP_ASSIGN_ADD, "); return OP_ASSIGN_ADD; }
-\+			{ printf("OP_ADD, "); return OP_ADD; }
-\-\-		{ printf("OP_DEC, "); return OP_DEC; } //neither post nor pre
-\-\=		{ printf("OP_ASSIGN_SUB, "); return OP_ASSIGN_SUB; }
-\-			{ printf("OP_SUB, "); return OP_SUB; }
-\*\=		{ printf("OP_ASSIGN_MULT, "); return OP_ASSIGN_MULT; }
-\*			{ printf("OP_MULT, "); return OP_MULT; }
-\/=			{ printf("OP_ASSIGN_DIV, "); return OP_ASSIGN_DIV; }
-\/			{ printf("OP_DIV, "); return OP_DIV; }
-\|\|		{ printf("OP_CMP_OR, "); return OP_CMP_OR; }
-\|\=		{ printf("OP_ASSIGN_BW_OR, "); return OP_ASSIGN_BW_OR; }
-\|			{ printf("OP_BW_OR, "); return OP_BW_OR; }
-\&\&		{ printf("OP_CMP_AND, "); return OP_CMP_AND; }
-\&\=		{ printf("OP_ASSIGN_BW_AND, "); return OP_ASSIGN_BW_AND; }
-\&			{ printf("OP_BW_AND, "); return OP_BW_AND; }
-\^\=		{ printf("OP_ASSIGN_BW_XOR, "); return OP_ASSIGN_BW_XOR; }
-\^			{ printf("OP_BW_XOR, "); return OP_BW_XOR; }
-\~			{ printf("OP_BW_NOT, "); return OP_BW_NOT; }
-\:\:		{ printf("OP_COLON_DOUBLE, "); return OP_COLON_DOUBLE; }
-\:			{ printf("OP_COLON, "); return OP_COLON; }
-\;			{ printf("OP_COLON_SEMI, "); return OP_COLON_SEMI; }
-\?			{ printf("OP_QMARK, "); return OP_QMARK; } /*
-// \@		{ printf("OP_AT, "); return OP_AT; } //disabled*/
-\#			{ printf("OP_HASH, "); return OP_HASH; }
+\(			{ PRINT_TOKEN("OP_LPAREN, "); return OP_LPAREN; }
+\)			{ PRINT_TOKEN("OP_RPAREN, "); return OP_RPAREN; }
+\[\s*\[		{ PRINT_TOKEN("FUNC_POINTER_BEGIN, "); return FUNC_POINTER_BEGIN; }
+\[			{ PRINT_TOKEN("OP_LBRACKET, "); return OP_LBRACKET; }	/*
+\]\s*\]		{ PRINT_TOKEN("FUNC_POINTER_END, "); return FUNC_POINTER_END; } //Using this would override ']' in nested array expressions */
+\]			{ PRINT_TOKEN("OP_RBRACKET, "); return OP_RBRACKET; }
+\{			{ PRINT_TOKEN("OP_LBRACE, "); return OP_LBRACE; }
+\}			{ PRINT_TOKEN("OP_RBRACE, "); return OP_RBRACE; }
+\,			{ PRINT_TOKEN("OP_COMMA, "); return OP_COMMA; }
+\.			{ PRINT_TOKEN("OP_DOT, "); return OP_DOT; }
+\!\=		{ PRINT_TOKEN("OP_CMP_NEQ, "); return OP_CMP_NEQ; }
+\!			{ PRINT_TOKEN("OP_NOT, "); return OP_NOT; }
+%			{ PRINT_TOKEN("OP_MOD, "); return OP_MOD; }
+\=\=		{ PRINT_TOKEN("OP_CMP_EQ, "); return OP_CMP_EQ; }
+\=			{ PRINT_TOKEN("OP_ASSIGN, "); return OP_ASSIGN; }
+\<\<		{ PRINT_TOKEN("OP_LSHIFT, "); return OP_LSHIFT; }
+\<\=		{ PRINT_TOKEN("OP_CMP_LE, "); return OP_CMP_LE; }
+\<			{ PRINT_TOKEN("OP_CMP_LT, "); return OP_CMP_LT; }
+\>\>		{ PRINT_TOKEN("OP_RSHIFT, "); return OP_RSHIFT; }
+\>\=		{ PRINT_TOKEN("OP_CMP_GE, "); return OP_CMP_GE; }
+\>			{ PRINT_TOKEN("OP_CMP_GT, "); return OP_CMP_GT; }
+\+\+		{ PRINT_TOKEN("OP_INC, "); return OP_INC; } //neither post nor pre
+\+\=		{ PRINT_TOKEN("OP_ASSIGN_ADD, "); return OP_ASSIGN_ADD; }
+\+			{ PRINT_TOKEN("OP_ADD, "); return OP_ADD; }
+\-\-		{ PRINT_TOKEN("OP_DEC, "); return OP_DEC; } //neither post nor pre
+\-\=		{ PRINT_TOKEN("OP_ASSIGN_SUB, "); return OP_ASSIGN_SUB; }
+\-			{ PRINT_TOKEN("OP_SUB, "); return OP_SUB; }
+\*\=		{ PRINT_TOKEN("OP_ASSIGN_MULT, "); return OP_ASSIGN_MULT; }
+\*			{ PRINT_TOKEN("OP_MULT, "); return OP_MULT; }
+\/=			{ PRINT_TOKEN("OP_ASSIGN_DIV, "); return OP_ASSIGN_DIV; }
+\/			{ PRINT_TOKEN("OP_DIV, "); return OP_DIV; }
+\|\|		{ PRINT_TOKEN("OP_CMP_OR, "); return OP_CMP_OR; }
+\|\=		{ PRINT_TOKEN("OP_ASSIGN_BW_OR, "); return OP_ASSIGN_BW_OR; }
+\|			{ PRINT_TOKEN("OP_BW_OR, "); return OP_BW_OR; }
+\&\&		{ PRINT_TOKEN("OP_CMP_AND, "); return OP_CMP_AND; }
+\&\=		{ PRINT_TOKEN("OP_ASSIGN_BW_AND, "); return OP_ASSIGN_BW_AND; }
+\&			{ PRINT_TOKEN("OP_BW_AND, "); return OP_BW_AND; }
+\^\=		{ PRINT_TOKEN("OP_ASSIGN_BW_XOR, "); return OP_ASSIGN_BW_XOR; }
+\^			{ PRINT_TOKEN("OP_BW_XOR, "); return OP_BW_XOR; }
+\~			{ PRINT_TOKEN("OP_BW_NOT, "); return OP_BW_NOT; }
+\:\:		{ PRINT_TOKEN("OP_COLON_DOUBLE, "); return OP_COLON_DOUBLE; }
+\:			{ PRINT_TOKEN("OP_COLON, "); return OP_COLON; }
+\;			{ PRINT_TOKEN("OP_COLON_SEMI, "); return OP_COLON_SEMI; }
+\?			{ PRINT_TOKEN("OP_QMARK, "); return OP_QMARK; } /*
+// \@		{ PRINT_TOKEN("OP_AT, "); return OP_AT; } //disabled*/
+\#			{ PRINT_TOKEN("OP_HASH, "); return OP_HASH; }
 
-"if"			{ printf("T_IF, "); return T_IF; }
-"else"			{ printf("T_ELSE, "); return T_ELSE; }
-"switch"		{ printf("T_SWITCH, "); return T_SWITCH; }
-"case"			{ printf("T_CASE, "); return T_CASE; }
-"default"		{ printf("T_DEFAULT, "); return T_DEFAULT; }
-"break"			{ printf("T_BREAK, "); return T_BREAK; }
-"for"			{ printf("T_FOR, "); return T_FOR; }
-"while"			{ printf("T_WHILE, "); return T_WHILE; }
-"continue"		{ printf("T_CONTINUE, "); return T_CONTINUE; }
-"return"		{ printf("T_RETURN, "); return T_RETURN; }
+"if"			{ PRINT_TOKEN("T_IF, "); return T_IF; }
+"else"			{ PRINT_TOKEN("T_ELSE, "); return T_ELSE; }
+"switch"		{ PRINT_TOKEN("T_SWITCH, "); return T_SWITCH; }
+"case"			{ PRINT_TOKEN("T_CASE, "); return T_CASE; }
+"default"		{ PRINT_TOKEN("T_DEFAULT, "); return T_DEFAULT; }
+"break"			{ PRINT_TOKEN("T_BREAK, "); return T_BREAK; }
+"for"			{ PRINT_TOKEN("T_FOR, "); return T_FOR; }
+"while"			{ PRINT_TOKEN("T_WHILE, "); return T_WHILE; }
+"continue"		{ PRINT_TOKEN("T_CONTINUE, "); return T_CONTINUE; }
+"return"		{ PRINT_TOKEN("T_RETURN, "); return T_RETURN; }
 
-"thread"		{ printf("T_THREAD, "); return T_THREAD; }
-"wait"			{ printf("T_WAIT, "); return T_WAIT; }
+"thread"		{ PRINT_TOKEN("T_THREAD, "); return T_THREAD; }
+"wait"			{ PRINT_TOKEN("T_WAIT, "); return T_WAIT; }
 
-([_a-zA-Z0-9]+\\)+[_a-zA-Z0-9]+			{ printf("T_FILEPATH, "); yylval->literal_string = yytext; return T_FILEPATH; }
-{RX_T_IDENTIFIER}	{ printf("T_IDENTIFIER, "); return T_IDENTIFIER; } /*
+([_a-zA-Z0-9]+\\)+[_a-zA-Z0-9]+			{ PRINT_TOKEN("T_FILEPATH, "); yylval->literal_string = yytext; return T_FILEPATH; }
+{RX_T_IDENTIFIER}	{ PRINT_TOKEN("T_IDENTIFIER, "); yylval->literal_string = yytext; return T_IDENTIFIER; } /*
 
-.*			{ fprintf(stderr, "UNEXPECTED TOKEN '%s'", yytext);  return T_INVALID; } */ 
+.*			{ fPRINT_TOKEN(stderr, "UNEXPECTED TOKEN '%s'", yytext);  return T_INVALID; } */ 
 
 %%
