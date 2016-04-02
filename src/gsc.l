@@ -127,6 +127,4 @@ RX_T_IDENTIFIER		\_?[a-zA-Z\-_][a-zA-Z\-_0-9]*
 
 .*			{ fprintf(stderr, "UNEXPECTED TOKEN '%s'", yytext);  return T_INVALID; } */ 
 
-<<EOF>>		{ return T_EOF; }
-
 %%
