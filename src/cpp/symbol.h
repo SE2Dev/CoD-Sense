@@ -11,24 +11,38 @@
 #include "symbol_enum.h"
 #include "location.h"
 
-class Symbol
+#include "llist.h"
+
+//
+// A symbol consists of symbol meta-data
+// and also represent's a linked-list of symbols
+// for each child, a new list is defined
+//
+class Symbol : public LList<Symbol>
 {
-	public:
+	protected:
 		SYMBOL_TYPE type;
 	
 		Symbol* parent;
 		
-		//Siblings
 		Symbol* prev;
 		Symbol* next;
 		
-		Range location;
-	
+		//
+		// A list of children for this symbol
+		//
+		Symbol* children;
+		
+		Range location;		
+		
 	public:
 		Symbol(void);
 		Symbol(YYLTYPE loc);
 		
 		~Symbol();
+		
+		void AddChild(Symbol* child);
+		void PrintInfo();
 };
 
 class String : public Symbol

@@ -127,11 +127,12 @@
 //ternary
 %right OP_ASSIGN OP_ASSIGN_ADD OP_ASSIGN_SUB OP_ASSIGN_MULT OP_ASSIGN_DIV OP_ASSIGN_BW_AND OP_ASSIGN_BW_XOR OP_ASSIGN_BW_OR
 */
+
 //%type<ival> expression
 //%type<fval> mixed_expression
 
-%type<include> IncludeDirective;
-%type<animtree> AnimtreeDirective;
+%type<symbol> IncludeDirective;
+%type<symbol> AnimtreeDirective;
 %type<symbol> FunctionDeclaration;
 
 %type<symbol> FormalParameterList;
@@ -158,64 +159,52 @@ AnimtreeDirective:
 FunctionDeclaration:
 	T_IDENTIFIER OP_LPAREN FormalParameterList OP_RPAREN OP_LBRACE OP_RBRACE
 	{
-		$$ = new Symbol();
-		for(String* param = (String*)$3; param; param = (String*)param->prev)
+		$$ = new Symbol(@$);
+		$$->AddChild(new Symbol(@3));
+		/*for(String* param = (String*)$3; param; param = (String*)param->prev)
 		{
 			printf("PARAM: %s\n", param->value);
-		}
+		}*/
 	}
 
 FormalParameterList
 	: FormalParameterList OP_COMMA T_IDENTIFIER
 		{
-			$$->next = new String($3, @3);
-			$$->next->prev = $$;
-			$$ = $$->next;
+			//$$->next = new String($3, @3);
+			//$$->next->prev = $$;
+			//$$ = $$->next;
 		}
 	| T_IDENTIFIER
 		{
-			$$ = new String($1, @1);
+			//$$ = new String($1, @1);
 		}
 	|
 		{
-			$$ = new String("", @$);
+			//$$ = new String("", @$);
 		}
 
 SourceElement:
 	IncludeDirective
-		{
-			$$ = (Symbol*)$1;
-			$1->location.Print();
-		}
 	| AnimtreeDirective
-		{
-			$$ = (Symbol*)$1;
-			$1->location.Print();
-		}
 	| FunctionDeclaration
-		{
-			$$ = $1;
-		}
 
 SourceElements:
 	SourceElements SourceElement
 		{
-			$1->parent = NULL;
-			$$->next = $1;
-			$1->prev = $$;
+			$$->AddToEnd($2);
 		}
 	| SourceElement
-		{
-			$1->prev = NULL;
-			$1->parent = NULL;
-			$$ = $1;
-		}
 	;
 
 Program: SourceElements T_EOF
 	{
+		for(Symbol* a = $1; a; a = a->NextElem())
+		{
+			a->PrintInfo();
+		}
+		
+		printf("\nFILE RANGE: %d[%d] - %d[%d]\n", @$.first_line, @$.first_column, @$.last_line, @$.last_column);
 	}
-
 %%
 
 #define DEBUG 1
