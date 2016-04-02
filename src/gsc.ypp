@@ -190,16 +190,29 @@ void yyerror(YYLTYPE* loc, void* scanner, const char* err) {
 
 extern int yylex_init(void** ptr_yy_globals);
 extern int yylex_destroy(void* yyscanner);
+extern void yyset_in(FILE* in, void* scanner);
+extern void yyset_out(FILE* out, void* scanner);
 
 int main(int argc, char** argv) {
+FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
 
 #if DEBUG
 while(1){
 #endif
 	void* myscanner;
 	yylex_init(&myscanner);
+	
+	yyset_in(in, myscanner );
+	yyset_out(stdout, myscanner);
+	
 	yyparse(myscanner);
 	yylex_destroy(myscanner);
+	
+	if(argc > 1)
+	{
+		printf("\n");
+		exit(0);
+	}
 #if DEBUG
 }
 #endif

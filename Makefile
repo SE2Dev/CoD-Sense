@@ -14,5 +14,6 @@ test:
 
 test-file:
 	make
-	gnome-terminal -x ./bin/parser ./bin/test.gsc
+	gnome-terminal -x ./bin/test.sh
+	
 	
