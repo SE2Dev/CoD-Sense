@@ -42,6 +42,8 @@
 	float		literal_float;
 	char*		literal_string;
 	
+	char*		t_identifier;
+	
 	Symbol*		symbol;
 	Include*	include;
 	Animtree*	animtree;
@@ -86,7 +88,7 @@
 %token T_THREAD
 %token T_WAIT
 %token<literal_string> T_FILEPATH
-%token T_IDENTIFIER
+%token<t_identifier> T_IDENTIFIER
 
 // Define Token
 %token OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
@@ -128,6 +130,9 @@
 
 %type<include> IncludeDirective;
 %type<animtree> AnimtreeDirective;
+%type<symbol> FunctionDeclaration;
+
+%type<symbol> FormalParameterList;
 
 %type<symbol> SourceElements;
 %type<symbol> SourceElement;
@@ -136,17 +141,46 @@
 
 %%
 
-IncludeDirective: INCLUDE T_FILEPATH
+IncludeDirective:
+	INCLUDE T_FILEPATH
 		{
 			$$ = new Include(new String($2, @2), @$); 
 		}
 		
-AnimtreeDirective: USING_ANIMTREE OP_LPAREN T_STRING OP_RPAREN OP_COLON_SEMI
+AnimtreeDirective:
+	USING_ANIMTREE OP_LPAREN T_STRING OP_RPAREN OP_COLON_SEMI
 		{
 			$$ = new Animtree(new String($3, @3), @$); 
 		}
 
-SourceElement: IncludeDirective
+FunctionDeclaration:
+	T_IDENTIFIER OP_LPAREN FormalParameterList OP_RPAREN OP_LBRACE OP_RBRACE
+	{
+		$$ = new Symbol();
+		for(String* param = (String*)$3; param; param = (String*)param->prev)
+		{
+			printf("PARAM: %s\n", param->value);
+		}
+	}
+
+FormalParameterList
+	: FormalParameterList OP_COMMA T_IDENTIFIER
+		{
+			$$->next = new String($3, @3);
+			$$->next->prev = $$;
+			$$ = $$->next;
+		}
+	| T_IDENTIFIER
+		{
+			$$ = new String($1, @1);
+		}
+	|
+		{
+			$$ = new String("", @$);
+		}
+
+SourceElement:
+	IncludeDirective
 		{
 			$$ = (Symbol*)$1;
 			$1->location.Print();
@@ -156,16 +190,22 @@ SourceElement: IncludeDirective
 			$$ = (Symbol*)$1;
 			$1->location.Print();
 		}
-
-SourceElements: SourceElements SourceElement
+	| FunctionDeclaration
 		{
-			/*$$ = new Include($2);
-			$$->location = @$;
-		   	//$$ = new Include(@1);
-			$$->location.Print();*/
+			$$ = $1;
+		}
+
+SourceElements:
+	SourceElements SourceElement
+		{
+			$1->parent = NULL;
+			$$->next = $1;
+			$1->prev = $$;
 		}
 	| SourceElement
 		{
+			$1->prev = NULL;
+			$1->parent = NULL;
 			$$ = $1;
 		}
 	;
