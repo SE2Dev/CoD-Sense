@@ -22,8 +22,10 @@
 %locations
 %initial-action
 {
-	@$.first_line = @$.last_line = 0;
-	@$.first_column = @$.last_column = 0;
+	#if VSCODE_COMPATIBLE_LOCATION
+		@$.first_line = @$.last_line = 0;
+		@$.first_column = @$.last_column = 0;
+	#endif
 }
 
 %code requires
