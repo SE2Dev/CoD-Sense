@@ -111,21 +111,21 @@
 %token T_INVALID
 %token T_EOF 0
 
-// Operator Precedence
-%left OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
-%right OP_INC_PRE OP_DEC_PRE OP_UPLUS OP_UMINUS OP_NOT OP_BW_NOT
-%left OP_MULT OP_DIV OP_MOD
-%left OP_ADD OP_SUB
-%left OP_LSHIFT OP_RSHIFT
-%left OP_CMP_LT OP_CMP_LE OP_CMP_GT OP_CMP_GE
-%left OP_CMP_EQ OP_CMP_NEQ
-%left OP_BW_AND
-%left OP_BW_XOR
-%left OP_BW_OR
-%left OP_CMP_AND
-%left OP_CMP_OR
-//ternary
+// Operator Precedence ( highest line number = highest precedence )
 %right OP_ASSIGN OP_ASSIGN_ADD OP_ASSIGN_SUB OP_ASSIGN_MULT OP_ASSIGN_DIV OP_ASSIGN_BW_AND OP_ASSIGN_BW_XOR OP_ASSIGN_BW_OR
+//ternary
+%left OP_CMP_OR
+%left OP_CMP_AND
+%left OP_BW_OR
+%left OP_BW_XOR
+%left OP_BW_AND
+%left OP_CMP_EQ OP_CMP_NEQ
+%left OP_CMP_LT OP_CMP_LE OP_CMP_GT OP_CMP_GE
+%left OP_LSHIFT OP_RSHIFT
+%left OP_ADD OP_SUB
+%left OP_MULT OP_DIV OP_MOD
+%right OP_INC_PRE OP_DEC_PRE OP_UPLUS OP_UMINUS OP_NOT OP_BW_NOT
+%left OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
 
 //%type<ival> expression
 //%type<fval> mixed_expression
