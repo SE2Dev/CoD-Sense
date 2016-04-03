@@ -492,9 +492,7 @@ EmptyStatement
 IfStatement
 	: T_IF OP_LPAREN Expression OP_RPAREN Statement 
 		{ $$ = new Symbol(@$); }
-	| T_ELSE T_IF OP_LPAREN Expression OP_RPAREN Statement 
-		{ $$ = new Symbol(@$); }
-	| T_ELSE Statement 
+	| T_ELSE Statement
 		{ $$ = new Symbol(@$); }
 	;
 
