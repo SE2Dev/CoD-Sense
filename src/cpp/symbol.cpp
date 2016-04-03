@@ -48,12 +48,11 @@ void Symbol::PrintInfoRecursive(int indentLevel)
 	
 	for(Symbol* c = this->children; c; c = c->NextElem())
 	{
-		for(int i = 1; i < indentLevel; i++)
+		for(int i = 0; i < indentLevel; i++)
 		{
-			printf("    ");
+			printf("│   ");
 		}
 		printf("%s", c->NextElem() ? "├── " : "└── ");
-		
 		c->PrintInfoRecursive(indentLevel + 1);
 	}
 }
