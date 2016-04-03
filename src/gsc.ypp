@@ -30,6 +30,8 @@
 
 %code requires
 {
+	#include "operator_enum.h"
+	
 	//
 	// Forward declarations for any custom classes used in YYSTYPE
 	//
@@ -40,6 +42,8 @@
 }
 
 %union {
+	OPERATOR_TYPE	op; //operator
+	
 	int			literal_int;
 	float		literal_float;
 	char*		literal_string;
@@ -155,9 +159,9 @@
 %type<symbol> LiteralExpression;
 %type<symbol> OptionalExpression;
 %type<symbol> BasicExpression;
-%type<symbol> OperatorPostfix;
-%type<symbol> OperatorPrefix;	
-%type<symbol> OperatorMid;
+%type<op> OperatorPostfix;
+%type<op> OperatorPrefix;	
+%type<op> OperatorMid;
 %type<symbol> e;
 %type<symbol> Expression;
 %type<symbol> ExpressionStatement;
@@ -358,89 +362,92 @@ BasicExpression
 	;
 
 OperatorPostfix
-	: OP_INC 
-		{ $$ = new Symbol(@$); }
-	| OP_DEC 
-		{ $$ = new Symbol(@$); }
+	: OP_INC
+		{ $$ = OP_TYPE_INC; };
+	| OP_DEC
+		{ $$ = OP_TYPE_DEC; };
 	;
 	
 OperatorPrefix
-	: OP_INC 
-		{ $$ = new Symbol(@$); }
-	| OP_DEC 
-		{ $$ = new Symbol(@$); }
-	| OP_ADD 
-		{ $$ = new Symbol(@$); }
-	| OP_SUB 
-		{ $$ = new Symbol(@$); }
-	| OP_BW_NOT 
-		{ $$ = new Symbol(@$); }
-	| OP_NOT 
-		{ $$ = new Symbol(@$); }
+	: OP_INC
+		{ $$ = OP_TYPE_INC; };
+	| OP_DEC
+		{ $$ = OP_TYPE_DEC; };
+	| OP_ADD
+		{ $$ = OP_TYPE_ADD; };
+	| OP_SUB
+		{ $$ = OP_TYPE_SUB; };
+	| OP_BW_NOT
+		{ $$ = OP_TYPE_BW_NOT; };
+	| OP_NOT
+		{ $$ = OP_TYPE_NOT; };
 	;
 	
 OperatorMid
 	: OP_MULT 
-		{ $$ = new Symbol(@$); }
-	| OP_DIV 
-		{ $$ = new Symbol(@$); }
-	| OP_MOD 
-		{ $$ = new Symbol(@$); }
-	| OP_ADD 
-		{ $$ = new Symbol(@$); }
-	| OP_SUB 
-		{ $$ = new Symbol(@$); }
-	| OP_LSHIFT 
-		{ $$ = new Symbol(@$); }
-	| OP_RSHIFT 
-		{ $$ = new Symbol(@$); }
-	| OP_CMP_LT 
-		{ $$ = new Symbol(@$); }
-	| OP_CMP_LE 
-		{ $$ = new Symbol(@$); }
-	| OP_CMP_GT 
-		{ $$ = new Symbol(@$); }
-	| OP_CMP_GE 
-		{ $$ = new Symbol(@$); }
-	| OP_CMP_EQ 
-		{ $$ = new Symbol(@$); }
-	| OP_CMP_NEQ 
-		{ $$ = new Symbol(@$); }
-	| OP_BW_AND 
-		{ $$ = new Symbol(@$); }
-	| OP_BW_OR 
-		{ $$ = new Symbol(@$); }
-	| OP_CMP_AND 
-		{ $$ = new Symbol(@$); }
-	| OP_CMP_OR 
-		{ $$ = new Symbol(@$); }
-	| OP_ASSIGN 
-		{ $$ = new Symbol(@$); }
-	| OP_ASSIGN_ADD 
-		{ $$ = new Symbol(@$); }
-	| OP_ASSIGN_SUB 
-		{ $$ = new Symbol(@$); }
-	| OP_ASSIGN_MULT 
-		{ $$ = new Symbol(@$); }
-	| OP_ASSIGN_DIV 
-		{ $$ = new Symbol(@$); }
-	| OP_ASSIGN_BW_AND 
-		{ $$ = new Symbol(@$); }
-	| OP_ASSIGN_BW_XOR 
-		{ $$ = new Symbol(@$); }
-	| OP_ASSIGN_BW_OR 
-		{ $$ = new Symbol(@$); }
+		{ $$ = OP_TYPE_MULT; };
+	| OP_DIV
+		{ $$ = OP_TYPE_DIV; };
+	| OP_MOD
+		{ $$ = OP_TYPE_MOD; };
+	| OP_ADD
+		{ $$ = OP_TYPE_ADD; };
+	| OP_SUB
+		{ $$ = OP_TYPE_SUB; };
+	| OP_LSHIFT
+		{ $$ = OP_TYPE_LSHIFT; };
+	| OP_RSHIFT
+		{ $$ = OP_TYPE_RSHIFT; };
+	| OP_CMP_LT
+		{ $$ = OP_TYPE_CMP_LT; };
+	| OP_CMP_LE
+		{ $$ = OP_TYPE_CMP_LE; };
+	| OP_CMP_GT
+		{ $$ = OP_TYPE_CMP_GT; };
+	| OP_CMP_GE
+		{ $$ = OP_TYPE_CMP_GE; };
+	| OP_CMP_EQ
+		{ $$ = OP_TYPE_CMP_EQ; };
+	| OP_CMP_NEQ
+		{ $$ = OP_TYPE_CMP_NEQ; };
+	| OP_BW_AND
+		{ $$ = OP_TYPE_BW_AND; };
+	| OP_BW_OR
+		{ $$ = OP_TYPE_BW_OR; };
+	| OP_CMP_AND
+		{ $$ = OP_TYPE_CMP_AND; };
+	| OP_CMP_OR
+		{ $$ = OP_TYPE_CMP_OR; };
+	| OP_ASSIGN
+		{ $$ = OP_TYPE_ASSIGN; };
+	| OP_ASSIGN_ADD
+		{ $$ = OP_TYPE_ASSIGN_ADD; };
+	| OP_ASSIGN_SUB
+		{ $$ = OP_TYPE_ASSIGN_SUB; };
+	| OP_ASSIGN_MULT
+		{ $$ = OP_TYPE_ASSIGN_MULT; };
+	| OP_ASSIGN_DIV
+		{ $$ = OP_TYPE_ASSIGN_DIV; };
+	| OP_ASSIGN_BW_AND
+		{ $$ = OP_TYPE_ASSIGN_BW_AND; };
+	| OP_ASSIGN_BW_XOR
+		{ $$ = OP_TYPE_ASSIGN_BW_XOR; };
+	| OP_ASSIGN_BW_OR
+		{ $$ = OP_TYPE_ASSIGN_BW_OR; };
 	;
 
 e
 	: BasicExpression 
 		{ $$ = new Symbol(@$); }
 	| e OperatorPostfix 
-		{ $$ = new Symbol(@$); }
+		{ printf("POST %s", OPERATOR_TYPE_STRING($2)); 
+			$$ = new Symbol(@$);	}
 	| OperatorPrefix e 
-		{ $$ = new Symbol(@$); }
+		{ printf("PREFIX %s", OPERATOR_TYPE_STRING($1));  
+			$$ = new Symbol(@$);	}
 	| e OperatorMid e 
-		{ $$ = new Symbol(@$); }
+		{ printf("MID %s", OPERATOR_TYPE_STRING($2));  
+			$$ = new Symbol(@$);	}
 	| AnimReferenceExpression 
 		{ $$ = new Symbol(@$); }
 	| OP_LPAREN e OP_RPAREN 
@@ -449,12 +456,12 @@ e
 
 Expression
 	: e 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	;
 	
 ExpressionStatement
 	: Expression OP_COLON_SEMI 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; /*new Symbol(@$);*/ }
 	;
 
 ReturnStatement
@@ -504,27 +511,27 @@ LoopStatement
 		
 Statement
 	: Block 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| WaitStatement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| ExpressionStatement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| IfStatement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| SwitchStatement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| CaseStatement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| LoopStatement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| ReturnStatement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| T_BREAK OP_COLON_SEMI 
 		{ $$ = new Symbol(@$); }
 	| T_CONTINUE OP_COLON_SEMI 
 		{ $$ = new Symbol(@$); }
 	| EmptyStatement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	;
 
 StatementList

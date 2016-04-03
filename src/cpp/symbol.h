@@ -8,6 +8,7 @@
 
 #include "gsc.tab.hpp"
 
+#include "operator_enum.h"
 #include "symbol_enum.h"
 #include "location.h"
 
