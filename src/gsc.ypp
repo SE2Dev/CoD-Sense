@@ -179,40 +179,29 @@ IncludeDirective:
 	INCLUDE T_FILEPATH OP_COLON_SEMI
 		{
 			$$ = new Include(new String($2, @2), @$); 
-		}
+		};
 		
 AnimtreeDirective:
 	USING_ANIMTREE OP_LPAREN T_STRING OP_RPAREN OP_COLON_SEMI
 		{
 			$$ = new Animtree(new String($3, @3), @$); 
-		}
+		};
 
 FunctionDeclaration:
 	T_IDENTIFIER OP_LPAREN FormalParameterList OP_RPAREN Block
 	{
 		$$ = new Symbol(@$);
-		$$->AddChild(new Symbol(@3));
-		/*for(String* param = (String*)$3; param; param = (String*)param->prev)
-		{
-			printf("PARAM: %s\n", param->value);
-		}*/
-	}
+		$$->AddChild(new Group($3, @3));
+		$$->AddChild($5);
+	};
 
 FormalParameterList
 	: FormalParameterList OP_COMMA T_IDENTIFIER
-		{
-			//$$->next = new String($3, @3);
-			//$$->next->prev = $$;
-			//$$ = $$->next;
-		}
+		{ $$->AddToEnd( new String($3, @3) ); }
 	| T_IDENTIFIER
-		{
-			//$$ = new String($1, @1);
-		}
+		{ $$ = new String($1, @1); }
 	|
-		{
-			//$$ = new String("", @$);
-		}
+		{ $$ = NULL; };
 
 SourceElement:
 	IncludeDirective
@@ -231,7 +220,7 @@ Program: SourceElements T_EOF
 	{
 		for(Symbol* a = $1; a; a = a->NextElem())
 		{
-			a->PrintInfo();
+			a->PrintInfoRecursive();
 		}
 		
 		printf("\nFILE RANGE: %d[%d] - %d[%d]\n", @$.first_line, @$.first_column, @$.last_line, @$.last_column);
@@ -255,7 +244,7 @@ NumericLiteral
 
 Block
 	: OP_LBRACE StatementList OP_RBRACE 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Group($2, @2); }
 	;
 
 FunctionParameterList
@@ -484,7 +473,6 @@ WaitStatement
 
 EmptyStatement
 	: OP_COLON_SEMI
-		
 		{ $$ = new Symbol(@$); }
 	;
 
@@ -541,9 +529,11 @@ Statement
 
 StatementList
 	: StatementList Statement 
-		{ $$ = new Symbol(@$); }
+		{ $$->AddToEnd($2); }
+	| Statement
+		{ $$ = $1; }
 	| 
-		{ $$ = new Symbol(@$); }
+		{ $$ = NULL; }
 	;
 
 %%
