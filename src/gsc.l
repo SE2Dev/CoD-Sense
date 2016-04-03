@@ -47,7 +47,7 @@
 RX_T_STRING			\"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 RX_T_FLOAT			[0-9]+\.(?:[0-9]*)?f?|\.[0-9]+f?
 RX_T_INT			[0-9]+
-RX_T_IDENTIFIER		\_?[a-zA-Z\-_][a-zA-Z\-_0-9]*
+RX_T_IDENTIFIER		[a-zA-Z_][a-zA-Z\-_0-9]*
 
 %%
 
