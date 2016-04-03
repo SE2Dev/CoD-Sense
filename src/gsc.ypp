@@ -112,7 +112,7 @@
 %token T_EOF 0
 
 // Operator Precedence
-/*%left OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
+%left OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
 %right OP_INC_PRE OP_DEC_PRE OP_UPLUS OP_UMINUS OP_NOT OP_BW_NOT
 %left OP_MULT OP_DIV OP_MOD
 %left OP_ADD OP_SUB
@@ -126,7 +126,6 @@
 %left OP_CMP_OR
 //ternary
 %right OP_ASSIGN OP_ASSIGN_ADD OP_ASSIGN_SUB OP_ASSIGN_MULT OP_ASSIGN_DIV OP_ASSIGN_BW_AND OP_ASSIGN_BW_XOR OP_ASSIGN_BW_OR
-*/
 
 //%type<ival> expression
 //%type<fval> mixed_expression
