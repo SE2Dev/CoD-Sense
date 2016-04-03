@@ -175,6 +175,8 @@
 %type<symbol> Statement;
 %type<symbol> StatementList;
 
+%destructor { printf("BISON SYMBOL DESTRUCTOR\n"); } <*>
+
 %start Program
 
 %%
