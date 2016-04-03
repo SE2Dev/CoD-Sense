@@ -64,6 +64,9 @@ bool LList<T>::InList(void) const
 	return this != head;
 }
 
+//
+// Returns the size of the current list (without the head)
+//
 template <typename T>
 int LList<T>::Size(void) const
 {
