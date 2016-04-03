@@ -32,8 +32,8 @@
 		}
 	}
 	
-	//#define PRINT_TOKEN(S) 
-	#define PRINT_TOKEN(S) printf(S)
+	#define PRINT_TOKEN(S) 
+	//#define PRINT_TOKEN(S) printf(S)
 %}
 
 %option reentrant
