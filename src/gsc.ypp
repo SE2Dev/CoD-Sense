@@ -140,12 +140,44 @@
 %type<symbol> SourceElements;
 %type<symbol> SourceElement;
 
+%type<symbol> StringLiteral;
+%type<symbol> NumericLiteral;
+%type<symbol> Block;
+%type<symbol> FunctionParameterList;
+%type<symbol> FunctionCall;
+%type<symbol> FunctionExpression;
+%type<symbol> PointerExpression;
+%type<symbol> ReferenceExpression;
+%type<symbol> AnimReferenceExpression;
+%type<symbol> MemberExpression;
+%type<symbol> ElementList;
+%type<symbol> ListExpression;
+%type<symbol> ObjectExpression;	
+%type<symbol> LiteralExpression;
+%type<symbol> OptionalExpression;
+%type<symbol> BasicExpression;
+%type<symbol> OperatorPostfix;
+%type<symbol> OperatorPrefix;	
+%type<symbol> OperatorMid;
+%type<symbol> e;
+%type<symbol> Expression;
+%type<symbol> ExpressionStatement;
+%type<symbol> ReturnStatement;
+%type<symbol> WaitStatement;
+%type<symbol> EmptyStatement;
+%type<symbol> IfStatement;
+%type<symbol> SwitchStatement;
+%type<symbol> CaseStatement;
+%type<symbol> LoopStatement;
+%type<symbol> Statement;
+%type<symbol> StatementList;
+
 %start Program
 
 %%
 
 IncludeDirective:
-	INCLUDE T_FILEPATH
+	INCLUDE T_FILEPATH OP_COLON_SEMI
 		{
 			$$ = new Include(new String($2, @2), @$); 
 		}
@@ -157,7 +189,7 @@ AnimtreeDirective:
 		}
 
 FunctionDeclaration:
-	T_IDENTIFIER OP_LPAREN FormalParameterList OP_RPAREN OP_LBRACE OP_RBRACE
+	T_IDENTIFIER OP_LPAREN FormalParameterList OP_RPAREN Block
 	{
 		$$ = new Symbol(@$);
 		$$->AddChild(new Symbol(@3));
@@ -205,7 +237,213 @@ Program: SourceElements T_EOF
 		
 		printf("\nFILE RANGE: %d[%d] - %d[%d]\n", @$.first_line, @$.first_column, @$.last_line, @$.last_column);
 	}
+	
+StringLiteral
+	: T_STRING { $$ = new Symbol(@$); }
+	| OP_BW_AND T_STRING { $$ = new Symbol(@$); }
+	| OP_HASH T_STRING { $$ = new Symbol(@$); }
+	;
+
+NumericLiteral
+	: T_INT { $$ = new Symbol(@$); }
+	| T_FLOAT { $$ = new Symbol(@$); }
+	;
+
+Block
+	: OP_LBRACE StatementList OP_RBRACE { $$ = new Symbol(@$); }
+	;
+
+FunctionParameterList
+	: Expression { $$ = new Symbol(@$); }
+	| FunctionParameterList OP_COMMA Expression { $$ = new Symbol(@$); }
+	|  { $$ = new Symbol(@$); }
+	;
+
+FunctionCall
+	: T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN { $$ = new Symbol(@$); }
+	| T_THREAD T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN { $$ = new Symbol(@$); }
+	| PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN { $$ = new Symbol(@$); }
+	| T_THREAD PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN { $$ = new Symbol(@$); }
+	| ReferenceExpression OP_LPAREN FunctionParameterList OP_RPAREN { $$ = new Symbol(@$); }
+	| T_THREAD ReferenceExpression OP_LPAREN FunctionParameterList OP_RPAREN { $$ = new Symbol(@$); }
+	;
+
+FunctionExpression
+	: ObjectExpression FunctionCall { $$ = new Symbol(@$); }
+	| FunctionCall { $$ = new Symbol(@$); }
+	;
+
+PointerExpression
+	: FUNC_POINTER_BEGIN ObjectExpression OP_RBRACKET OP_RBRACKET { $$ = new Symbol(@$); }
+	| FUNC_POINTER_BEGIN ReferenceExpression OP_RBRACKET OP_RBRACKET { $$ = new Symbol(@$); }
+	;
+
+ReferenceExpression
+	: T_FILEPATH OP_COLON_DOUBLE T_IDENTIFIER { $$ = new Symbol(@$); }
+	| OP_COLON_DOUBLE T_IDENTIFIER { $$ = new Symbol(@$); }
+	;
+
+AnimReferenceExpression
+	: OP_MOD T_IDENTIFIER { $$ = new Symbol(@$); }
+	;
+
+MemberExpression
+	: ObjectExpression OP_LBRACKET Expression OP_RBRACKET { $$ = new Symbol(@$); }
+	| ObjectExpression OP_DOT ObjectExpression { $$ = new Symbol(@$); }
+	| OP_LBRACKET OP_RBRACKET { $$ = new Symbol(@$); }
+	;
+
+ElementList
+	: Expression OP_COMMA Expression //Lists must have at least two elements { $$ = new Symbol(@$); }
+	| ElementList OP_COMMA Expression { $$ = new Symbol(@$); }
+	;
+
+ListExpression
+	: OP_LPAREN ElementList OP_RPAREN { $$ = new Symbol(@$); }
+	;
+
+ObjectExpression
+	: T_IDENTIFIER { $$ = new Symbol(@$); }
+
+	| FunctionExpression { $$ = new Symbol(@$); }
+	| MemberExpression { $$ = new Symbol(@$); }
+	| OP_LPAREN ObjectExpression OP_RPAREN { $$ = new Symbol(@$); }
+	;
+	
+LiteralExpression
+	: NumericLiteral { $$ = new Symbol(@$); }
+	| StringLiteral { $$ = new Symbol(@$); }
+	;
+
+OptionalExpression
+	: Expression { $$ = new Symbol(@$); }
+	| { $$ = new Symbol(@$); }
+	;
+
+BasicExpression
+	: ObjectExpression { $$ = new Symbol(@$); }
+	| LiteralExpression { $$ = new Symbol(@$); }
+	| ListExpression //used for things like vectors { $$ = new Symbol(@$); }
+	| ReferenceExpression { $$ = new Symbol(@$); }
+	| ANIMTREE { $$ = new Symbol(@$); }
+	;
+
+OperatorPostfix
+	: OP_INC { $$ = new Symbol(@$); }
+	| OP_DEC { $$ = new Symbol(@$); }
+	;
+	
+OperatorPrefix
+	: OP_INC { $$ = new Symbol(@$); }
+	| OP_DEC { $$ = new Symbol(@$); }
+	| OP_ADD { $$ = new Symbol(@$); }
+	| OP_SUB { $$ = new Symbol(@$); }
+	| OP_BW_NOT { $$ = new Symbol(@$); }
+	| OP_NOT { $$ = new Symbol(@$); }
+	;
+	
+OperatorMid
+	: OP_MULT { $$ = new Symbol(@$); }
+	| OP_DIV { $$ = new Symbol(@$); }
+	| OP_MOD { $$ = new Symbol(@$); }
+	| OP_ADD { $$ = new Symbol(@$); }
+	| OP_SUB { $$ = new Symbol(@$); }
+	| OP_LSHIFT { $$ = new Symbol(@$); }
+	| OP_RSHIFT { $$ = new Symbol(@$); }
+	| OP_CMP_LT { $$ = new Symbol(@$); }
+	| OP_CMP_LE { $$ = new Symbol(@$); }
+	| OP_CMP_GT { $$ = new Symbol(@$); }
+	| OP_CMP_GE { $$ = new Symbol(@$); }
+	| OP_CMP_EQ { $$ = new Symbol(@$); }
+	| OP_CMP_NEQ { $$ = new Symbol(@$); }
+	| OP_BW_AND { $$ = new Symbol(@$); }
+	| OP_BW_OR { $$ = new Symbol(@$); }
+	| OP_CMP_AND { $$ = new Symbol(@$); }
+	| OP_CMP_OR { $$ = new Symbol(@$); }
+	| OP_ASSIGN { $$ = new Symbol(@$); }
+	| OP_ASSIGN_ADD { $$ = new Symbol(@$); }
+	| OP_ASSIGN_SUB { $$ = new Symbol(@$); }
+	| OP_ASSIGN_MULT { $$ = new Symbol(@$); }
+	| OP_ASSIGN_DIV { $$ = new Symbol(@$); }
+	| OP_ASSIGN_BW_AND { $$ = new Symbol(@$); }
+	| OP_ASSIGN_BW_XOR { $$ = new Symbol(@$); }
+	| OP_ASSIGN_BW_OR { $$ = new Symbol(@$); }
+	;
+
+e
+	: BasicExpression { $$ = new Symbol(@$); }
+	| e OperatorPostfix { $$ = new Symbol(@$); }
+	| OperatorPrefix e { $$ = new Symbol(@$); }
+	| e OperatorMid e { $$ = new Symbol(@$); }
+	| AnimReferenceExpression { $$ = new Symbol(@$); }
+	| OP_LPAREN e OP_RPAREN { $$ = new Symbol(@$); }
+	;
+
+Expression
+	: e { $$ = new Symbol(@$); }
+	;
+	
+ExpressionStatement
+	: Expression OP_COLON_SEMI { $$ = new Symbol(@$); }
+	;
+
+ReturnStatement
+	: T_RETURN OP_COLON_SEMI { $$ = new Symbol(@$); }
+	| T_RETURN Expression OP_COLON_SEMI { $$ = new Symbol(@$); }
+	;
+
+WaitStatement
+	: T_WAIT Expression OP_COLON_SEMI { $$ = new Symbol(@$); }
+	| T_WAIT OP_LPAREN Expression OP_RPAREN OP_COLON_SEMI { $$ = new Symbol(@$); }
+	;
+
+EmptyStatement
+	: OP_COLON_SEMI
+		{ $$ = new Symbol(@$); }
+	;
+
+IfStatement
+	: T_IF OP_LPAREN Expression OP_RPAREN Statement { $$ = new Symbol(@$); }
+	| T_ELSE T_IF OP_LPAREN Expression OP_RPAREN Statement { $$ = new Symbol(@$); }
+	| T_ELSE Statement { $$ = new Symbol(@$); }
+	;
+
+SwitchStatement
+	: T_SWITCH OP_LPAREN Expression OP_RPAREN Statement { $$ = new Symbol(@$); }
+	;
+
+CaseStatement
+	: T_CASE LiteralExpression OP_COLON { $$ = new Symbol(@$); }
+	| T_DEFAULT OP_COLON { $$ = new Symbol(@$); }
+	;
+
+LoopStatement
+	: T_WHILE OP_LPAREN Expression OP_RPAREN Statement { $$ = new Symbol(@$); }
+	| T_FOR OP_LPAREN OptionalExpression OP_COLON_SEMI OptionalExpression OP_COLON_SEMI OptionalExpression OP_RPAREN Statement { $$ = new Symbol(@$); }
+	;
+
+Statement
+	: Block { $$ = new Symbol(@$); }
+	| WaitStatement { $$ = new Symbol(@$); }
+	| ExpressionStatement { $$ = new Symbol(@$); }
+	| IfStatement { $$ = new Symbol(@$); }
+	| SwitchStatement { $$ = new Symbol(@$); }
+	| CaseStatement { $$ = new Symbol(@$); }
+	| LoopStatement { $$ = new Symbol(@$); }
+	| ReturnStatement { $$ = new Symbol(@$); }
+	| T_BREAK OP_COLON_SEMI { $$ = new Symbol(@$); }
+	| T_CONTINUE OP_COLON_SEMI { $$ = new Symbol(@$); }
+	| EmptyStatement { $$ = new Symbol(@$); }
+	;
+
+StatementList
+	: StatementList Statement { $$ = new Symbol(@$); }
+	| { $$ = new Symbol(@$); }
+	;
+
 %%
+
+#include <sys/time.h>
 
 #define DEBUG 1
 
@@ -225,11 +463,12 @@ extern void yyset_in(FILE* in, void* scanner);
 extern void yyset_out(FILE* out, void* scanner);
 
 int main(int argc, char** argv) {
-FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
-
+	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
+	
 #if DEBUG
 while(1){
 #endif
+
 	void* myscanner;
 	yylex_init(&myscanner);
 	
@@ -239,17 +478,18 @@ while(1){
 	yyparse(myscanner);
 	yylex_destroy(myscanner);
 	
+	timespec end;
+	clock_gettime(CLOCK_REALTIME, &end);
+	
 	if(argc > 1)
 	{
 		printf("\n");
 		exit(0);
 	}
+	
 #if DEBUG
 }
 #endif
-
-	printf("PRESS ANY KEY TO EXIT");
-	std::cin.get();
 
 	return 0;
 }
