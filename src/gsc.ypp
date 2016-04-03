@@ -56,7 +56,7 @@
 }
 
 %token<literal_string> T_STRING
-%token<literal_float> T_FLOAT
+%token<literal_string> T_FLOAT
 %token<literal_string> T_INT
 
 %token INCLUDE
@@ -232,18 +232,18 @@ Program: SourceElements T_EOF
 	
 StringLiteral
 	: T_STRING 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new String($1, @1); }
 	| OP_BW_AND T_STRING 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new String($2, @$); }
 	| OP_HASH T_STRING 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new String($2, @$); }
 	;
 
 NumericLiteral
 	: T_INT 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new String($1, @1); }
 	| T_FLOAT 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new String($1, @1); }
 	;
 
 Block
@@ -324,7 +324,7 @@ ListExpression
 
 ObjectExpression
 	: T_IDENTIFIER 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new String($1, @1); }
 
 	| FunctionExpression 
 		{ $$ = new Symbol(@$); }
@@ -336,9 +336,9 @@ ObjectExpression
 	
 LiteralExpression
 	: NumericLiteral 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| StringLiteral 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	;
 
 OptionalExpression
@@ -350,9 +350,9 @@ OptionalExpression
 
 BasicExpression
 	: ObjectExpression 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| LiteralExpression 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| ListExpression //used for things like vectors 
 		{ $$ = new Symbol(@$); }
 	| ReferenceExpression 
@@ -438,7 +438,7 @@ OperatorMid
 
 e
 	: BasicExpression 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| e OperatorPostfix 
 		{ printf("POST %s", OPERATOR_TYPE_STRING($2)); 
 			$$ = new Symbol(@$);	}
@@ -447,7 +447,11 @@ e
 			$$ = new Symbol(@$);	}
 	| e OperatorMid e 
 		{ printf("MID %s", OPERATOR_TYPE_STRING($2));  
-			$$ = new Symbol(@$);	}
+			$$ = new Symbol(@$);
+			$$->_debug_override_type(S_TYPE_EXPRESSION);
+			$$->AddChild($1);
+			$$->AddChild($3);	
+		}
 	| AnimReferenceExpression 
 		{ $$ = new Symbol(@$); }
 	| OP_LPAREN e OP_RPAREN 
