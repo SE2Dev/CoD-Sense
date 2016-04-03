@@ -27,12 +27,35 @@ void Symbol::AddChild(Symbol* child)
 
 void Symbol::PrintInfo()
 {
-	printf("%s at %d(%d) - %d(%d)\n",
+	printf("%s with %d children at %d(%d) - %d(%d)\n",
 		SYMBOL_TYPE_STRING(type),
+		this->children ? this->children->Size() + 1 : 0,
 		location.start.line,
 		location.start.character,
 		location.end.line,
 		location.end.character);
+}
+
+void Symbol::PrintInfoRecursive(int indentLevel)
+{
+	printf("%s with %d children at %d(%d) - %d(%d)\n",
+		SYMBOL_TYPE_STRING(type),
+		this->children ? this->children->Size() + 1 : 0,
+		location.start.line,
+		location.start.character,
+		location.end.line,
+		location.end.character);
+	
+	for(Symbol* c = this->children; c; c = c->NextElem())
+	{
+		for(int i = 1; i < indentLevel; i++)
+		{
+			printf("    ");
+		}
+		printf("%s", c->NextElem() ? "├── " : "└── ");
+		
+		c->PrintInfoRecursive(indentLevel + 1);
+	}
 }
 
 //
@@ -44,14 +67,14 @@ String::String(void) : value(NULL)
 	//printf("%s\n", SYMBOL_TYPE_STRING(type));
 }
 
-String::String(const char* str)
+String::String(char* str)
 {
 	this->type = S_TYPE_STRING;
 	this->value = strdup(str);
 	//printf("%s value: '%s'\n", SYMBOL_TYPE_STRING(type), this->value);
 }
 
-String::String(const char* str, YYLTYPE loc)
+String::String(char* str, YYLTYPE loc)
 {
 	this->type = S_TYPE_STRING;
 	this->value = strdup(str);

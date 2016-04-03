@@ -43,6 +43,7 @@ class Symbol : public LList<Symbol>
 		
 		void AddChild(Symbol* child);
 		void PrintInfo();
+		void PrintInfoRecursive(int indentLevel = 0);
 };
 
 class String : public Symbol
@@ -51,8 +52,8 @@ class String : public Symbol
 		const char* value;
 		
 		String(void);
-		String(const char* str);
-		String(const char* str, YYLTYPE loc);
+		String(char* str);
+		String(char* str, YYLTYPE loc);
 		
 		~String(void);
 };
