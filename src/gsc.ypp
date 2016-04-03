@@ -469,6 +469,9 @@ int main(int argc, char** argv) {
 while(1){
 #endif
 
+	timespec start;
+	clock_gettime(CLOCK_REALTIME, &start);
+
 	void* myscanner;
 	yylex_init(&myscanner);
 	
@@ -483,6 +486,9 @@ while(1){
 	
 	if(argc > 1)
 	{
+		int nanos = end.tv_nsec - start.tv_nsec;
+		fprintf(stderr, "Parsed in %f ms\n", (double)nanos / 1000000.0);
+		
 		printf("\n");
 		exit(0);
 	}
