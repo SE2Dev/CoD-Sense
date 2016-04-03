@@ -32,8 +32,8 @@
 		}
 	}
 	
-	#define PRINT_TOKEN(S) 
-	//#define PRINT_TOKEN(S) printf(S)
+	//#define PRINT_TOKEN(S) 
+	#define PRINT_TOKEN(S) printf(S)
 %}
 
 %option reentrant
@@ -56,9 +56,9 @@ RX_T_IDENTIFIER		[a-zA-Z_][a-zA-Z\-_0-9]*
 "/*"(.|\n|\r)*?"*/"	/* skip block comment */
 "/#"(.|\n|\r)*?"#/"	/* skip devscript (for now) */
 
-{RX_T_STRING}			{ PRINT_TOKEN("T_STRING, "); yylval->literal_string = yytext; return T_STRING; }
-{RX_T_FLOAT}			{ PRINT_TOKEN("T_FLOAT, "); return T_FLOAT; }
-{RX_T_INT}				{ PRINT_TOKEN("T_INT, "); return T_INT; }
+{RX_T_STRING}			{ PRINT_TOKEN("T_STRING, "); yylval->literal_string = strdup(yytext); return T_STRING; }
+{RX_T_FLOAT}			{ PRINT_TOKEN("T_FLOAT, "); yylval->literal_string = strdup(yytext); return T_FLOAT; }
+{RX_T_INT}				{ PRINT_TOKEN("T_INT, "); yylval->literal_string = strdup(yytext); return T_INT; }
 
 "#include"				{ PRINT_TOKEN("INCLUDE, "); return INCLUDE; }
 "#using_animtree"		{ PRINT_TOKEN("USING_ANIMTREE, "); return USING_ANIMTREE; }
@@ -125,8 +125,8 @@ RX_T_IDENTIFIER		[a-zA-Z_][a-zA-Z\-_0-9]*
 "thread"		{ PRINT_TOKEN("T_THREAD, "); return T_THREAD; }
 "wait"			{ PRINT_TOKEN("T_WAIT, "); return T_WAIT; }
 
-([_a-zA-Z0-9]+\\)+[_a-zA-Z0-9]+			{ PRINT_TOKEN("T_FILEPATH, "); yylval->literal_string = yytext; return T_FILEPATH; }
-{RX_T_IDENTIFIER}	{ PRINT_TOKEN("T_IDENTIFIER, "); yylval->literal_string = yytext; return T_IDENTIFIER; } /*
+([_a-zA-Z0-9]+\\)+[_a-zA-Z0-9]+			{ PRINT_TOKEN("T_FILEPATH, "); yylval->literal_string = strdup(yytext); return T_FILEPATH; }
+{RX_T_IDENTIFIER}	{ PRINT_TOKEN("T_IDENTIFIER, "); yylval->literal_string = strdup(yytext); return T_IDENTIFIER; } /*
 
 .*			{ fPRINT_TOKEN(stderr, "UNEXPECTED TOKEN '%s'", yytext);  return T_INVALID; } */ 
 
