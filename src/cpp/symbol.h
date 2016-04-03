@@ -43,8 +43,10 @@ class Symbol : public LList<Symbol>
 		~Symbol();
 		
 		void AddChild(Symbol* child);
-		void PrintInfo();
+		virtual void PrintInfo();
 		void PrintInfoRecursive(int indentLevel = 0);
+		
+		void _debug_override_type(SYMBOL_TYPE type);
 };
 
 //
@@ -68,6 +70,8 @@ class String : public Symbol
 		String(char* str, YYLTYPE loc);
 		
 		~String(void);
+		
+		void PrintInfo();
 };
 
 class Include : public Symbol
@@ -79,6 +83,8 @@ class Include : public Symbol
 		Include(String* filepath, YYLTYPE loc);
 		
 		~Include(void);
+		
+		void PrintInfo();
 };
 
 class Animtree : public Symbol
@@ -90,4 +96,6 @@ class Animtree : public Symbol
 		Animtree(String* animtree, YYLTYPE loc);
 		
 		~Animtree(void);
+		
+		void PrintInfo();
 };

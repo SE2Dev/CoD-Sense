@@ -38,13 +38,7 @@ void Symbol::PrintInfo()
 
 void Symbol::PrintInfoRecursive(int indentLevel)
 {
-	printf("%s with %d children at %d(%d) - %d(%d)\n",
-		SYMBOL_TYPE_STRING(type),
-		this->children ? this->children->Size() + 1 : 0,
-		location.start.line,
-		location.start.character,
-		location.end.line,
-		location.end.character);
+	this->PrintInfo();
 	
 	for(Symbol* c = this->children; c; c = c->NextElem())
 	{
@@ -55,6 +49,11 @@ void Symbol::PrintInfoRecursive(int indentLevel)
 		printf("%s", c->NextElem() ? "├── " : "└── ");
 		c->PrintInfoRecursive(indentLevel + 1);
 	}
+}
+
+void Symbol::_debug_override_type(SYMBOL_TYPE type)
+{
+	this->type = type;
 }
 
 //
@@ -99,6 +98,18 @@ String::~String()
 	delete[] value;
 }
 
+void String::PrintInfo()
+{
+	printf("%s with %d children at %d(%d) - %d(%d), name '%s'\n",
+		SYMBOL_TYPE_STRING(type),
+		this->children ? this->children->Size() + 1 : 0,
+		location.start.line,
+		location.start.character,
+		location.end.line,
+		location.end.character,
+		this->value);
+}
+
 //
 // INCLUDE
 //
@@ -120,6 +131,18 @@ Include::~Include()
 	delete[] file;
 }
 
+void Include::PrintInfo()
+{
+	printf("%s with %d children at %d(%d) - %d(%d), file '%s'\n",
+		SYMBOL_TYPE_STRING(type),
+		this->children ? this->children->Size() + 1 : 0,
+		location.start.line,
+		location.start.character,
+		location.end.line,
+		location.end.character,
+		this->file->value);
+}
+
 //
 // Animtree
 //
@@ -139,4 +162,16 @@ Animtree::Animtree(String* animtree, YYLTYPE loc): string(animtree)
 Animtree::~Animtree()
 {
 	delete[] string;
+}
+
+void Animtree::PrintInfo()
+{
+	printf("%s with %d children at %d(%d) - %d(%d), str '%s'\n",
+		SYMBOL_TYPE_STRING(type),
+		this->children ? this->children->Size() + 1 : 0,
+		location.start.line,
+		location.start.character,
+		location.end.line,
+		location.end.character,
+		this->string->value);
 }
