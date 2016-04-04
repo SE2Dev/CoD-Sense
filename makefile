@@ -19,7 +19,7 @@ clean:
 	@mkdir -p src/cpp/parser && rm -f -r src/cpp/parser/*
 
 parser:
-	@bison -o ${PARSER_SRC_OUT}".cpp" -d ${PARSER_SRC}
+	@bison -v -o ${PARSER_SRC_OUT}".cpp" -d ${PARSER_SRC}
 	@flex -o ${LEXER_SRC_OUT}".cpp" -d ${LEXER_SRC}
 	
 compile:
