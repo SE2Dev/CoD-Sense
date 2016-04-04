@@ -72,7 +72,7 @@ class String : public Symbol
 		String(char* str);
 		String(char* str, YYLTYPE loc);
 		
-		~String(void);
+		virtual ~String(void);
 		
 		void PrintInfo();
 };

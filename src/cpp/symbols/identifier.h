@@ -10,7 +10,7 @@ class Identifier : public Symbol
 		Identifier(char* str);
 		Identifier(char* str, YYLTYPE loc);
 		
-		~Identifier(void);
+		virtual ~Identifier(void);
 		
 		void PrintInfo();
 };
