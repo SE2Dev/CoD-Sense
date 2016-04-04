@@ -48,57 +48,14 @@ class Symbol : public LList<Symbol>
 		void _debug_override_type(SYMBOL_TYPE type);
 };
 
+//
+// Include any child class types AFTER Symbol is defined
+//
+#include "include.h"
+#include "animtree.h"
+
 #include "expression.h"
 #include "identifier.h"
 #include "reference.h"
-
-//
-// A Group consists of multiple child symbols
-// it is generally used to define scopes, etc.
-//
-class Group : public Symbol
-{
-public:
-	Group(Symbol* childList, YYLTYPE range);	
-	~Group(void);
-};
-
-class String : public Symbol
-{
-	public:
-		const char* value;
-		
-		String(void);
-		String(char* str);
-		String(char* str, YYLTYPE loc);
-		
-		virtual ~String(void);
-		
-		void PrintInfo();
-};
-
-class Include : public Symbol
-{
-	public:
-		String* file;
-		
-		Include(void);
-		Include(String* filepath, YYLTYPE loc);
-		
-		~Include(void);
-		
-		void PrintInfo();
-};
-
-class Animtree : public Symbol
-{
-	public:
-		String* string;
-		
-		Animtree(void);
-		Animtree(String* animtree, YYLTYPE loc);
-		
-		~Animtree(void);
-		
-		void PrintInfo();
-};
+#include "string.h"
+#include "group.h"
