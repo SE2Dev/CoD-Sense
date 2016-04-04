@@ -6,13 +6,13 @@
 
 #include <string.h>
 
-#include "gsc.tab.hpp"
+#include "../parser/gsc.tab.hpp"
 
 #include "operator_enum.h"
 #include "symbol_enum.h"
-#include "location.h"
+#include "../util/location.h"
 
-#include "llist.h"
+#include "../util/llist.h"
 
 //
 // A symbol consists of symbol meta-data

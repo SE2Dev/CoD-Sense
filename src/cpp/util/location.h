@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include <string.h>
-#include "gsc.tab.hpp"
+#include "../parser/gsc.tab.hpp"
 
 class Position
 {

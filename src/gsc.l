@@ -1,7 +1,7 @@
 %{
 	#include <stdio.h>
 	#include "gsc.tab.hpp"
-	#include "symbol.h"
+	#include "../symbols/symbol.h"
 	
 	#define YY_DECL int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, void* yyscanner)
 	#define YY_USER_ACTION yy_update_loc(yyscanner);

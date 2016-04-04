@@ -1,4 +1,7 @@
-bin/parser
-out/
 .vscode/keybindings.json
+
+bin/parser
+obj/
+src/cpp/parser
+
 browse.VC.db

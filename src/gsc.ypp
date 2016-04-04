@@ -5,7 +5,7 @@
 
 	//#include "lex.yy.h"
 	
-	#include "symbol.h"
+	#include "../symbols/symbol.h"
 	#include "gsc.tab.hpp"
 
 	int yylex(YYSTYPE *yylval_param, YYLTYPE *yylloc_param, void* yyscanner);
@@ -30,7 +30,7 @@
 
 %code requires
 {
-	#include "operator_enum.h"
+	#include "../symbols/operator_enum.h"
 	
 	//
 	// Forward declarations for any custom classes used in YYSTYPE
