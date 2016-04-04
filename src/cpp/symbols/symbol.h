@@ -11,7 +11,6 @@
 #include "operator_enum.h"
 #include "symbol_enum.h"
 #include "../util/location.h"
-
 #include "../util/llist.h"
 
 //
@@ -48,6 +47,8 @@ class Symbol : public LList<Symbol>
 		
 		void _debug_override_type(SYMBOL_TYPE type);
 };
+
+#include "expression.h"
 
 //
 // A Group consists of multiple child symbols

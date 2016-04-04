@@ -39,6 +39,7 @@
 	class Include;
 	class String;
 	class Animtree;
+	class Expression;
 }
 
 %union {
@@ -53,6 +54,8 @@
 	Symbol*		symbol;
 	Include*	include;
 	Animtree*	animtree;
+	
+	Expression* expression;
 }
 
 %token<literal_string> T_STRING
@@ -158,11 +161,11 @@
 %type<symbol> ObjectExpression;	
 %type<symbol> LiteralExpression;
 %type<symbol> OptionalExpression;
-%type<symbol> BasicExpression;
+%type<expression> BasicExpression;
 %type<op> OperatorPostfix;
 %type<op> OperatorPrefix;	
 %type<op> OperatorMid;
-%type<symbol> e;
+%type<expression> e;
 %type<symbol> Expression;
 %type<symbol> ExpressionStatement;
 %type<symbol> ReturnStatement;
@@ -352,15 +355,15 @@ OptionalExpression
 
 BasicExpression
 	: ObjectExpression 
-		{ $$ = $1; }
+		{ $$ = (Expression*)$1; }
 	| LiteralExpression 
-		{ $$ = $1; }
+		{ $$ = (Expression*)$1; }
 	| ListExpression //used for things like vectors 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Expression(@$); }
 	| ReferenceExpression 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Expression(@$); }
 	| ANIMTREE 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Expression(@$); }
 	;
 
 OperatorPostfix
@@ -442,22 +445,15 @@ e
 	: BasicExpression 
 		{ $$ = $1; }
 	| e OperatorPostfix 
-		{ printf("POST %s", OPERATOR_TYPE_STRING($2)); 
-			$$ = new Symbol(@$);	}
+		{ $$ = new Expression($1, $2, @$); }
 	| OperatorPrefix e 
-		{ printf("PREFIX %s", OPERATOR_TYPE_STRING($1));  
-			$$ = new Symbol(@$);	}
+		{ $$ = new Expression($1, $2, @$); }
 	| e OperatorMid e 
-		{ printf("MID %s", OPERATOR_TYPE_STRING($2));  
-			$$ = new Symbol(@$);
-			$$->_debug_override_type(S_TYPE_EXPRESSION);
-			$$->AddChild($1);
-			$$->AddChild($3);	
-		}
+		{ $$ = new Expression($1, $2, $3, @$); }
 	| AnimReferenceExpression 
-		{ $$ = new Symbol(@$); }
+		{ $$ = (Expression*)$1; }
 	| OP_LPAREN e OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{ $$ = (Expression*)$2; }
 	;
 
 Expression
