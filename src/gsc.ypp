@@ -37,9 +37,13 @@
 	//
 	class Symbol;
 	class Include;
+	
 	class String;
+	class Identifier;
+	
 	class Animtree;
 	class Expression;
+	class Reference;
 }
 
 %union {
@@ -56,6 +60,7 @@
 	Animtree*	animtree;
 	
 	Expression* expression;
+	Reference* reference;
 }
 
 %token<literal_string> T_STRING
@@ -153,7 +158,7 @@
 %type<symbol> FunctionCall;
 %type<symbol> FunctionExpression;
 %type<symbol> PointerExpression;
-%type<symbol> ReferenceExpression;
+%type<reference> ReferenceExpression;
 %type<symbol> AnimReferenceExpression;
 %type<symbol> MemberExpression;
 %type<symbol> ElementList;
@@ -200,15 +205,19 @@ FunctionDeclaration:
 	T_IDENTIFIER OP_LPAREN FormalParameterList OP_RPAREN Block
 	{
 		$$ = new Symbol(@$);
+		$$->AddChild(new Identifier($1,@1));
 		$$->AddChild(new Group($3, @3));
 		$$->AddChild($5);
 	};
 
 FormalParameterList
 	: FormalParameterList OP_COMMA T_IDENTIFIER
-		{ $$->AddToEnd( new String($3, @3) ); }
+		{
+			$1->AddToEnd( new Identifier($3, @3) );
+			$$ = $1;
+		}
 	| T_IDENTIFIER
-		{ $$ = new String($1, @1); }
+		{ $$ = new Identifier($1, @1); }
 	|
 		{ $$ = NULL; };
 
@@ -220,7 +229,8 @@ SourceElement:
 SourceElements:
 	SourceElements SourceElement
 		{
-			$$->AddToEnd($2);
+			$1->AddToEnd($2);
+			$$ = $1;
 		}
 	| SourceElement
 	;
@@ -258,18 +268,25 @@ Block
 
 FunctionParameterList
 	: Expression 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| FunctionParameterList OP_COMMA Expression 
-		{ $$ = new Symbol(@$); }
+		{
+			$1->AddToEnd($3);
+			$$ = $1;
+		}
 	|  
 		{ $$ = new Symbol(@$); }
 	;
 
 FunctionCall
 	: T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{
+			$$ = new Symbol(@$);
+			$$->AddChild(new Identifier($1,@1));
+			$$->AddChild($3);
+		}
 	| T_THREAD T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Identifier($2, @2); }
 	| PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN 
 		{ $$ = new Symbol(@$); }
 	| T_THREAD PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN 
@@ -296,14 +313,21 @@ PointerExpression
 
 ReferenceExpression
 	: T_FILEPATH OP_COLON_DOUBLE T_IDENTIFIER 
-		{ $$ = new Symbol(@$); }
+		{
+			String* file = new String($1, @1);
+			Identifier* identifier = new Identifier($3, @3);
+			$$ = new Reference(file, identifier, @$);
+		}
 	| OP_COLON_DOUBLE T_IDENTIFIER 
-		{ $$ = new Symbol(@$); }
+		{
+			Identifier* identifier = new Identifier($2, @2);
+			$$ = new Reference(NULL, identifier, @$);
+		}
 	;
 
 AnimReferenceExpression
 	: OP_MOD T_IDENTIFIER 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Identifier($2, @2); }
 	;
 
 MemberExpression
@@ -329,7 +353,7 @@ ListExpression
 
 ObjectExpression
 	: T_IDENTIFIER 
-		{ $$ = new String($1, @1); }
+		{ $$ = new Identifier($1, @1); }
 
 	| FunctionExpression 
 		{ $$ = new Symbol(@$); }
@@ -508,7 +532,9 @@ LoopStatement
 	: T_WHILE OP_LPAREN Expression OP_RPAREN Statement 
 		{ $$ = new Symbol(@$); }
 	| T_FOR OP_LPAREN OptionalExpression OP_COLON_SEMI OptionalExpression OP_COLON_SEMI OptionalExpression OP_RPAREN Statement 
-		{ $$ = new Symbol(@$); }
+		{
+			$$ = new Symbol(@$);
+		}
 	;
 		
 Statement
@@ -538,7 +564,10 @@ Statement
 
 StatementList
 	: StatementList Statement 
-		{ $$->AddToEnd($2); }
+		{
+			$1->AddToEnd($2);
+			$$ = $1;
+		}
 	| Statement
 		{ $$ = $1; }
 	| 

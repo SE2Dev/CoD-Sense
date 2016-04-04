@@ -11,6 +11,7 @@ main(arg1, arg2, arg3, arg4, arg5, arg6)
 	 ++prefixme;
 	 
 	 1+2;
+	 a=1+2*4;
 }
 
 myfunc(aaaa, bb , ccCC_c)

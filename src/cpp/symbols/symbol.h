@@ -49,6 +49,8 @@ class Symbol : public LList<Symbol>
 };
 
 #include "expression.h"
+#include "identifier.h"
+#include "reference.h"
 
 //
 // A Group consists of multiple child symbols
