@@ -38,8 +38,8 @@
 
 %option reentrant
 %option bison-bridge
-
 %option bison-locations
+%option nounput
 
 %option noyywrap
 
