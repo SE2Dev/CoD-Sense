@@ -4,11 +4,11 @@
 class Reference : public Symbol
 {
 	public:
-		String* file;
+		Literal* file;
 		Identifier* identifier;
 		
 		Reference(void);
-		Reference(String* filepath, Identifier* identifier, YYLTYPE loc);
+		Reference(Literal* filepath, Identifier* identifier, YYLTYPE loc);
 		
 		~Reference(void);
 		

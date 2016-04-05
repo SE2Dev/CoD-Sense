@@ -6,7 +6,7 @@ Animtree::Animtree(void) : string(NULL)
 	//printf("%s\n", SYMBOL_TYPE_STRING(type));
 }
 
-Animtree::Animtree(String* animtree, YYLTYPE loc): string(animtree)
+Animtree::Animtree(Literal* animtree, YYLTYPE loc): string(animtree)
 {
 	this->type = S_TYPE_ANIMTREE;
 	this->location = loc;

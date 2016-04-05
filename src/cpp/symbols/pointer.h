@@ -4,7 +4,7 @@
 class Pointer : public Symbol
 {
 	public:
-		String* file;
+		Literal* file;
 		Identifier* identifier;
 		
 		Pointer(void);

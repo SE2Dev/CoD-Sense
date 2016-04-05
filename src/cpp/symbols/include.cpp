@@ -7,7 +7,7 @@ Include::Include(void) : file(NULL)
 	//printf("%s\n", SYMBOL_TYPE_STRING(type));
 }
 
-Include::Include(String* filepath, YYLTYPE loc): file(filepath)
+Include::Include(Literal* filepath, YYLTYPE loc): file(filepath)
 {
 	this->type = S_TYPE_INCLUDE;
 	this->location = loc;

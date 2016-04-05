@@ -38,7 +38,7 @@
 	class Symbol;
 	class Include;
 	
-	class String;
+	class Literal;
 	class Identifier;
 	
 	class Animtree;
@@ -64,6 +64,8 @@
 	Symbol*		symbol;
 	Include*	include;
 	Animtree*	animtree;
+	
+	Literal*	literal;
 	
 	Expression* expression;
 	Reference* reference;
@@ -163,8 +165,8 @@
 %type<symbol> 		SourceElements;
 %type<symbol> 		SourceElement;
 		
-%type<symbol> 		StringLiteral;
-%type<symbol> 		NumericLiteral;
+%type<literal> 		StringLiteral;
+%type<literal> 		NumericLiteral;
 %type<symbol> 		Block;
 %type<symbol> 		FunctionParameterList;
 %type<call>			FunctionCall;
@@ -204,13 +206,13 @@
 IncludeDirective:
 	INCLUDE T_FILEPATH OP_COLON_SEMI
 		{
-			$$ = new Include(new String($2, @2), @$); 
+			$$ = new Include(new Literal($2, @2, S_TYPE_LITERAL_FILEPATH), @$); 
 		};
 		
 AnimtreeDirective:
 	USING_ANIMTREE OP_LPAREN T_STRING OP_RPAREN OP_COLON_SEMI
 		{
-			$$ = new Animtree(new String($3, @3), @$); 
+			$$ = new Animtree(new Literal($3, @3, S_TYPE_LITERAL_STRING), @$); 
 		};
 
 FunctionDeclaration:
@@ -259,18 +261,18 @@ Program: SourceElements T_EOF
 	
 StringLiteral
 	: T_STRING 
-		{ $$ = new String($1, @1); }
+		{ $$ = new Literal($1, @1, S_TYPE_LITERAL_STRING); }
 	| OP_BW_AND T_STRING 
-		{ $$ = new String($2, @$); }
+		{ $$ = new Literal($2, @$, S_TYPE_LITERAL_STRING); }
 	| OP_HASH T_STRING 
-		{ $$ = new String($2, @$); }
+		{ $$ = new Literal($2, @$, S_TYPE_LITERAL_STRING); }
 	;
 
 NumericLiteral
 	: T_INT 
-		{ $$ = new String($1, @1); }
+		{ $$ = new Literal($1, @1, S_TYPE_LITERAL_INT); }
 	| T_FLOAT 
-		{ $$ = new String($1, @1); }
+		{ $$ = new Literal($1, @1, S_TYPE_LITERAL_FLOAT); }
 	;
 
 Block
@@ -349,7 +351,7 @@ PointerExpression
 ReferenceExpression
 	: T_FILEPATH OP_COLON_DOUBLE T_IDENTIFIER 
 		{
-			String* file = new String($1, @1);
+			Literal* file = new Literal($1, @1, S_TYPE_LITERAL_FILEPATH);
 			Identifier* identifier = new Identifier($3, @3);
 			$$ = new Reference(file, identifier, @$);
 		}

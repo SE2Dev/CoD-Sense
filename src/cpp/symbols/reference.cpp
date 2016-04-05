@@ -5,7 +5,7 @@ Reference::Reference(void) : file(NULL), identifier(NULL)
 	this->type = S_TYPE_REFERENCE;
 }
 
-Reference::Reference(String* filepath, Identifier* identifier, YYLTYPE loc)
+Reference::Reference(Literal* filepath, Identifier* identifier, YYLTYPE loc)
 {
 	this->type = S_TYPE_REFERENCE;
 	

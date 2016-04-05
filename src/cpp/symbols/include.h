@@ -4,10 +4,10 @@
 class Include : public Symbol
 {
 	public:
-		String* file;
+		Literal* file;
 		
 		Include(void);
-		Include(String* filepath, YYLTYPE loc);
+		Include(Literal* filepath, YYLTYPE loc);
 		
 		~Include(void);
 		

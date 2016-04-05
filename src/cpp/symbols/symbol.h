@@ -51,6 +51,8 @@ class Symbol : public LList<Symbol>
 //
 // Include any child class types AFTER Symbol is defined
 //
+#include "literal.h"
+
 #include "include.h"
 #include "animtree.h"
 #include "function.h"
@@ -59,7 +61,6 @@ class Symbol : public LList<Symbol>
 #include "identifier.h"
 #include "reference.h"
 #include "pointer.h"
-#include "string.h"
 #include "group.h"
 
 #include "return.h"

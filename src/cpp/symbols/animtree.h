@@ -4,10 +4,10 @@
 class Animtree : public Symbol
 {
 	public:
-		String* string;
+		Literal* string;
 		
 		Animtree(void);
-		Animtree(String* animtree, YYLTYPE loc);
+		Animtree(Literal* animtree, YYLTYPE loc);
 		
 		~Animtree(void);
 		
