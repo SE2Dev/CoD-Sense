@@ -12,6 +12,9 @@ main(arg1, arg2, arg3, arg4, arg5, arg6)
 	 
 	 1+2;
 	 a=1+2*4;
+	 
+	 myfunc = ::me;
+	 maps\file::func;
 }
 
 myfunc(aaaa, bb , ccCC_c)

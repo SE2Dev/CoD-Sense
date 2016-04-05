@@ -53,6 +53,7 @@ class Symbol : public LList<Symbol>
 //
 #include "include.h"
 #include "animtree.h"
+#include "function.h"
 
 #include "expression.h"
 #include "identifier.h"

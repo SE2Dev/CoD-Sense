@@ -7,9 +7,14 @@ Reference::Reference(void) : file(NULL), identifier(NULL)
 
 Reference::Reference(String* filepath, Identifier* identifier, YYLTYPE loc)
 {
+	this->type = S_TYPE_REFERENCE;
+	
 	this->file = filepath;
 	this->identifier = identifier;
 	this->location = loc;
+	
+	this->AddChild(filepath);
+	this->AddChild(identifier);
 }
 
 Reference::~Reference()

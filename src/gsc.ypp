@@ -204,7 +204,7 @@ AnimtreeDirective:
 FunctionDeclaration:
 	T_IDENTIFIER OP_LPAREN FormalParameterList OP_RPAREN Block
 	{
-		$$ = new Symbol(@$);
+		$$ = new Function(new Identifier($1, @1), @$);
 		$$->AddChild(new Identifier($1,@1));
 		$$->AddChild(new Group($3, @3));
 		$$->AddChild($5);
@@ -385,7 +385,7 @@ BasicExpression
 	| ListExpression //used for things like vectors 
 		{ $$ = new Expression(@$); }
 	| ReferenceExpression 
-		{ $$ = new Expression(@$); }
+		{ $$ = (Expression*)$1; }
 	| ANIMTREE 
 		{ $$ = new Expression(@$); }
 	;
