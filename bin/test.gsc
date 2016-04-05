@@ -19,6 +19,8 @@ main(arg1, arg2, arg3, arg4, arg5, arg6)
 	 idfunc();
 	 thread threadfunc();
 	 [[ref]]();
+	 
+	 return 67;
 }
 
 myfunc(aaaa, bb , ccCC_c)

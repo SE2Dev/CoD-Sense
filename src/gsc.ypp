@@ -48,6 +48,8 @@
 	
 	class Function;
 	class Call;
+	
+	class Return;
 }
 
 %union {
@@ -69,6 +71,8 @@
 	
 	Function* function;
 	Call* call;
+	
+	Return* retn;
 }
 
 %token<literal_string> T_STRING
@@ -179,7 +183,7 @@
 %type<op> 			OperatorPrefix;	
 %type<op> 			OperatorMid;
 %type<expression>	e;
-%type<symbol> 		Expression;
+%type<expression> 	Expression;
 %type<symbol> 		ExpressionStatement;
 %type<symbol> 		ReturnStatement;
 %type<symbol> 		WaitStatement;
@@ -327,7 +331,10 @@ FunctionCall
 
 FunctionExpression
 	: ObjectExpression FunctionCall 
-		{ $$ = $2; }
+		{
+			// Add Object Expression Child
+			$$ = $2;
+		}
 	| FunctionCall 
 		{ $$ = $1; }
 	;
@@ -383,11 +390,9 @@ ObjectExpression
 	: T_IDENTIFIER 
 		{ $$ = new Identifier($1, @1); }
 	| FunctionExpression
-		{ $$ = $1; }
 	| MemberExpression 
-		{ $$ = new Symbol(@$); }
 	| OP_LPAREN ObjectExpression OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $2; }
 	;
 	
 LiteralExpression
@@ -517,9 +522,9 @@ ExpressionStatement
 
 ReturnStatement
 	: T_RETURN OP_COLON_SEMI 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Return(NULL, @$); }
 	| T_RETURN Expression OP_COLON_SEMI 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Return($2, @$); }
 	;
 
 WaitStatement
@@ -570,6 +575,7 @@ Statement
 	| SwitchStatement 
 	| CaseStatement 
 	| LoopStatement 
+	| ReturnStatement
 	| T_BREAK OP_COLON_SEMI 
 		{ $$ = new Symbol(@$); }
 	| T_CONTINUE OP_COLON_SEMI 
