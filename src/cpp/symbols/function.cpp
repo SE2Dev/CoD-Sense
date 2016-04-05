@@ -35,12 +35,12 @@ void Function::PrintInfo()
 
 
 
-Call::Call(void) : flags(CALL_FLAG_NULL), identifier(NULL)
+Call::Call(void) : flags(CALL_FLAG_NULL), identifier(NULL), caller(NULL)
 {
 	this->type = S_TYPE_FUNCTION_CALL;
 }
 
-Call::Call(YYLTYPE loc, int flags) : flags(flags), identifier(NULL)
+Call::Call(YYLTYPE loc, int flags) : flags(flags), identifier(NULL), caller(NULL)
 {
 	this->type = S_TYPE_FUNCTION_CALL;
 	this->location = loc;
@@ -49,6 +49,22 @@ Call::Call(YYLTYPE loc, int flags) : flags(flags), identifier(NULL)
 Call::~Call()
 {
 	delete this->identifier;
+}
+
+void Call::SetCaller(Expression* caller)
+{
+	if(this->flags & CALL_FLAGS_EXPLICIT_CALLER)
+		return;
+
+	this->caller = caller;
+	if(caller)
+	{
+		// Swap the head of the children list with the caller, insert the old list after that
+		Symbol* children = this->children;
+		this->children = caller;
+		caller->AddToEnd(children);
+	}
+	this->flags |= CALL_FLAGS_EXPLICIT_CALLER;
 }
 
 void Call::PrintInfo()

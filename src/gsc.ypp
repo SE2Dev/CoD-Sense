@@ -334,7 +334,7 @@ FunctionCall
 FunctionExpression
 	: ObjectExpression FunctionCall 
 		{
-			// Add Object Expression Child
+			$2->SetCaller((Expression*)$1);// Add Object Expression Child
 			$$ = $2;
 		}
 	| FunctionCall 
