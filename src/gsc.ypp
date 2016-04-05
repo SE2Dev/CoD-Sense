@@ -44,6 +44,10 @@
 	class Animtree;
 	class Expression;
 	class Reference;
+	class Pointer;
+	
+	class Function;
+	class Call;
 }
 
 %union {
@@ -61,6 +65,10 @@
 	
 	Expression* expression;
 	Reference* reference;
+	Pointer* pointer;
+	
+	Function* function;
+	Call* call;
 }
 
 %token<literal_string> T_STRING
@@ -155,9 +163,9 @@
 %type<symbol> NumericLiteral;
 %type<symbol> Block;
 %type<symbol> FunctionParameterList;
-%type<symbol> FunctionCall;
+%type<function> FunctionCall;
 %type<symbol> FunctionExpression;
-%type<symbol> PointerExpression;
+%type<pointer> PointerExpression;
 %type<reference> ReferenceExpression;
 %type<symbol> AnimReferenceExpression;
 %type<symbol> MemberExpression;
@@ -281,20 +289,20 @@ FunctionParameterList
 FunctionCall
 	: T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN 
 		{
-			$$ = new Symbol(@$);
+			$$ = new Function(@$);
 			$$->AddChild(new Identifier($1,@1));
 			$$->AddChild($3);
 		}
 	| T_THREAD T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Identifier($2, @2); }
+		{ $$ = new Function(@$); }
 	| PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Function(@$); } //temporary
 	| T_THREAD PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Function(@$); } //temporary
 	| ReferenceExpression OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Function(@$); }
 	| T_THREAD ReferenceExpression OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Function(@$); }
 	;
 
 FunctionExpression
@@ -306,9 +314,9 @@ FunctionExpression
 
 PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression OP_RBRACKET OP_RBRACKET 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Pointer(@$); }
 	| FUNC_POINTER_BEGIN ReferenceExpression OP_RBRACKET OP_RBRACKET 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Pointer(@$); }
 	;
 
 ReferenceExpression
@@ -355,8 +363,8 @@ ObjectExpression
 	: T_IDENTIFIER 
 		{ $$ = new Identifier($1, @1); }
 
-	| FunctionExpression 
-		{ $$ = new Symbol(@$); }
+	/*| FunctionExpression 			//commented because it reduces a few conflicts
+		{ $$ = new Symbol(@$); }*/
 	| MemberExpression 
 		{ $$ = new Symbol(@$); }
 	| OP_LPAREN ObjectExpression OP_RPAREN 

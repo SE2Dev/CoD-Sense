@@ -58,5 +58,6 @@ class Symbol : public LList<Symbol>
 #include "expression.h"
 #include "identifier.h"
 #include "reference.h"
+#include "pointer.h"
 #include "string.h"
 #include "group.h"
