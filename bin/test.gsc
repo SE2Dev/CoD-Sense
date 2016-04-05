@@ -30,5 +30,13 @@ myfunc(aaaa, bb , ccCC_c)
 	"do_something";
 	make_a_statement;
 	
-	s3;
+	if(1>3)
+	{
+		do_this;
+		and_this;
+	}
+	else
+	{
+		THISSSSSSS;
+	}
 }

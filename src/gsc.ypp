@@ -41,6 +41,8 @@
 	class Literal;
 	class Identifier;
 	
+	class Conditional;
+	
 	class Animtree;
 	class Expression;
 	class Reference;
@@ -178,8 +180,8 @@
 %type<symbol> 		ElementList;
 %type<symbol> 		ListExpression;
 %type<symbol> 		ObjectExpression;	
-%type<symbol> 		LiteralExpression;
-%type<symbol> 		OptionalExpression;
+%type<literal> 		LiteralExpression;
+%type<expression> 		OptionalExpression;
 %type<expression>	BasicExpression;
 %type<op> 			OperatorPostfix;
 %type<op> 			OperatorPrefix;	
@@ -334,7 +336,7 @@ FunctionCall
 FunctionExpression
 	: ObjectExpression FunctionCall 
 		{
-			$2->SetCaller((Expression*)$1);// Add Object Expression Child
+			$2->SetCaller((Expression*)$1);
 			$$ = $2;
 		}
 	| FunctionCall 
@@ -378,14 +380,20 @@ MemberExpression
 
 ElementList
 	: Expression OP_COMMA Expression //Lists must have at least two elements 
-		{ $$ = new Symbol(@$); }
+		{
+			$1->AddToEnd($3);
+			$$ = $1;
+		}
 	| ElementList OP_COMMA Expression 
-		{ $$ = new Symbol(@$); }
+		{
+			$1->AddToEnd($3);
+			$$ = $1;
+		}
 	;
 
 ListExpression
 	: OP_LPAREN ElementList OP_RPAREN 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $2; }
 	;
 
 ObjectExpression
@@ -404,7 +412,6 @@ LiteralExpression
 
 OptionalExpression
 	: Expression 
-		{ $$ = $1; }
 	| 
 		{ $$ = NULL; }
 	;
@@ -543,9 +550,9 @@ EmptyStatement
 
 IfStatement
 	: T_IF OP_LPAREN Expression OP_RPAREN Statement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Conditional($5, @$, S_TYPE_CONDITIONAL_IF); }
 	| T_ELSE Statement
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Conditional($2, @$, S_TYPE_CONDITIONAL_ELSE); }
 	;
 
 SwitchStatement
@@ -562,7 +569,7 @@ CaseStatement
 
 LoopStatement
 	: T_WHILE OP_LPAREN Expression OP_RPAREN Statement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Conditional($5, @$, S_TYPE_CONDITIONAL_WHILE); }
 	| T_FOR OP_LPAREN OptionalExpression OP_COLON_SEMI OptionalExpression OP_COLON_SEMI OptionalExpression OP_RPAREN Statement 
 		{
 			$$ = new Symbol(@$);
