@@ -1,5 +1,7 @@
 .vscode/keybindings.json
 
+*.o
+
 bin/parser
 obj/
 src/cpp/parser
