@@ -392,16 +392,14 @@ ObjectExpression
 	
 LiteralExpression
 	: NumericLiteral 
-		{ $$ = $1; }
 	| StringLiteral 
-		{ $$ = $1; }
 	;
 
 OptionalExpression
 	: Expression 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	| 
-		{ $$ = new Symbol(@$); }
+		{ $$ = NULL; }
 	;
 
 BasicExpression
@@ -504,7 +502,7 @@ e
 	| AnimReferenceExpression 
 		{ $$ = (Expression*)$1; }
 	| OP_LPAREN e OP_RPAREN 
-		{ $$ = (Expression*)$2; }
+		{ $$ = $2; }
 	;
 
 Expression
@@ -566,27 +564,17 @@ LoopStatement
 		
 Statement
 	: Block 
-		{ $$ = $1; }
 	| WaitStatement 
-		{ $$ = $1; }
 	| ExpressionStatement 
-		{ $$ = $1; }
 	| IfStatement 
-		{ $$ = $1; }
 	| SwitchStatement 
-		{ $$ = $1; }
 	| CaseStatement 
-		{ $$ = $1; }
 	| LoopStatement 
-		{ $$ = $1; }
-	| ReturnStatement 
-		{ $$ = $1; }
 	| T_BREAK OP_COLON_SEMI 
 		{ $$ = new Symbol(@$); }
 	| T_CONTINUE OP_COLON_SEMI 
 		{ $$ = new Symbol(@$); }
 	| EmptyStatement 
-		{ $$ = $1; }
 	;
 
 StatementList
