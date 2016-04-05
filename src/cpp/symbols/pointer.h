@@ -8,7 +8,7 @@ class Pointer : public Symbol
 		Identifier* identifier;
 		
 		Pointer(void);
-		Pointer(String* filepath, Identifier* identifier, YYLTYPE loc);
+		Pointer(YYLTYPE loc);
 		
 		~Pointer(void);
 		

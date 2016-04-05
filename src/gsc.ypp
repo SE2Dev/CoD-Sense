@@ -150,46 +150,46 @@
 //%type<ival> expression
 //%type<fval> mixed_expression
 
-%type<symbol> IncludeDirective;
-%type<symbol> AnimtreeDirective;
-%type<symbol> FunctionDeclaration;
-
-%type<symbol> FormalParameterList;
-
-%type<symbol> SourceElements;
-%type<symbol> SourceElement;
-
-%type<symbol> StringLiteral;
-%type<symbol> NumericLiteral;
-%type<symbol> Block;
-%type<symbol> FunctionParameterList;
-%type<function> FunctionCall;
-%type<symbol> FunctionExpression;
-%type<pointer> PointerExpression;
-%type<reference> ReferenceExpression;
-%type<symbol> AnimReferenceExpression;
-%type<symbol> MemberExpression;
-%type<symbol> ElementList;
-%type<symbol> ListExpression;
-%type<symbol> ObjectExpression;	
-%type<symbol> LiteralExpression;
-%type<symbol> OptionalExpression;
-%type<expression> BasicExpression;
-%type<op> OperatorPostfix;
-%type<op> OperatorPrefix;	
-%type<op> OperatorMid;
-%type<expression> e;
-%type<symbol> Expression;
-%type<symbol> ExpressionStatement;
-%type<symbol> ReturnStatement;
-%type<symbol> WaitStatement;
-%type<symbol> EmptyStatement;
-%type<symbol> IfStatement;
-%type<symbol> SwitchStatement;
-%type<symbol> CaseStatement;
-%type<symbol> LoopStatement;
-%type<symbol> Statement;
-%type<symbol> StatementList;
+%type<symbol> 		IncludeDirective;
+%type<symbol> 		AnimtreeDirective;
+%type<symbol> 		FunctionDeclaration;
+		
+%type<symbol> 		FormalParameterList;
+		
+%type<symbol> 		SourceElements;
+%type<symbol> 		SourceElement;
+		
+%type<symbol> 		StringLiteral;
+%type<symbol> 		NumericLiteral;
+%type<symbol> 		Block;
+%type<symbol> 		FunctionParameterList;
+%type<call>			FunctionCall;
+%type<symbol>		FunctionExpression;
+%type<pointer>		PointerExpression;
+%type<reference>	ReferenceExpression;
+%type<symbol> 		AnimReferenceExpression;
+%type<symbol> 		MemberExpression;
+%type<symbol> 		ElementList;
+%type<symbol> 		ListExpression;
+%type<symbol> 		ObjectExpression;	
+%type<symbol> 		LiteralExpression;
+%type<symbol> 		OptionalExpression;
+%type<expression>	BasicExpression;
+%type<op> 			OperatorPostfix;
+%type<op> 			OperatorPrefix;	
+%type<op> 			OperatorMid;
+%type<expression>	e;
+%type<symbol> 		Expression;
+%type<symbol> 		ExpressionStatement;
+%type<symbol> 		ReturnStatement;
+%type<symbol> 		WaitStatement;
+%type<symbol> 		EmptyStatement;
+%type<symbol> 		IfStatement;
+%type<symbol> 		SwitchStatement;
+%type<symbol> 		CaseStatement;
+%type<symbol> 		LoopStatement;
+%type<symbol> 		Statement;
+%type<symbol> 		StatementList;
 
 %destructor { printf("BISON SYMBOL DESTRUCTOR\n"); } <*>
 
@@ -289,27 +289,47 @@ FunctionParameterList
 FunctionCall
 	: T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN 
 		{
-			$$ = new Function(@$);
+			$$ = new Call(@$, CALL_FLAG_IDENTIFIER);
 			$$->AddChild(new Identifier($1,@1));
 			$$->AddChild($3);
 		}
 	| T_THREAD T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Function(@$); }
+		{
+			$$ = new Call(@$, CALL_FLAG_THREAD | CALL_FLAG_IDENTIFIER);
+			$$->AddChild(new Identifier($2,@2));
+			$$->AddChild($4);
+		}
 	| PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Function(@$); } //temporary
+		{
+			$$ = new Call(@$, CALL_FLAG_POINTER);
+			$$->AddChild($1);
+			$$->AddChild($3);
+		}
 	| T_THREAD PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Function(@$); } //temporary
+		{
+			$$ = new Call(@$, CALL_FLAG_THREAD | CALL_FLAG_POINTER);
+			$$->AddChild($2);
+			$$->AddChild($4);
+		}
 	| ReferenceExpression OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Function(@$); }
+		{
+			$$ = new Call(@$, CALL_FLAG_REFERENCE);
+			$$->AddChild($1);
+			$$->AddChild($3);
+		}
 	| T_THREAD ReferenceExpression OP_LPAREN FunctionParameterList OP_RPAREN 
-		{ $$ = new Function(@$); }
+		{
+			$$ = new Call(@$, CALL_FLAG_THREAD | CALL_FLAG_REFERENCE);
+			$$->AddChild($2);
+			$$->AddChild($4);
+		}
 	;
 
 FunctionExpression
 	: ObjectExpression FunctionCall 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $2; }
 	| FunctionCall 
-		{ $$ = new Symbol(@$); }
+		{ $$ = $1; }
 	;
 
 PointerExpression
@@ -362,9 +382,8 @@ ListExpression
 ObjectExpression
 	: T_IDENTIFIER 
 		{ $$ = new Identifier($1, @1); }
-
-	/*| FunctionExpression 			//commented because it reduces a few conflicts
-		{ $$ = new Symbol(@$); }*/
+	| FunctionExpression
+		{ $$ = $1; }
 	| MemberExpression 
 		{ $$ = new Symbol(@$); }
 	| OP_LPAREN ObjectExpression OP_RPAREN 

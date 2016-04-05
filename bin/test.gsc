@@ -15,6 +15,10 @@ main(arg1, arg2, arg3, arg4, arg5, arg6)
 	 
 	 myfunc = ::me;
 	 maps\file::func;
+	 
+	 idfunc();
+	 thread threadfunc();
+	 [[ref]]();
 }
 
 myfunc(aaaa, bb , ccCC_c)

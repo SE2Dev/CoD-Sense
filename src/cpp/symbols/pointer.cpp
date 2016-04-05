@@ -5,16 +5,11 @@ Pointer::Pointer(void) : file(NULL), identifier(NULL)
 	this->type = S_TYPE_POINTER;
 }
 
-Pointer::Pointer(String* filepath, Identifier* identifier, YYLTYPE loc)
+Pointer::Pointer(YYLTYPE loc)
 {
 	this->type = S_TYPE_POINTER;
 	
-	this->file = filepath;
-	this->identifier = identifier;
 	this->location = loc;
-	
-	this->AddChild(filepath);
-	this->AddChild(identifier);
 }
 
 Pointer::~Pointer()
@@ -33,5 +28,5 @@ void Pointer::PrintInfo()
 		location.end.line,
 		location.end.character,
 		(this->file) ? this->file->value : "$this",
-		this->identifier->value);
+		"this->identifier->value");
 }
