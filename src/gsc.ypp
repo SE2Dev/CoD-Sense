@@ -573,11 +573,16 @@ Statement
 StatementList
 	: StatementList Statement 
 		{
-			$1->AddToEnd($2);
-			$$ = $1;
+			if($1 != NULL)
+			{
+				$1->AddToEnd($2);
+				$$ = $1;
+			}
+			else
+			{
+				$$ = $2;
+			}
 		}
-	| Statement
-		{ $$ = $1; }
 	| 
 		{ $$ = NULL; }
 	;
