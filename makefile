@@ -7,11 +7,13 @@ LEXER_SRC="src/gsc.l"
 PARSER_SRC_OUT="src/cpp/parser/gsc.tab"
 LEXER_SRC_OUT="src/cpp/parser/gsc.yy"
 
+MAKE_CHILD_OPTIONS=--no-print-directory
+
 default:
-	@$(MAKE) clean
-	@$(MAKE) parser
-	@$(MAKE) compile
-	@$(MAKE) link
+	@$(MAKE) ${MAKE_CHILD_OPTIONS} clean
+	@$(MAKE) ${MAKE_CHILD_OPTIONS} parser
+	@$(MAKE) ${MAKE_CHILD_OPTIONS} compile
+	@$(MAKE) ${MAKE_CHILD_OPTIONS} link
 
 clean:
 	@mkdir -p bin
@@ -30,9 +32,9 @@ link:
 	@g++ -Wall -g -o bin/parser obj/*.o
 
 test:
-	make
-	gnome-terminal -x ./bin/parser
+	@$(MAKE)
+	@gnome-terminal -x ./bin/parser
 
 test-file:
-	make
-	gnome-terminal -x ./bin/test.sh
+	@$(MAKE)
+	@gnome-terminal -x ./bin/test.sh
