@@ -52,6 +52,7 @@
 	class Call;
 	
 	class Return;
+	class Wait;
 }
 
 %union {
@@ -538,9 +539,9 @@ ReturnStatement
 
 WaitStatement
 	: T_WAIT Expression OP_COLON_SEMI 
-		{ $$ = new Symbol(@$); }
-	| T_WAIT OP_LPAREN Expression OP_RPAREN OP_COLON_SEMI 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Wait($2, @$); }
+	//| T_WAIT OP_LPAREN Expression OP_RPAREN OP_COLON_SEMI 
+	//	{ $$ = new Symbol(@$); }
 	;
 
 EmptyStatement

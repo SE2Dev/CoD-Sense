@@ -39,4 +39,7 @@ myfunc(aaaa, bb , ccCC_c)
 	{
 		THISSSSSSS;
 	}
+	
+	wait 1.0;
+	wait (a+b);
 }

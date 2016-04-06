@@ -66,3 +66,4 @@ class Symbol : public LList<Symbol>
 #include "group.h"
 
 #include "return.h"
+#include "wait.h"
