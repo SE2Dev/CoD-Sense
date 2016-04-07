@@ -125,8 +125,8 @@
 %token<t_identifier> T_IDENTIFIER
 
 // Define Token
-%token OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
-%token OP_INC_PRE OP_DEC_PRE OP_UPLUS OP_UMINUS OP_NOT OP_BW_NOT
+%token OP_LB OP_RB OP_DOT
+%token OP_NOT OP_BW_NOT
 %token OP_MULT OP_DIV OP_MOD
 %token OP_ADD OP_SUB
 %token OP_LSHIFT OP_RSHIFT
@@ -138,7 +138,8 @@
 %token OP_CMP_AND
 %token OP_CMP_OR
 //ternary
-%token OP_ASSIGN OP_ASSIGN_ADD OP_ASSIGN_SUB OP_ASSIGN_MULT OP_ASSIGN_DIV OP_ASSIGN_BW_AND OP_ASSIGN_BW_XOR OP_ASSIGN_BW_OR
+%token OP_ASSIGN
+%token OP_ASSIGN_ADD OP_ASSIGN_SUB OP_ASSIGN_MULT OP_ASSIGN_DIV OP_ASSIGN_BW_AND OP_ASSIGN_BW_XOR OP_ASSIGN_BW_OR
 
 %token T_INVALID
 %token T_EOF 0
@@ -156,7 +157,7 @@
 %left OP_LSHIFT OP_RSHIFT
 %left OP_ADD OP_SUB
 %left OP_MULT OP_DIV OP_MOD
-%right OP_INC_PRE OP_DEC_PRE OP_UPLUS OP_UMINUS OP_NOT OP_BW_NOT
+%right OP_INC_PRE OP_DEC_PRE OP_POSITIVE OP_NEGATIVE OP_NOT OP_BW_NOT
 %left OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
 
 //%type<ival> expression
@@ -183,13 +184,11 @@
 %type<symbol> 		MemberExpression;
 %type<symbol> 		ElementList;
 %type<symbol> 		ListExpression;
-%type<symbol> 		ObjectExpression;	
+%type<symbol> 		ObjectExpression;
+%type<symbol>		ModifiableExpression;
 %type<literal> 		LiteralExpression;
 %type<expression> 	OptionalExpression;
 %type<expression>	BasicExpression;
-%type<op> 			OperatorPostfix;
-%type<op> 			OperatorPrefix;	
-%type<op> 			OperatorMid;
 %type<expression>	e;
 %type<expression> 	Expression;
 %type<symbol> 		ExpressionStatement;
@@ -401,10 +400,8 @@ ListExpression
 	;
 
 ObjectExpression
-	: T_IDENTIFIER 
-		{ $$ = new Identifier($1, @1); }
+	: ModifiableExpression
 	| FunctionExpression
-	| MemberExpression 
 	| OP_LPAREN ObjectExpression OP_RPAREN 
 		{ $$ = $2; }
 	;
@@ -433,90 +430,87 @@ BasicExpression
 		{ $$ = new Expression(@$); }
 	;
 
-OperatorPostfix
-	: OP_INC
-		{ $$ = OP_TYPE_INC; };
-	| OP_DEC
-		{ $$ = OP_TYPE_DEC; };
-	;
-	
-OperatorPrefix
-	: OP_INC
-		{ $$ = OP_TYPE_INC; };
-	| OP_DEC
-		{ $$ = OP_TYPE_DEC; };
-	| OP_ADD
-		{ $$ = OP_TYPE_ADD; };
-	| OP_SUB
-		{ $$ = OP_TYPE_SUB; };
-	| OP_BW_NOT
-		{ $$ = OP_TYPE_BW_NOT; };
-	| OP_NOT
-		{ $$ = OP_TYPE_NOT; };
-	;
-	
-OperatorMid
-	: OP_MULT 
-		{ $$ = OP_TYPE_MULT; };
-	| OP_DIV
-		{ $$ = OP_TYPE_DIV; };
-	| OP_MOD
-		{ $$ = OP_TYPE_MOD; };
-	| OP_ADD
-		{ $$ = OP_TYPE_ADD; };
-	| OP_SUB
-		{ $$ = OP_TYPE_SUB; };
-	| OP_LSHIFT
-		{ $$ = OP_TYPE_LSHIFT; };
-	| OP_RSHIFT
-		{ $$ = OP_TYPE_RSHIFT; };
-	| OP_CMP_LT
-		{ $$ = OP_TYPE_CMP_LT; };
-	| OP_CMP_LE
-		{ $$ = OP_TYPE_CMP_LE; };
-	| OP_CMP_GT
-		{ $$ = OP_TYPE_CMP_GT; };
-	| OP_CMP_GE
-		{ $$ = OP_TYPE_CMP_GE; };
-	| OP_CMP_EQ
-		{ $$ = OP_TYPE_CMP_EQ; };
-	| OP_CMP_NEQ
-		{ $$ = OP_TYPE_CMP_NEQ; };
-	| OP_BW_AND
-		{ $$ = OP_TYPE_BW_AND; };
-	| OP_BW_OR
-		{ $$ = OP_TYPE_BW_OR; };
-	| OP_CMP_AND
-		{ $$ = OP_TYPE_CMP_AND; };
-	| OP_CMP_OR
-		{ $$ = OP_TYPE_CMP_OR; };
-	| OP_ASSIGN
-		{ $$ = OP_TYPE_ASSIGN; };
-	| OP_ASSIGN_ADD
-		{ $$ = OP_TYPE_ASSIGN_ADD; };
-	| OP_ASSIGN_SUB
-		{ $$ = OP_TYPE_ASSIGN_SUB; };
-	| OP_ASSIGN_MULT
-		{ $$ = OP_TYPE_ASSIGN_MULT; };
-	| OP_ASSIGN_DIV
-		{ $$ = OP_TYPE_ASSIGN_DIV; };
-	| OP_ASSIGN_BW_AND
-		{ $$ = OP_TYPE_ASSIGN_BW_AND; };
-	| OP_ASSIGN_BW_XOR
-		{ $$ = OP_TYPE_ASSIGN_BW_XOR; };
-	| OP_ASSIGN_BW_OR
-		{ $$ = OP_TYPE_ASSIGN_BW_OR; };
-	;
+ModifiableExpression
+	: T_IDENTIFIER 
+		{ $$ = new Identifier($1, @1); }
+	| MemberExpression 
+	| OP_LPAREN ModifiableExpression OP_RPAREN 
+		{ $$ = $2; }
 
 e
 	: BasicExpression 
-		{ $$ = $1; }
-	| e OperatorPostfix 
-		{ $$ = new Expression($1, $2, @$); }
-	| OperatorPrefix e 
-		{ $$ = new Expression($1, $2, @$); }
-	| e OperatorMid e 
-		{ $$ = new Expression($1, $2, $3, @$); }
+	
+	/* PREFIX OPERATORS */
+	| OP_INC ModifiableExpression %prec OP_INC_PRE
+		{ $$ = new Expression(OP_TYPE_INC, (Expression*)$2, @$); };
+	| OP_DEC ModifiableExpression %prec OP_DEC_PRE
+		{ $$ = new Expression(OP_TYPE_DEC, (Expression*)$2, @$); };
+	| OP_ADD e %prec OP_POSITIVE
+		{ $$ = new Expression(OP_TYPE_ADD, $2, @$); };
+	| OP_SUB e %prec OP_NEGATIVE
+		{ $$ = new Expression(OP_TYPE_SUB, $2, @$); };
+	| OP_BW_NOT e
+		{ $$ = new Expression(OP_TYPE_BW_NOT, $2, @$); };
+	| OP_NOT e
+		{ $$ = new Expression(OP_TYPE_NOT, $2, @$); };
+	
+	/* POSTFIX OPERATORS */
+	| ModifiableExpression OP_INC %prec OP_INC_POST
+		{ $$ = new Expression((Expression*)$1, OP_TYPE_INC, @$); };
+	| ModifiableExpression OP_DEC %prec OP_DEC_POST
+		{ $$ = new Expression((Expression*)$1, OP_TYPE_INC, @$); };
+	
+	/* MID OPERATORS */
+	| e OP_MULT e 
+		{ $$ = new Expression($1, OP_TYPE_MULT, $3, @$); };
+	| e OP_DIV e
+		{ $$ = new Expression($1, OP_TYPE_DIV, $3, @$); };
+	| e OP_MOD e
+		{ $$ = new Expression($1, OP_TYPE_MOD, $3, @$); };
+	| e OP_ADD e
+		{ $$ = new Expression($1, OP_TYPE_ADD, $3, @$); };
+	| e OP_SUB e
+		{ $$ = new Expression($1, OP_TYPE_SUB, $3, @$); };
+	| e OP_LSHIFT e
+		{ $$ = new Expression($1, OP_TYPE_LSHIFT, $3, @$); };
+	| e OP_RSHIFT e
+		{ $$ = new Expression($1, OP_TYPE_RSHIFT, $3, @$); };
+	| e OP_CMP_LT e
+		{ $$ = new Expression($1, OP_TYPE_CMP_LT, $3, @$); };
+	| e OP_CMP_LE e
+		{ $$ = new Expression($1, OP_TYPE_CMP_LE, $3, @$); };
+	| e OP_CMP_GT e
+		{ $$ = new Expression($1, OP_TYPE_CMP_GT, $3, @$); };
+	| e OP_CMP_GE e
+		{ $$ = new Expression($1, OP_TYPE_CMP_GE, $3, @$); };
+	| e OP_CMP_EQ e
+		{ $$ = new Expression($1, OP_TYPE_CMP_EQ, $3, @$); };
+	| e OP_CMP_NEQ e
+		{ $$ = new Expression($1, OP_TYPE_CMP_NEQ, $3, @$); };
+	| e OP_BW_AND e
+		{ $$ = new Expression($1, OP_TYPE_BW_AND, $3, @$); };
+	| e OP_BW_OR e
+		{ $$ = new Expression($1, OP_TYPE_BW_OR, $3, @$); };
+	| e OP_CMP_AND e
+		{ $$ = new Expression($1, OP_TYPE_CMP_AND, $3, @$); };
+	| e OP_CMP_OR e
+		{ $$ = new Expression($1, OP_TYPE_CMP_OR, $3, @$); };
+	| e OP_ASSIGN e
+		{ $$ = new Expression($1, OP_TYPE_ASSIGN, $3, @$); };
+	| e OP_ASSIGN_ADD e
+		{ $$ = new Expression($1, OP_TYPE_ASSIGN_ADD, $3, @$); };
+	| e OP_ASSIGN_SUB e
+		{ $$ = new Expression($1, OP_TYPE_ASSIGN_SUB, $3, @$); };
+	| e OP_ASSIGN_MULT e
+		{ $$ = new Expression($1, OP_TYPE_ASSIGN_MULT, $3, @$); };
+	| e OP_ASSIGN_DIV e
+		{ $$ = new Expression($1, OP_TYPE_ASSIGN_DIV, $3, @$); };
+	| e OP_ASSIGN_BW_AND e
+		{ $$ = new Expression($1, OP_TYPE_ASSIGN_BW_AND, $3, @$); };
+	| e OP_ASSIGN_BW_XOR e
+		{ $$ = new Expression($1, OP_TYPE_ASSIGN_BW_XOR, $3, @$); };
+	| e OP_ASSIGN_BW_OR e
+		{ $$ = new Expression($1, OP_TYPE_ASSIGN_BW_OR, $3, @$); };
 	| AnimReferenceExpression 
 		{ $$ = (Expression*)$1; }
 	| OP_LPAREN e OP_RPAREN 
@@ -525,7 +519,6 @@ e
 
 Expression
 	: e 
-		{ $$ = $1; }
 	;
 	
 ExpressionStatement
