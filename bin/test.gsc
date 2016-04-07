@@ -39,7 +39,8 @@ myfunc(aaaa, bb , ccCC_c)
 	{
 		THISSSSSSS;
 	}
-	
+	(a)=4;
+	((((((A))))));
 	wait 1.0;
 	wait (a+b);
 }

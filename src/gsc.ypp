@@ -95,8 +95,6 @@
 %token OP_RPAREN
 %token FUNC_POINTER_BEGIN
 
-%token OP_LBRACKET
-%token OP_RBRACKET
 %token OP_LBRACE
 %token OP_RBRACE
 %token OP_COMMA
@@ -125,7 +123,7 @@
 %token<t_identifier> T_IDENTIFIER
 
 // Define Token
-%token OP_LB OP_RB OP_DOT
+%token OP_LBRACKET OP_RBRACKET OP_DOT
 %token OP_NOT OP_BW_NOT
 %token OP_MULT OP_DIV OP_MOD
 %token OP_ADD OP_SUB
@@ -144,6 +142,10 @@
 %token T_INVALID
 %token T_EOF 0
 
+// Special Operators & Operator-Like Tokens
+%nonassoc T_THREAD T_FILEPATH T_IDENTIFIER
+%left OP_COLON_DOUBLE FUNC_POINTER_BEGIN
+
 // Operator Precedence ( highest line number = highest precedence )
 %right OP_ASSIGN OP_ASSIGN_ADD OP_ASSIGN_SUB OP_ASSIGN_MULT OP_ASSIGN_DIV OP_ASSIGN_BW_AND OP_ASSIGN_BW_XOR OP_ASSIGN_BW_OR
 //ternary
@@ -158,7 +160,9 @@
 %left OP_ADD OP_SUB
 %left OP_MULT OP_DIV OP_MOD
 %right OP_INC_PRE OP_DEC_PRE OP_POSITIVE OP_NEGATIVE OP_NOT OP_BW_NOT
-%left OP_INC_POST OP_DEC_POST OP_LB OP_RB OP_DOT
+%left OP_INC_POST OP_DEC_POST OP_LBRACKET OP_RBRACKET OP_DOT
+
+
 
 //%type<ival> expression
 //%type<fval> mixed_expression
@@ -375,7 +379,7 @@ AnimReferenceExpression
 MemberExpression
 	: ObjectExpression OP_LBRACKET Expression OP_RBRACKET 
 		{ $$ = new Member((Expression*)$1, (Expression*)$3, @$, S_TYPE_MEMBER_ARRAY_ELEMENT); }
-	| ObjectExpression OP_DOT ObjectExpression 
+	| ObjectExpression OP_DOT ObjectExpression
 		{ $$ = new Member((Expression*)$1, (Expression*)$3, @$, S_TYPE_MEMBER_OBJECT_PROPERTY); }
 	| OP_LBRACKET OP_RBRACKET 
 		{ $$ = new Member(NULL, NULL, @$, S_TYPE_MEMBER_ARRAY_EMPTY); }
@@ -402,8 +406,8 @@ ListExpression
 ObjectExpression
 	: ModifiableExpression
 	| FunctionExpression
-	| OP_LPAREN ObjectExpression OP_RPAREN 
-		{ $$ = $2; }
+	/*| OP_LPAREN ObjectExpression OP_RPAREN // DEPRECATED
+		{ $$ = $2; }*/
 	;
 	
 LiteralExpression
@@ -434,8 +438,8 @@ ModifiableExpression
 	: T_IDENTIFIER 
 		{ $$ = new Identifier($1, @1); }
 	| MemberExpression 
-	| OP_LPAREN ModifiableExpression OP_RPAREN 
-		{ $$ = $2; }
+	/*| OP_LPAREN ModifiableExpression OP_RPAREN // DEPRECATED
+		{ $$ = $2; }*/
 
 e
 	: BasicExpression 
