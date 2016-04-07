@@ -2,19 +2,50 @@
 	"version": "0.1.0",
 	"command": "make",
 	"isShellCommand": true,
-
 	"showOutput": "silent",
-	
 	"tasks": [
 		{
 			"taskName": "default",
-			"isBuildCommand": true
+			"isBuildCommand": true,
+			"problemMatcher": [
+				{
+					"severity": "error",
+					"pattern": {
+						"regexp": "^((?:[.a-zA-z_-]\\/?)+):([0-9]+):([0-9]+):\\s*error:\\s*(.*)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"message": 4
+					}
+				},
+				{
+					"severity": "warning",
+					"pattern": {
+						"regexp": "^((?:[.a-zA-z_-]\\/?)+):([0-9]+):([0-9]+):\\s*warning:\\s*(.*)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"message": 4
+					}
+				},
+				{
+					"severity": "info",
+					"pattern": {
+						"regexp": "^((?:[.a-zA-z_-]\\/?)+):([0-9]+):([0-9]+):\\s*note:\\s*(.*)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"message": 4
+					}
+				}
+			]
 		},
 		{
-			"taskName": "test"//, "isTestCommand": true
+			"taskName": "test" //, "isTestCommand": true
 		},
 		{
-			"taskName": "test-file", "isTestCommand": true
+			"taskName": "test-file",
+			"isTestCommand": true
 		}
 	]
 }
