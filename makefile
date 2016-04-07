@@ -36,9 +36,9 @@ link:
 	@g++ -Wall -g -o bin/parser obj/*.o
 
 test:
-	@$(MAKE)
+	@$(MAKE) ${MAKE_CHILD_OPTIONS}
 	@gnome-terminal -x ./bin/parser
 
 test-file:
-	@$(MAKE)
+	@$(MAKE) ${MAKE_CHILD_OPTIONS}
 	@gnome-terminal -x ./bin/test.sh
