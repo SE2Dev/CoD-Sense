@@ -12,7 +12,7 @@ MAKE_CHILD_OPTIONS=--no-print-directory
 default:
 	@$(MAKE) ${MAKE_CHILD_OPTIONS} clean
 	@$(MAKE) ${MAKE_CHILD_OPTIONS} parser
-	@$(MAKE) ${MAKE_CHILD_OPTIONS} compile
+	@$(MAKE) ${MAKE_CHILD_OPTIONS} compile || $(MAKE) ${MAKE_CHILD_OPTIONS} compile-error #runs compile-error if compile fails
 	@$(MAKE) ${MAKE_CHILD_OPTIONS} link
 
 clean:
@@ -23,10 +23,14 @@ clean:
 parser:
 	@bison -v -o ${PARSER_SRC_OUT}".cpp" -d ${PARSER_SRC}
 	@flex -o ${LEXER_SRC_OUT}".cpp" -d ${LEXER_SRC}
-	
+
 compile:
 	@g++ -Wall -g -c `find $(SRC_DIRS) -type f $(SRC_PATTERN) -print`
 	@mv *.o obj/
+
+compile-error:
+	@rm -f -r *.o
+	@exit 1
 	
 link:
 	@g++ -Wall -g -o bin/parser obj/*.o
