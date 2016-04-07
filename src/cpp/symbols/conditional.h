@@ -11,6 +11,7 @@ public:
 
 	Conditional(void);
 	Conditional(Expression* expr, Symbol* stmt, YYLTYPE loc, SYMBOL_TYPE type);
+	Conditional(Expression* expr0, Expression* expr1, Expression* expr2, Symbol* stmt, YYLTYPE loc, SYMBOL_TYPE type);
 	
 	~Conditional(void);
 	

@@ -573,7 +573,7 @@ LoopStatement
 		{ $$ = new Conditional($3, $5, @$, S_TYPE_CONDITIONAL_WHILE); }
 	| T_FOR OP_LPAREN OptionalExpression OP_COLON_SEMI OptionalExpression OP_COLON_SEMI OptionalExpression OP_RPAREN Statement 
 		{
-			$$ = new Symbol(@$);
+			$$ = new Conditional($3, $5, $7, $9, @$, S_TYPE_CONDITIONAL_FOR);
 		}
 	;
 		
