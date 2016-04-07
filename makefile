@@ -7,6 +7,9 @@ LEXER_SRC="src/gsc.l"
 PARSER_SRC_OUT="src/cpp/parser/gsc.tab"
 LEXER_SRC_OUT="src/cpp/parser/gsc.yy"
 
+BISON_OPTIONS=-d
+FLEX_OPTIONS=-d -Cfa
+
 MAKE_CHILD_OPTIONS=--no-print-directory
 
 default:
@@ -21,8 +24,8 @@ clean:
 	@mkdir -p src/cpp/parser && rm -f -r src/cpp/parser/*
 
 parser:
-	@bison -v -o ${PARSER_SRC_OUT}".cpp" -d ${PARSER_SRC}
-	@flex -o ${LEXER_SRC_OUT}".cpp" -d ${LEXER_SRC}
+	@bison -v -o ${PARSER_SRC_OUT}".cpp" ${BISON_OPTIONS} ${PARSER_SRC}
+	@flex -o ${LEXER_SRC_OUT}".cpp" ${FLEX_OPTIONS} ${LEXER_SRC}
 
 compile:
 	@g++ -Wall -g -c `find $(SRC_DIRS) -type f $(SRC_PATTERN) -print`
