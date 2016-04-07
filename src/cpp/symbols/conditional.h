@@ -6,10 +6,11 @@
 class Conditional : public Symbol
 {
 public:
+	Expression* expression;
 	Symbol* statement;
 
 	Conditional(void);
-	Conditional(Symbol* statement, YYLTYPE loc, SYMBOL_TYPE type);
+	Conditional(Expression* expr, Symbol* stmt, YYLTYPE loc, SYMBOL_TYPE type);
 	
 	~Conditional(void);
 	

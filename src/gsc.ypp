@@ -182,7 +182,7 @@
 %type<symbol> 		ListExpression;
 %type<symbol> 		ObjectExpression;	
 %type<literal> 		LiteralExpression;
-%type<expression> 		OptionalExpression;
+%type<expression> 	OptionalExpression;
 %type<expression>	BasicExpression;
 %type<op> 			OperatorPostfix;
 %type<op> 			OperatorPrefix;	
@@ -423,7 +423,7 @@ BasicExpression
 	| LiteralExpression 
 		{ $$ = (Expression*)$1; }
 	| ListExpression //used for things like vectors 
-		{ $$ = new Expression(@$); }
+		{ $$ = (Expression*)$1; }
 	| ReferenceExpression 
 		{ $$ = (Expression*)$1; }
 	| ANIMTREE 
@@ -551,26 +551,26 @@ EmptyStatement
 
 IfStatement
 	: T_IF OP_LPAREN Expression OP_RPAREN Statement 
-		{ $$ = new Conditional($5, @$, S_TYPE_CONDITIONAL_IF); }
+		{ $$ = new Conditional($3, $5, @$, S_TYPE_CONDITIONAL_IF); }
 	| T_ELSE Statement
-		{ $$ = new Conditional($2, @$, S_TYPE_CONDITIONAL_ELSE); }
+		{ $$ = new Conditional(NULL, $2, @$, S_TYPE_CONDITIONAL_ELSE); }
 	;
 
 SwitchStatement
 	: T_SWITCH OP_LPAREN Expression OP_RPAREN Statement 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Conditional($3, $5, @$, S_TYPE_CONDITIONAL_SWITCH); }
 	;
 
 CaseStatement
 	: T_CASE LiteralExpression OP_COLON 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Conditional((Expression*)$2, NULL, @$, S_TYPE_CONDITIONAL_CASE); }
 	| T_DEFAULT OP_COLON 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Conditional(NULL, NULL, @$, S_TYPE_CONDITIONAL_CASE); }
 	;
 
 LoopStatement
 	: T_WHILE OP_LPAREN Expression OP_RPAREN Statement 
-		{ $$ = new Conditional($5, @$, S_TYPE_CONDITIONAL_WHILE); }
+		{ $$ = new Conditional($3, $5, @$, S_TYPE_CONDITIONAL_WHILE); }
 	| T_FOR OP_LPAREN OptionalExpression OP_COLON_SEMI OptionalExpression OP_COLON_SEMI OptionalExpression OP_RPAREN Statement 
 		{
 			$$ = new Symbol(@$);

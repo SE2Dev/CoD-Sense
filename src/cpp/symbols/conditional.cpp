@@ -6,11 +6,13 @@ Conditional::Conditional(void) : statement(NULL)
 	this->type = S_TYPE_NONE;
 }
 
-Conditional::Conditional(Symbol* stmt, YYLTYPE loc, SYMBOL_TYPE type) : statement(stmt)
+Conditional::Conditional(Expression* expr, Symbol* stmt, YYLTYPE loc, SYMBOL_TYPE type) : expression(expr), statement(stmt)
 {
 	this->type = type;
 	this->location = loc;
-	this->AddChild(stmt);
+	
+	if(expr) { this->AddChild(expr); }
+	if(stmt) { this->AddChild(stmt); }
 }
 
 Conditional::~Conditional()
