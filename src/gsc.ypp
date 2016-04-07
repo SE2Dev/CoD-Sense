@@ -9,8 +9,7 @@
 	#include "gsc.tab.hpp"
 
 	int yylex(YYSTYPE *yylval_param, YYLTYPE *yylloc_param, void* yyscanner);
-	//extern int yyparse();
-	void yyerror(YYLTYPE* loc, void* scanner, const char* err);
+	extern void yyerror(YYLTYPE* loc, void* scanner, const char* err);
 %}
 
 %define api.pure full
@@ -612,59 +611,3 @@ StatementList
 
 %%
 
-#include <sys/time.h>
-
-#define DEBUG 1
-
-void yyerror(YYLTYPE* loc, void* scanner, const char* err) {
-	fprintf(stderr, "PARSE ERROR AT LINE %d(%d): %s\n",
-		loc->first_line, loc->first_column,
-		err);
-		
-#if !(DEBUG)
-	exit(1);
-#endif
-}
-
-extern int yylex_init(void** ptr_yy_globals);
-extern int yylex_destroy(void* yyscanner);
-extern void yyset_in(FILE* in, void* scanner);
-extern void yyset_out(FILE* out, void* scanner);
-
-int main(int argc, char** argv) {
-	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
-	
-#if DEBUG
-while(1){
-#endif
-
-	timespec start;
-	clock_gettime(CLOCK_REALTIME, &start);
-
-	void* myscanner;
-	yylex_init(&myscanner);
-	
-	yyset_in(in, myscanner );
-	yyset_out(stdout, myscanner);
-	
-	yyparse(myscanner);
-	yylex_destroy(myscanner);
-	
-	timespec end;
-	clock_gettime(CLOCK_REALTIME, &end);
-	
-	if(argc > 1)
-	{
-		int nanos = end.tv_nsec - start.tv_nsec;
-		fprintf(stderr, "Parsed in %f ms\n", (double)nanos / 1000000.0);
-		
-		printf("\n");
-		exit(0);
-	}
-	
-#if DEBUG
-}
-#endif
-
-	return 0;
-}
