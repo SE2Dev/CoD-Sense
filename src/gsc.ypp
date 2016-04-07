@@ -45,6 +45,7 @@
 	
 	class Animtree;
 	class Expression;
+	class Member;
 	class Reference;
 	class Pointer;
 	
@@ -70,14 +71,16 @@
 	
 	Literal*	literal;
 	
-	Expression* expression;
-	Reference* reference;
-	Pointer* pointer;
+	Member*		member;
 	
-	Function* function;
-	Call* call;
+	Expression*	expression;
+	Reference*	reference;
+	Pointer*	pointer;
 	
-	Return* retn;
+	Function*	function;
+	Call*		call;
+	
+	Return*		retn;
 }
 
 %token<literal_string> T_STRING
@@ -372,11 +375,11 @@ AnimReferenceExpression
 
 MemberExpression
 	: ObjectExpression OP_LBRACKET Expression OP_RBRACKET 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Member((Expression*)$1, (Expression*)$3, @$, S_TYPE_MEMBER_ARRAY_ELEMENT); }
 	| ObjectExpression OP_DOT ObjectExpression 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Member((Expression*)$1, (Expression*)$3, @$, S_TYPE_MEMBER_OBJECT_PROPERTY); }
 	| OP_LBRACKET OP_RBRACKET 
-		{ $$ = new Symbol(@$); }
+		{ $$ = new Member(NULL, NULL, @$, S_TYPE_MEMBER_ARRAY_EMPTY); }
 	;
 
 ElementList

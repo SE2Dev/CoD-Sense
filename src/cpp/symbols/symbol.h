@@ -60,6 +60,7 @@ class Symbol : public LList<Symbol>
 #include "conditional.h"
 
 #include "expression.h"
+#include "member.h"
 #include "identifier.h"
 #include "reference.h"
 #include "pointer.h"
