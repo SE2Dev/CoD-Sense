@@ -346,9 +346,9 @@ FunctionExpression
 
 PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression OP_RBRACKET OP_RBRACKET 
-		{ $$ = new Pointer(@$); }
+		{ $$ = new Pointer((Expression*)$2, @$); }
 	| FUNC_POINTER_BEGIN ReferenceExpression OP_RBRACKET OP_RBRACKET 
-		{ $$ = new Pointer(@$); }
+		{ $$ = new Pointer((Expression*)$2, @$); }
 	;
 
 ReferenceExpression

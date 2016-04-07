@@ -4,11 +4,10 @@
 class Pointer : public Symbol
 {
 	public:
-		Literal* file;
-		Identifier* identifier;
+		Expression* expression;
 		
 		Pointer(void);
-		Pointer(YYLTYPE loc);
+		Pointer(Expression* expression, YYLTYPE loc);
 		
 		~Pointer(void);
 		
