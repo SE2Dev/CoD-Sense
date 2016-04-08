@@ -19,7 +19,11 @@ public:
 	virtual ARG_TYPE	Type(void) const = 0;
 };
 
-extern IArg* g_flag_verbose;
-extern IArg* g_cmd_tree;
+#define REGISTER_STATIC_ARGUMENT_INTERFACE(NAME) extern IArg* g_##NAME;
+
+REGISTER_STATIC_ARGUMENT_INTERFACE(verbose);	//g_verbose
+REGISTER_STATIC_ARGUMENT_INTERFACE(tree);		//g_tree
+
+#undef REGISTER_STATIC_ARGUMENT_INTERFACE
 
 void Arg_PrintUsage(void);
