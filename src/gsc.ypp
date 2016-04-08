@@ -2,8 +2,6 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <iostream>
-
-	//#include "lex.yy.h"
 	
 	#include "../symbols/symbol.h"
 	#include "gsc.tab.hpp"
@@ -160,11 +158,6 @@
 %left OP_MULT OP_DIV OP_MOD
 %right OP_INC_PRE OP_DEC_PRE OP_POSITIVE OP_NEGATIVE OP_NOT OP_BW_NOT
 %left OP_INC_POST OP_DEC_POST OP_LBRACKET OP_RBRACKET OP_DOT
-
-
-
-//%type<ival> expression
-//%type<fval> mixed_expression
 
 %type<symbol> 		IncludeDirective;
 %type<symbol> 		AnimtreeDirective;
