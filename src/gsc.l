@@ -1,5 +1,12 @@
 %{
 	#include <stdio.h>
+	
+#ifdef _WIN32
+	#include <io.h> //required for POSIX alternative _isatty();
+#else
+	#include <unistd.h> //required for isatty()
+#endif
+	
 	#include "gsc.tab.hpp"
 	#include "../symbols/symbol.h"
 	
@@ -39,10 +46,11 @@
 %option reentrant
 %option bison-bridge
 %option bison-locations
+
 %option nounput
+%option nounistd
 
 %option noyywrap
-
 
 RX_T_STRING			\"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 RX_T_FLOAT			[0-9]+\.(?:[0-9]*)?f?|\.[0-9]+f?

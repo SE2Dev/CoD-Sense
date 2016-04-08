@@ -12,6 +12,8 @@ FLEX_OPTIONS=-d -Cfa
 
 MAKE_CHILD_OPTIONS=--no-print-directory
 
+GPP_OPTIONS=-D_DEBUG -g
+
 default:
 	@$(MAKE) ${MAKE_CHILD_OPTIONS} clean
 	@$(MAKE) ${MAKE_CHILD_OPTIONS} parser
@@ -28,7 +30,7 @@ parser:
 	@flex -o ${LEXER_SRC_OUT}".cpp" ${FLEX_OPTIONS} ${LEXER_SRC}
 
 compile:
-	@g++ -Wall -g -c `find $(SRC_DIRS) -type f $(SRC_PATTERN) -print`
+	@g++ -Wall ${GPP_OPTIONS} -c `find $(SRC_DIRS) -type f $(SRC_PATTERN) -print`
 	@mv *.o obj/
 
 compile-error:
@@ -36,7 +38,7 @@ compile-error:
 	@exit 1
 	
 link:
-	@g++ -Wall -g -o bin/parser obj/*.o
+	@g++ -Wall ${GPP_OPTIONS} -o bin/parser obj/*.o
 
 test:
 	@$(MAKE) ${MAKE_CHILD_OPTIONS}
