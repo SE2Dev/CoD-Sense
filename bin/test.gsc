@@ -2,6 +2,10 @@
 
 #using_animtree("human");
 
+/*
+	don�t stop for unicode shenanigans
+*/
+
 main(arg1, arg2, arg3, arg4, arg5, arg6)
 {
 	"a_statement";

@@ -16,7 +16,7 @@
 	YYLTYPE *yyget_lloc  (yyscan_t yyscanner);
 	void yyset_lloc (YYLTYPE *  yylloc_param , void* yyscanner);
 	char *yyget_text (void* yyscanner );
-		
+	
 	void yy_update_loc(void* yyscanner)
 	{
 		YYLTYPE& yylloc = *yyget_lloc(yyscanner);
@@ -49,7 +49,6 @@
 
 %option nounput
 %option nounistd
-
 %option noyywrap
 
 RX_T_STRING			\"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
@@ -57,20 +56,28 @@ RX_T_FLOAT			[0-9]+\.(?:[0-9]*)?f?|\.[0-9]+f?
 RX_T_INT			[0-9]+
 RX_T_IDENTIFIER		[a-zA-Z_][a-zA-Z\-_0-9]*
 
+%x S_BLOCK_COMMENT
+%x S_BLOCK_DEVSCRIPT
+
 %%
 
-\s+					/* skip whitespace */
-"//".*				/* skip single line comments */	
-"/*"(.|\n|\r)*?"*/"	/* skip block comment */
-"/#"(.|\n|\r)*?"#/"	/* skip devscript (for now) */
+\s+						/* skip whitespace */
+"//".*					/* skip single line comments */
+"/*"					{ BEGIN(S_BLOCK_COMMENT); }
 
-{RX_T_STRING}			{ PRINT_TOKEN("T_STRING, "); yylval->literal_string = strdup(yytext); return T_STRING; }
-{RX_T_FLOAT}			{ PRINT_TOKEN("T_FLOAT, "); yylval->literal_string = strdup(yytext); return T_FLOAT; }
-{RX_T_INT}				{ PRINT_TOKEN("T_INT, "); yylval->literal_string = strdup(yytext); return T_INT; }
+<S_BLOCK_COMMENT>.		/* ignore unicode shenanigans in comment blocks */
+<S_BLOCK_COMMENT>"*/"	{ BEGIN(INITIAL); }
 
-"#include"				{ PRINT_TOKEN("INCLUDE, "); return INCLUDE; }
-"#using_animtree"		{ PRINT_TOKEN("USING_ANIMTREE, "); return USING_ANIMTREE; }
-"#animtree"				{ PRINT_TOKEN("ANIMTREE, "); return ANIMTREE; }
+<INITIAL>"/#"			{ BEGIN(S_BLOCK_DEVSCRIPT); }
+<S_BLOCK_DEVSCRIPT>"#/"	{ BEGIN(INITIAL); }	
+
+{RX_T_STRING}		{ PRINT_TOKEN("T_STRING, "); yylval->literal_string = strdup(yytext); return T_STRING; }
+{RX_T_FLOAT}		{ PRINT_TOKEN("T_FLOAT, "); yylval->literal_string = strdup(yytext); return T_FLOAT; }
+{RX_T_INT}			{ PRINT_TOKEN("T_INT, "); yylval->literal_string = strdup(yytext); return T_INT; }
+
+"#include"			{ PRINT_TOKEN("INCLUDE, "); return INCLUDE; }
+"#using_animtree"	{ PRINT_TOKEN("USING_ANIMTREE, "); return USING_ANIMTREE; }
+"#animtree"			{ PRINT_TOKEN("ANIMTREE, "); return ANIMTREE; }
 
 \(			{ PRINT_TOKEN("OP_LPAREN, "); return OP_LPAREN; }
 \)			{ PRINT_TOKEN("OP_RPAREN, "); return OP_RPAREN; }
@@ -134,8 +141,6 @@ RX_T_IDENTIFIER		[a-zA-Z_][a-zA-Z\-_0-9]*
 "wait"			{ PRINT_TOKEN("T_WAIT, "); return T_WAIT; }
 
 ([_a-zA-Z0-9]+\\)+[_a-zA-Z0-9]+			{ PRINT_TOKEN("T_FILEPATH, "); yylval->literal_string = strdup(yytext); return T_FILEPATH; }
-{RX_T_IDENTIFIER}	{ PRINT_TOKEN("T_IDENTIFIER, "); yylval->literal_string = strdup(yytext); return T_IDENTIFIER; } /*
-
-.*			{ fPRINT_TOKEN(stderr, "UNEXPECTED TOKEN '%s'", yytext);  return T_INVALID; } */ 
+{RX_T_IDENTIFIER}	{ PRINT_TOKEN("T_IDENTIFIER, "); yylval->literal_string = strdup(yytext); return T_IDENTIFIER; }
 
 %%
