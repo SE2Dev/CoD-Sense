@@ -198,7 +198,8 @@
 %type<symbol> 		Statement;
 %type<symbol> 		StatementList;
 
-%destructor { printf("BISON SYMBOL DESTRUCTOR\n"); } <*>
+%destructor { printf("DISCARD SYMBOL\n"); } <*>
+%destructor { printf("DISCARD TOKEN %s\n", $$); free($$); } T_FILEPATH T_IDENTIFIER T_STRING T_FLOAT T_INT
 
 %start Program
 
