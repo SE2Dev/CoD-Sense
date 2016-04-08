@@ -84,12 +84,12 @@ public:
 //
 // DO NOT USE DIRECTLY
 //
-// REGISTER_STATIC_ARGUMENT(Option, verbose, "verbose", 'v', "Enable verbose logging");
+// REGISTER_STATIC_ARGUMENT(Option, g_verbose, "verbose", 'v', "Enable verbose logging");
 // expands to:
-// 	static Option l_flag_verbose("verbose", 'v', "Enable verbose logging");
-// 	IArg* g_flag_verbose = &l_flag_verbose;
+// 	static Option l_g_verbose("verbose", 'v', "Enable verbose logging");
+// 	IArg* g_verbose = &l_g_verbose;
 //
-#define REGISTER_STATIC_ARGUMENT(TYPE,NAME,ARG_NAME,ARG_SHORTCUT,ARG_DESC) TYPE l_##NAME (ARG_NAME, ARG_SHORTCUT, ARG_DESC); IArg* g_##NAME = &l_##NAME;
+#define REGISTER_STATIC_ARGUMENT(TYPE,NAME,ARG_NAME,ARG_SHORTCUT,ARG_DESC) TYPE l_##NAME (ARG_NAME, ARG_SHORTCUT, ARG_DESC); IArg* NAME = &l_##NAME;
 
 //
 // Registration macros used for automatically registering an argument of a specific type
@@ -100,8 +100,8 @@ public:
 //
 // ARGUMENTS
 //
-REGISTER_STATIC_OPTION( verbose, "verbose", 'v', "Enable verbose logging");
-REGISTER_STATIC_COMMAND( tree, "tree", 't', "Print the AST for a given script file");
+REGISTER_STATIC_OPTION( g_opt_verbose, "verbose", 'v', "Enable verbose logging");
+REGISTER_STATIC_COMMAND( g_cmd_tree, "tree", 't', "Print the AST for a given script file");
 
 #undef REGISTER_STATIC_ARGUMENT
 #undef REGISTER_STATIC_OPTION
