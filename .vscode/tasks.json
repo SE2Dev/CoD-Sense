@@ -2,7 +2,7 @@
 	"version": "0.1.0",
 	"command": "make",
 	"isShellCommand": true,
-	"showOutput": "silent",
+	"showOutput": "always",
 	"tasks": [
 		{
 			"taskName": "default",
