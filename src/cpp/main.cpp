@@ -27,6 +27,8 @@ void yyerror(YYLTYPE* loc, yyscan_t scanner, const char* err)
 
 int main(int argc, char** argv)
 {
+	Arg_PrintUsage();
+	
 	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
 	
 #if _DEBUG

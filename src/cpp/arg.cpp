@@ -1,71 +1,51 @@
 #include "arg.h"
+#include "string.h"
 
-IArg* g_shortcut[255] = {NULL};
+Argument* g_shortcut[255] = {NULL};
 
-class Arg : public IArg
+int Argument::RegisterShortcut(char shortcut)
 {
-protected:
-	const char*	name;
-	const char*	desc;
-	char	shortcut;
-	
-	ARG_TYPE type;
-	
-	bool enabled;
-
-	int RegisterShortcut(char shortcut)
+	if(this->shortcut)
 	{
-		if(this->shortcut)
+		fprintf(stderr, "Error: Could not register shortcut '-%c' for argument '%s' - arg already has shortcut '-%c'\n", shortcut, this->name, this->shortcut);
+		return 3;
+	}
+	
+	if(shortcut)
+	{
+		if(!g_shortcut[(int)shortcut])
 		{
-			if(!g_shortcut[(int)this->shortcut])
-			{
-				g_shortcut[(int)this->shortcut] = this;
-				return 0;
-			}
-			else
-			{
-				return 1;
-				fprintf(stderr, "Error: Could not initialize argument '%s' - shortcut '-%c' already exists\n", name, shortcut);
-			}
+			this->shortcut = shortcut;
+			g_shortcut[(int)shortcut] = this;
+			return 0;
 		}
-		
-		return 2;
-	}
-
-public:
-	const char* Name(void) const
-	{
-		return this->name;
+		else
+		{
+			fprintf(stderr, "Error: Could not initialize argument '%s' - shortcut '-%c' already exists for another argument\n", name, shortcut);
+			return 1;
+		}
 	}
 	
-	const char* Description(void) const
-	{
-		return this->desc;
-	}
-	
-	ARG_TYPE Type(void) const
-	{
-		return this->type;
-	}
-};
+	fprintf(stderr, "Error: Could not register shortcut'-%c' for argument '%s'\n", shortcut, this->name);
+	return 2;
+}
 
-class Option : public Arg
+const char*  Argument::Name(void) const
 {
-private:
-public:
-	Option(const char* name, const char shortcut, const char* description)
-	{
-		this->name = name;
-		this->desc = description;
-		this->shortcut = shortcut;
-		this->type = ARG_OPTION;
-		
-		if(this->shortcut)
-			this->RegisterShortcut(shortcut);
-	}
-};
+	return this->name;
+}
 
-class Command : public Arg
+const char*  Argument::Description(void) const
+{
+	return this->desc;
+}
+
+int  Argument::Flags(void) const
+{
+	return this->flags;
+}
+
+class Command : public Argument
 {
 private:
 public:
@@ -73,13 +53,13 @@ public:
 	{
 		this->name = name;
 		this->desc = description;
-		this->shortcut = shortcut;
-		this->type = ARG_COMMAND;
+		this->flags = ARG_COMMAND;
 		
-		if(this->shortcut)
+		if(shortcut)
 			this->RegisterShortcut(shortcut);
 	}
 };
+
 
 //
 // DO NOT USE DIRECTLY
@@ -87,20 +67,18 @@ public:
 // REGISTER_STATIC_ARGUMENT(Option, g_verbose, "verbose", 'v', "Enable verbose logging");
 // expands to:
 // 	static Option l_g_verbose("verbose", 'v', "Enable verbose logging");
-// 	IArg* g_verbose = &l_g_verbose;
+// 	Argument* g_verbose = &l_g_verbose;
 //
-#define REGISTER_STATIC_ARGUMENT(TYPE,NAME,ARG_NAME,ARG_SHORTCUT,ARG_DESC) TYPE l_##NAME (ARG_NAME, ARG_SHORTCUT, ARG_DESC); IArg* NAME = &l_##NAME;
+#define REGISTER_STATIC_ARGUMENT(TYPE,NAME,ARG_NAME,ARG_SHORTCUT,ARG_DESC) TYPE l_##NAME (ARG_NAME, ARG_SHORTCUT, ARG_DESC); Argument* NAME = &l_##NAME;
 
 //
-// Registration macros used for automatically registering an argument of a specific type
+// Registration macros used for automatically registering an argument of a specific flags
 //
-#define REGISTER_STATIC_OPTION(NAME,ARG_NAME,ARG_SHORTCUT,ARG_DESC) REGISTER_STATIC_ARGUMENT(Option, NAME, ARG_NAME, ARG_SHORTCUT, ARG_DESC)
 #define REGISTER_STATIC_COMMAND(NAME,ARG_NAME,ARG_SHORTCUT,ARG_DESC) REGISTER_STATIC_ARGUMENT(Command, NAME, ARG_NAME, ARG_SHORTCUT, ARG_DESC)
 
 //
 // ARGUMENTS
 //
-REGISTER_STATIC_OPTION( g_opt_verbose, "verbose", 'v', "Enable verbose logging");
 REGISTER_STATIC_COMMAND( g_cmd_tree, "tree", 't', "Print the AST for a given script file");
 
 #undef REGISTER_STATIC_ARGUMENT
@@ -116,7 +94,7 @@ void Arg_PrintUsage(void)
 	printf("Options:\n");
 	for(int i = 0; i < 255; i++)
 	{
-		if(g_shortcut[i] && g_shortcut[i]->Type() == ARG_OPTION)
+		if(g_shortcut[i] && g_shortcut[i]->Flags() & (ARG_GLOBAL | ARG_CVAR))
 		{
 			printf("  -%c, --%-22s%s\n", i, g_shortcut[i]->Name(), g_shortcut[i]->Description());
 		}
@@ -126,7 +104,7 @@ void Arg_PrintUsage(void)
 	printf("Commands:\n");
 	for(int i = 0; i < 255; i++)
 	{
-		if(g_shortcut[i] && g_shortcut[i]->Type() == ARG_COMMAND)
+		if(g_shortcut[i] && g_shortcut[i]->Flags() & ARG_COMMAND)
 		{
 			printf("  -%c, --%-22s%s\n", i, g_shortcut[i]->Name(), g_shortcut[i]->Description());
 		}
@@ -134,3 +112,43 @@ void Arg_PrintUsage(void)
 	printf("\n");
 }
 
+int Arg_ParseArgument(char* arg)
+{
+	int len = strlen(arg);
+	if(!len)
+	{
+		fprintf(stderr, "Error: Zero length argument\n");
+		return 1;
+	}
+	
+	if(len >= 2 && (arg[0] == '-' && arg[1] == '-'))
+	{
+		printf("Full name found\n");
+		return 0;
+	}
+
+	if(len == 2 && arg[0] == '-')
+	{
+		printf("Shortcut found %d\n", g_shortcut[(int)arg[1]] != 0);
+		return 0;
+	}
+	
+	fprintf(stderr, "Error: Unrecognized argument '%s'\n", arg);
+	return 1;
+}
+
+int Arg_ParseArguments(int argc, char** argv)
+{
+	if(argc <= 1)
+	{
+		Arg_PrintUsage();
+		return 1;
+	}
+	
+	for(int i = 1; i < argc; i++)
+	{
+		Arg_ParseArgument(argv[i]);
+	}
+	
+	return 0;
+}

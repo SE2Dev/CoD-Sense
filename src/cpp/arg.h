@@ -3,23 +3,34 @@
 
 #define APPLICATION_NAME "parser"
 
-enum ARG_TYPE
+enum ARG_FLAGS
 {
-	ARG_OPTION,
-	ARG_COMMAND,
+	ARG_NULL		= 0 << 0,
 	
-	ARG_ABSTRACT,
+	ARG_GLOBAL		= 1 << 0,
+	
+	ARG_CVAR		= 1 << 2,
+	ARG_COMMAND		= 1 << 3,
 };
 
-class IArg
+class Argument
 {
+protected:
+	int			flags;
+	
+	const char*	name;
+	const char*	desc;
+	char		shortcut;
+
+	int RegisterShortcut(char shortcut);
+
 public:
-	virtual const char*	Name(void) const = 0;
-	virtual const char*	Description(void) const = 0;
-	virtual ARG_TYPE	Type(void) const = 0;
+	const char*	Name(void) const;
+	const char*	Description(void) const;
+	int			Flags(void) const;
 };
 
-#define REGISTER_STATIC_ARGUMENT_INTERFACE(NAME) extern IArg* NAME;
+#define REGISTER_STATIC_ARGUMENT_INTERFACE(NAME) extern Argument* NAME;
 
 REGISTER_STATIC_ARGUMENT_INTERFACE(g_opt_verbose);
 REGISTER_STATIC_ARGUMENT_INTERFACE(g_cmd_tree);
@@ -27,3 +38,4 @@ REGISTER_STATIC_ARGUMENT_INTERFACE(g_cmd_tree);
 #undef REGISTER_STATIC_ARGUMENT_INTERFACE
 
 void Arg_PrintUsage(void);
+int Arg_ParseArguments(int argc, char** argv);
