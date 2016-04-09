@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "parser/gsc.tab.hpp"
 
+#include "parser/gsc.tab.hpp"
+#include "posix.h"
 #include "arg.h"
 
 #ifdef _WIN32

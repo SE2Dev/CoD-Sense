@@ -1,11 +1,6 @@
 %{
 	#include <stdio.h>
-	
-#ifdef _WIN32
-	#include <io.h> //required for POSIX alternative _isatty();
-#else
-	#include <unistd.h> //required for isatty()
-#endif
+	#include "../posix.h"
 	
 	#include "gsc.tab.hpp"
 	#include "../symbols/symbol.h"
