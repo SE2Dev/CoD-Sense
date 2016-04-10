@@ -38,6 +38,17 @@ public:
 
 	~CVar(void);
 
+	/*int			AssignValue(bool value);
+	int			AssignValue(int value);
+	int			AssignValue(float value);
+	int			AssignValue(const char* value);*/
+
+	//
+	// Assign raw command line string data
+	// automatically convert to the proper data type
+	//
+	int			AssignRawString(const char* val);
+
 	int			ValueInt(void) const;
 	bool		ValueBool(void) const;
 	float		ValueFloat(void) const;
@@ -45,5 +56,11 @@ public:
 };
 
 #define REGISTER_GLOBAL_CVAR(IDENTIFIER) extern CVar IDENTIFIER;
+
 REGISTER_GLOBAL_CVAR(g_verbose);
+REGISTER_GLOBAL_CVAR(g_logfile);
+REGISTER_GLOBAL_CVAR(g_dumpCVars);
+
 #undef REGISTER_GLOBAL_CVAR
+
+void CVar_DumpCVars(void);

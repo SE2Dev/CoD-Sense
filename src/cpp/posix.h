@@ -24,5 +24,6 @@ W32_WARNING_DISABLE(4996) // Disable POSIX Name Deprecation
 #else //LINUX
 
 #include <unistd.h>	// required for isatty (LINUX)
+#define stricmp strcasecmp
 
 #endif

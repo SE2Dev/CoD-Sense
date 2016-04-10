@@ -1,5 +1,6 @@
 #include "arg.h"
 #include "string.h"
+#include "cvar.h"
 
 Argument* g_shortcut[255] = {NULL};
 
@@ -112,28 +113,52 @@ void Arg_PrintUsage(void)
 	printf("\n");
 }
 
-int Arg_ParseArgument(char* arg)
+int Arg_ParseArgument(char*** consumable_argv, int* consumable_argc)
 {
-	int len = strlen(arg);
+	char**& argv = *consumable_argv;
+	int& argc = *consumable_argc;
+	
+	const char* argStr = argv[0];
+
+	int len = strlen(argStr);
 	if(!len)
 	{
 		fprintf(stderr, "Error: Zero length argument\n");
 		return 1;
 	}
 	
-	if(len >= 2 && (arg[0] == '-' && arg[1] == '-'))
+	if(len >= 2 && (argStr[0] == '-' && argStr[1] == '-'))
 	{
 		printf("Full name found\n");
 		return 0;
 	}
 
-	if(len == 2 && arg[0] == '-')
+	if(len == 2 && argStr[0] == '-')
 	{
-		printf("Shortcut found %d\n", g_shortcut[(int)arg[1]] != 0);
-		return 0;
+		CVar* cvar = (CVar*)g_shortcut[(int)argStr[1]];
+		if(!cvar)
+		{
+			fprintf(stderr, "Error: Unrecognized argument '%s'\n", argStr);
+			return 1;
+		}
+		
+		if(cvar->Flags() & (ARG_CVAR | ARG_GLOBAL))
+		{
+			if(argc < 2)
+			{
+				fprintf(stderr, "Error: No value provided for argument '%s'\n", argStr);
+				return 3;
+			}
+			
+			cvar->AssignRawString(argv[1]);
+			argc-=2;
+			argv+=2;
+			return 0;
+		}
 	}
 	
-	fprintf(stderr, "Error: Unrecognized argument '%s'\n", arg);
+	// No arguments were consumed - print error & abort oncoming infinite loop
+	fprintf(stderr, "Error: Unrecognized argument '%s'\n", argStr);
 	return 1;
 }
 
@@ -145,9 +170,14 @@ int Arg_ParseArguments(int argc, char** argv)
 		return 1;
 	}
 	
-	for(int i = 1; i < argc; i++)
+	char** consumable_argv = &argv[1];
+	
+	for(int consumable_argc = argc - 1; consumable_argc; )
 	{
-		Arg_ParseArgument(argv[i]);
+		if(int err = Arg_ParseArgument(&consumable_argv, &consumable_argc))
+		{
+			return err;
+		}
 	}
 	
 	return 0;

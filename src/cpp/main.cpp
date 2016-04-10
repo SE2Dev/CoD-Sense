@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "parser/gsc.tab.hpp"
-#include "posix.h"
-#include "arg.h"
-
 #ifdef _WIN32
 	#include <Windows.h>
 #endif
+
+#include "parser/gsc.tab.hpp"
+#include "posix.h"
+#include "arg.h"
+#include "cvar.h"
 
 typedef void* yyscan_t;
 
@@ -28,6 +29,17 @@ void yyerror(YYLTYPE* loc, yyscan_t scanner, const char* err)
 int main(int argc, char** argv)
 {
 	Arg_PrintUsage();
+	
+	if(int err = Arg_ParseArguments(argc, argv))
+	{
+		fprintf(stderr, "Fatal Error: Unable to parse arguments - see --help\n");
+		return err;
+	}
+	
+	if(g_dumpCVars.ValueBool())
+	{
+		CVar_DumpCVars();
+	}
 	
 	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
 	
