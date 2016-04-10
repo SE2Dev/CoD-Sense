@@ -1,6 +1,8 @@
 #include "arg.h"
 #include "string.h"
 #include "cvar.h"
+#include "cmd.h"
+#include "util/llist.h"
 
 Argument* g_shortcut[255] = {NULL};
 
@@ -46,46 +48,6 @@ int  Argument::Flags(void) const
 	return this->flags;
 }
 
-class Command : public Argument
-{
-private:
-public:
-	Command(const char* name, const char shortcut, const char* description)
-	{
-		this->name = name;
-		this->desc = description;
-		this->flags = ARG_COMMAND;
-		
-		if(shortcut)
-			this->RegisterShortcut(shortcut);
-	}
-};
-
-
-//
-// DO NOT USE DIRECTLY
-//
-// REGISTER_STATIC_ARGUMENT(Option, g_verbose, "verbose", 'v', "Enable verbose logging");
-// expands to:
-// 	static Option l_g_verbose("verbose", 'v', "Enable verbose logging");
-// 	Argument* g_verbose = &l_g_verbose;
-//
-#define REGISTER_STATIC_ARGUMENT(TYPE,NAME,ARG_NAME,ARG_SHORTCUT,ARG_DESC) TYPE l_##NAME (ARG_NAME, ARG_SHORTCUT, ARG_DESC); Argument* NAME = &l_##NAME;
-
-//
-// Registration macros used for automatically registering an argument of a specific flags
-//
-#define REGISTER_STATIC_COMMAND(NAME,ARG_NAME,ARG_SHORTCUT,ARG_DESC) REGISTER_STATIC_ARGUMENT(Command, NAME, ARG_NAME, ARG_SHORTCUT, ARG_DESC)
-
-//
-// ARGUMENTS
-//
-REGISTER_STATIC_COMMAND( g_cmd_tree, "tree", 't', "Print the AST for a given script file");
-
-#undef REGISTER_STATIC_ARGUMENT
-#undef REGISTER_STATIC_OPTION
-#undef REGISTER_STATIC_COMMAND
-
 void Arg_PrintUsage(void)
 {
 	printf(	"%-9s%s\n%-9s%s\n\n",
@@ -103,12 +65,9 @@ void Arg_PrintUsage(void)
 	printf("\n");
 	
 	printf("Commands:\n");
-	for(int i = 0; i < 255; i++)
+	for(Command* cmd = Command::GlobalCommands(); cmd; cmd = cmd->NextElem())
 	{
-		if(g_shortcut[i] && g_shortcut[i]->Flags() & ARG_COMMAND)
-		{
-			printf("  -%c, --%-22s%s\n", i, g_shortcut[i]->Name(), g_shortcut[i]->Description());
-		}
+		printf("  %-22s%s\n", cmd->Name(), cmd->Description());
 	}
 	printf("\n");
 }
@@ -157,7 +116,9 @@ int Arg_ParseArgument(char*** consumable_argv, int* consumable_argc)
 		}
 	}
 	
+	//
 	// No arguments were consumed - print error & abort oncoming infinite loop
+	//
 	fprintf(stderr, "Error: Unrecognized argument '%s'\n", argStr);
 	return 1;
 }
@@ -170,15 +131,14 @@ int Arg_ParseArguments(int argc, char** argv)
 		return 1;
 	}
 	
-	char** consumable_argv = &argv[1];
-	
+	/*char** consumable_argv = &argv[1];
 	for(int consumable_argc = argc - 1; consumable_argc; )
 	{
 		if(int err = Arg_ParseArgument(&consumable_argv, &consumable_argc))
 		{
 			return err;
 		}
-	}
+	}*/
 	
 	return 0;
 }

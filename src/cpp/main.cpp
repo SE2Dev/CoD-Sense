@@ -10,6 +10,7 @@
 #include "platform.h"
 #include "arg.h"
 #include "cvar.h"
+#include "cmd.h"
 
 typedef void* yyscan_t;
 
