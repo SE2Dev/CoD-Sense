@@ -38,10 +38,16 @@ public:
 
 	~CVar(void);
 
-	/*int			AssignValue(bool value);
-	int			AssignValue(int value);
-	int			AssignValue(float value);
-	int			AssignValue(const char* value);*/
+	//
+	// Currently only supports bool cvars
+	//
+	//bool		Enable(void);
+	//bool		Disable(void);
+
+	//int			AssignValue(bool value);
+	//int			AssignValue(int value);
+	//int			AssignValue(float value);
+	//int			AssignValue(const char* value);
 
 	//
 	// Assign raw command line string data

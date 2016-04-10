@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "arg.h"
 #include "string.h"
 #include "cvar.h"
@@ -48,10 +49,51 @@ int  Argument::Flags(void) const
 	return this->flags;
 }
 
+ArgParsedInfo::ArgParsedInfo(void) : cmd(NULL), argc(0), argv(NULL)
+{
+}
+
+ArgParsedInfo::~ArgParsedInfo(void)
+{
+	for(; argc; argc--)
+	{
+		free((void*)this->argv[argc - 1]);
+	}
+	
+	delete[] this->argv;
+	this->argv = NULL;
+}
+
+Command* ArgParsedInfo::Cmd(void) const
+{
+	return this->cmd;
+}
+
+int ArgParsedInfo::Argc(void) const
+{
+	return this->argc;
+}
+
+char** ArgParsedInfo::Argv(void) const
+{
+	return this->argv;
+}
+
+char* ArgParsedInfo::Argv(int index) const
+{
+	if(index >= argc || index < 0)
+	{
+		return (char*)"";
+	}
+	
+	return this->argv[index];
+}
+
+
 void Arg_PrintUsage(void)
 {
 	printf(	"%-9s%s\n%-9s%s\n\n",
-			"Usage:",	APPLICATION_NAME" [options] [command] [arguments]",
+			"Usage:",	APPLICATION_NAME" [command] [options]",
 			"Example:",	APPLICATION_NAME" --tree -f 'maps/utility.gsc'");
 	
 	printf("Options:\n");
@@ -123,13 +165,21 @@ int Arg_ParseArgument(char*** consumable_argv, int* consumable_argc)
 	return 1;
 }
 
-int Arg_ParseArguments(int argc, char** argv)
+int Arg_ParseArguments(int argc, char** argv, ArgParsedInfo* out_info)
 {
-	if(argc <= 1)
+	out_info->cmd = Command::ResolveCommand(*argv);
+	if(!out_info->cmd)
 	{
-		Arg_PrintUsage();
-		return 1;
+		fprintf(stderr, "Error: Command '%s' not recognized\n", *argv);
+		return 2;
 	}
+	
+	out_info->argc = argc;
+	out_info->argv = new char*[argc];
+	for(int i = 0; i < argc; i++)
+	{
+		out_info->argv[i] = strdup(argv[i]);
+	} 
 	
 	/*char** consumable_argv = &argv[1];
 	for(int consumable_argc = argc - 1; consumable_argc; )

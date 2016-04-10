@@ -36,5 +36,28 @@ public:
 	int			Flags(void) const;
 };
 
+class Command;
+
+class ArgParsedInfo
+{
+private:
+	Command* cmd;
+
+	int argc;
+	char** argv;
+	
+public:
+	ArgParsedInfo(void);
+	~ArgParsedInfo(void);
+	
+	Command* Cmd(void) const;
+	
+	int		Argc(void) const;
+	char**	Argv(void) const;
+	char*	Argv(int index) const;
+	
+	friend int Arg_ParseArguments(int argc, char** argv, ArgParsedInfo* out_info);
+};
+
 void Arg_PrintUsage(void);
-int Arg_ParseArguments(int argc, char** argv);
+int Arg_ParseArguments(int argc, char** argv, ArgParsedInfo* out_info);

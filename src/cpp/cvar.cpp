@@ -65,6 +65,11 @@ CVar::CVar(const char* name, char shortcut, const char* description, bool defaul
 	this->name = name;
 	this->desc = description;
 	
+	//
+	// Allow all booleans to implicitly toggle when used with no value argument (or in a group)
+	//
+	this->flags |= ARG_IMPLICIT_VALUE;
+	
 	if(shortcut)
 	{
 		this->shortcut = 0;
@@ -121,6 +126,48 @@ CVar::CVar(const char* name, char shortcut, const char* description, const char*
 CVar::~CVar(void)
 {
 }
+
+/*bool CVar::Enable(void)
+{
+	switch(this->type)
+	{
+		case CVAR_BOOL:
+			if(stricmp(this->str_val, "false") == 0)
+				this->bool_val = false;
+			else if (stricmp(this->str_val, "true") == 0)
+				this->bool_val = true;
+			else
+				this->bool_val = (bool)atoi(str_val);
+			this->int_val = bool_val ? 1 : 0;
+			this->float_val = (float)int_val;
+			break;
+		case CVAR_INT:
+			this->int_val = atoi(str_val);
+			this->bool_val = (int_val != 0);
+			this->float_val = (float)int_val;
+			break;
+		case CVAR_FLOAT:
+			this->float_val = (float)atof(str_val);
+			this->int_val = (int)float_val;
+			this->bool_val = (int_val != 0);
+			break;
+		case CVAR_STRING:
+			this->bool_val = (str_val[0] != 0);
+			this->int_val = bool_val ? 1 : 0;
+			this->float_val = (float)this->int_val;
+			break;
+		default:
+			return 1;
+	}
+}
+
+bool CVar::Disable(void)
+{
+	this->bool_val = false;
+	this->int_val = 0;
+	this->float_val = 0.0f;
+	this->str_val = "NULL";
+}*/
 
 //
 // Assign raw command line string data
