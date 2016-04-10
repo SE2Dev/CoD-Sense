@@ -39,9 +39,11 @@ class Symbol : public LList<Symbol>
 		Symbol(void);
 		Symbol(YYLTYPE loc);
 		
-		~Symbol();
+		virtual ~Symbol();
 		
 		void AddChild(Symbol* child);
+		void FreeChildren(void);
+		
 		virtual void PrintInfo();
 		void PrintInfoRecursive(int indentLevel = 0);
 		

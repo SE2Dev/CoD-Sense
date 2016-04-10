@@ -7,4 +7,7 @@ Group::Group(Symbol* childList, YYLTYPE range)
 	this->location = range;
 }
 
-Group::~Group(void) {}
+Group::~Group(void)
+{
+	printf("~Group()\n");	
+}

@@ -14,6 +14,7 @@ Return::Return(Expression* expr, YYLTYPE loc) : expr(expr)
 
 Return::~Return()
 {
+	printf("~Return()\n");
 }
 
 void Return::PrintInfo()

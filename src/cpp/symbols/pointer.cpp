@@ -15,6 +15,7 @@ Pointer::Pointer(Expression* expr, YYLTYPE loc) : expression(expr)
 
 Pointer::~Pointer()
 {
+	printf("~Pointer()\n");
 }
 
 void Pointer::PrintInfo()

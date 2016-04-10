@@ -17,7 +17,8 @@ Function::Function(Identifier* identifier, YYLTYPE loc)
 
 Function::~Function()
 {
-	delete this->identifier;
+	//delete this->identifier;
+	printf("~Function()\n");
 }
 
 void Function::PrintInfo()
@@ -48,7 +49,8 @@ Call::Call(YYLTYPE loc, int flags) : flags(flags), identifier(NULL), caller(NULL
 
 Call::~Call()
 {
-	delete this->identifier;
+	//delete this->identifier;
+	printf("~Call()\n");
 }
 
 void Call::SetCaller(Expression* caller)

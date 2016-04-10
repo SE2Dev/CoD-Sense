@@ -19,8 +19,10 @@ Reference::Reference(Literal* filepath, Identifier* identifier, YYLTYPE loc)
 
 Reference::~Reference()
 {
-	delete this->file;
-	delete this->identifier;
+	//delete this->file;
+	//delete this->identifier;
+	
+	printf("~Reference()\n");
 }
 
 void Reference::PrintInfo()

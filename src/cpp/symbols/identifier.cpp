@@ -8,19 +8,20 @@ Identifier::Identifier(void) : value(NULL)
 Identifier::Identifier(char* str)
 {
 	this->type = S_TYPE_IDENTIFIER;
-	this->value = strdup(str);
+	this->value = str;
 }
 
 Identifier::Identifier(char* str, YYLTYPE loc)
 {
 	this->type = S_TYPE_IDENTIFIER;
-	this->value = strdup(str);
+	this->value = str;
 	this->location = loc;
 }
 
 Identifier::~Identifier()
 {
-	delete[] value;
+	//delete[] value;
+	printf("~Identifier()\n");
 }
 
 void Identifier::PrintInfo()

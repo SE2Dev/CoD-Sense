@@ -14,7 +14,7 @@ Symbol::Symbol(YYLTYPE loc) : type(S_TYPE_NONE), prev(NULL), next(NULL), childre
 
 Symbol::~Symbol()
 {
-	//printf("SYMBOL DTOR\n");
+	printf("~SYMBOL\n");
 }
 
 void Symbol::AddChild(Symbol* child)
@@ -23,6 +23,12 @@ void Symbol::AddChild(Symbol* child)
 		children = child;
 	else
 		children->AddToEnd(child);
+}
+
+void Symbol::FreeChildren(void)
+{
+	delete this->children;
+	this->children = NULL;
 }
 
 void Symbol::PrintInfo()

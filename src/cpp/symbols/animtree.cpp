@@ -15,7 +15,8 @@ Animtree::Animtree(Literal* animtree, YYLTYPE loc): string(animtree)
 
 Animtree::~Animtree()
 {
-	delete[] string;
+	//delete[] string;
+	printf("~Animtree()\n");
 }
 
 void Animtree::PrintInfo()

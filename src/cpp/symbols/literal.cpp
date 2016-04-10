@@ -8,13 +8,14 @@ Literal::Literal(void) : value(NULL)
 Literal::Literal(char* val, YYLTYPE loc, SYMBOL_TYPE type_override)
 {
 	this->type = type_override;
-	this->value = strdup(val);
+	this->value = val;
 	this->location = loc;
 }
 
 Literal::~Literal()
 {
-	delete[] value;
+	//free((void*)value);
+	printf("~Literal()\n");
 }
 
 void Literal::PrintInfo()

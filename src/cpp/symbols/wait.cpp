@@ -14,6 +14,7 @@ Wait::Wait(Expression* expr, YYLTYPE loc) : expr(expr)
 
 Wait::~Wait()
 {
+	printf("~Wait()\n");
 }
 
 void Wait::PrintInfo()

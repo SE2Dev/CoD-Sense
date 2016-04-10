@@ -16,7 +16,8 @@ Include::Include(Literal* filepath, YYLTYPE loc): file(filepath)
 
 Include::~Include()
 {
-	delete[] file;
+	//delete file;
+	printf("~Include()\n");
 }
 
 void Include::PrintInfo()

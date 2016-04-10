@@ -18,6 +18,7 @@ Member::Member(Expression* obj, Expression* expr, YYLTYPE loc, SYMBOL_TYPE type_
 
 Member::~Member()
 {
+	printf("~Member()\n");
 }
 
 void Member::PrintInfo()

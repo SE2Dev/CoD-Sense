@@ -14,7 +14,7 @@ private:
 public:
 
 	LList(void);
-	~LList(void);
+	virtual ~LList(void);
 	
 	bool IsEmpty(void) const;
 	bool InList(void) const;
