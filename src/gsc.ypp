@@ -27,7 +27,7 @@
 
 %code requires
 {
-	#include "../posix.h"
+	#include "../platform.h"
 	#include "../symbols/operator_enum.h"
 	
 	//

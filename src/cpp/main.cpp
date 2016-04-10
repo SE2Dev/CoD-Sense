@@ -7,7 +7,7 @@
 #endif
 
 #include "parser/gsc.tab.hpp"
-#include "posix.h"
+#include "platform.h"
 #include "arg.h"
 #include "cvar.h"
 

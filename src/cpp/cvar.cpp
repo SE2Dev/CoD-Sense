@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "posix.h"
+#include "platform.h"
 
 CVar* g_cvar[GLOBAL_CVAR_MAX];
 
