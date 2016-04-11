@@ -9,5 +9,4 @@ Group::Group(Symbol* childList, YYLTYPE range)
 
 Group::~Group(void)
 {
-	printf("~Group()\n");	
 }

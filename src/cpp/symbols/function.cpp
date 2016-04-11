@@ -18,7 +18,6 @@ Function::Function(Identifier* identifier, YYLTYPE loc)
 Function::~Function()
 {
 	//delete this->identifier;
-	printf("~Function()\n");
 }
 
 void Function::PrintInfo()
@@ -50,7 +49,6 @@ Call::Call(YYLTYPE loc, int flags) : flags(flags), identifier(NULL), caller(NULL
 Call::~Call()
 {
 	//delete this->identifier;
-	printf("~Call()\n");
 }
 
 void Call::SetCaller(Expression* caller)
@@ -61,10 +59,15 @@ void Call::SetCaller(Expression* caller)
 	this->caller = caller;
 	if(caller)
 	{
-		// Swap the head of the children list with the caller, insert the old list after that
-		Symbol* children = this->children;
-		this->children = caller;
-		caller->AddToEnd(children);
+		// Swap the head of the children list with the caller, manually append the old list after that
+		for(Symbol* child = this->children; child; )
+		{
+			Symbol* next = child->NextElem();
+			caller->AddToEnd(child);
+			child = next;
+		}
+		
+		this->children =  caller;
 	}
 	this->flags |= CALL_FLAGS_EXPLICIT_CALLER;
 }

@@ -11,13 +11,14 @@ Include::Include(Literal* filepath, YYLTYPE loc): file(filepath)
 {
 	this->type = S_TYPE_INCLUDE;
 	this->location = loc;
+	this->children = filepath;
 	//printf("%s file: '%s'\n", SYMBOL_TYPE_STRING(type), this->file->value);
 }
 
 Include::~Include()
 {
 	//delete file;
-	printf("~Include()\n");
+	//printf("~Include()\n");
 }
 
 void Include::PrintInfo()

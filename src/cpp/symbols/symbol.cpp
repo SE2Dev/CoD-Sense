@@ -14,8 +14,16 @@ Symbol::Symbol(YYLTYPE loc) : type(S_TYPE_NONE), prev(NULL), next(NULL), childre
 
 Symbol::~Symbol()
 {
-	printf("~SYMBOL\n");
-	this->FreeChildren();
+	/*printf("~%s with %d children at %d(%d) - %d(%d)\n",
+		SYMBOL_TYPE_STRING(type),
+		this->children ? this->children->Size() + 1 : 0,
+		location.start.line,
+		location.start.character,
+		location.end.line,
+		location.end.character);*/
+	
+	delete this->children;
+	delete this->NextElem();
 }
 
 void Symbol::AddChild(Symbol* child)

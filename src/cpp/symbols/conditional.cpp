@@ -28,7 +28,6 @@ Conditional::Conditional(Expression* expr0, Expression* expr1, Expression* expr2
 
 Conditional::~Conditional()
 {
-	printf("~Conditional()\n");
 }
 
 void Conditional::PrintInfo()

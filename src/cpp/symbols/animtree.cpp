@@ -10,13 +10,14 @@ Animtree::Animtree(Literal* animtree, YYLTYPE loc): string(animtree)
 {
 	this->type = S_TYPE_ANIMTREE;
 	this->location = loc;
+	this->AddChild(animtree);
 	//printf("%s animtree: '%s'\n", SYMBOL_TYPE_STRING(type), this->string->value);
 }
 
 Animtree::~Animtree()
 {
 	//delete[] string;
-	printf("~Animtree()\n");
+	//printf("~Animtree()\n");
 }
 
 void Animtree::PrintInfo()

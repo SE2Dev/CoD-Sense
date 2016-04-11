@@ -9,7 +9,7 @@ class Literal : public Symbol
 		Literal(void);
 		Literal(char* val, YYLTYPE loc, SYMBOL_TYPE type_override);
 		
-		virtual ~Literal(void);
+		~Literal(void);
 		
 		void PrintInfo();
 };

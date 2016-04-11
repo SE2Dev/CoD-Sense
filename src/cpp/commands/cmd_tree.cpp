@@ -52,11 +52,6 @@ int Cmd_Tree_f(int argc, char** argv)
 	yyparse(&AST, scanner);
 	yylex_destroy(scanner);
 	
-	for(Symbol* symbol = AST; symbol; symbol = symbol->NextElem())
-	{
-		symbol->PrintInfoRecursive();
-	}
-	
 	delete AST;
 	
 	double elapsed_time_ms = 0.0;
@@ -86,6 +81,11 @@ int Cmd_Tree_f(int argc, char** argv)
 	elapsed_time_ms += (double)delta.tv_nsec / 1000000.0;
 	
 #endif
+	
+	for(Symbol* symbol = AST; symbol; symbol = symbol->NextElem())
+	{
+		symbol->PrintInfoRecursive();
+	}
 		
 	if(argc > 1)
 	{

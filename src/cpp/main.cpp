@@ -23,6 +23,7 @@ int main(int argc, char** argv)
 	ArgParsedInfo cmd_info;
 	if(int err = Arg_ParseArguments(argc - 1, argv + 1, &cmd_info))
 	{
+		fprintf(stderr, "Fatal Error: %d\n", err);
 		return err;
 	}
 

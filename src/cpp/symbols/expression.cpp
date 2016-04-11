@@ -45,7 +45,6 @@ Expression::Expression(Expression* expr, OPERATOR_TYPE postfix, YYLTYPE range)
 
 Expression::~Expression()
 {
-	printf("~Expression()\n");
 }
 
 void Expression::PrintInfo()

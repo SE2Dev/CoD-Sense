@@ -6,10 +6,16 @@
 	don�t stop for unicode shenanigans
 */
 
+debug()
+{
+	self thread callme(arg);	//this line leaks
+	 							// Issue caused by Call::SetCaller
+}
+
 main(arg1, arg2, arg3, arg4, arg5, arg6)
 {
 	"a_statement";
-	
+
      myvar = 42;
 	 
 	// ++prefixme;
@@ -23,8 +29,6 @@ main(arg1, arg2, arg3, arg4, arg5, arg6)
 	 idfunc();
 	 thread threadfunc();
 	 [[ref]]();
-	 
-	 self thread callme(arg);
 	 
 	 return 67;
 }

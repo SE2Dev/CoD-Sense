@@ -21,7 +21,6 @@ Identifier::Identifier(char* str, YYLTYPE loc)
 Identifier::~Identifier()
 {
 	free((void*)this->value);
-	printf("~Identifier()\n");
 }
 
 void Identifier::PrintInfo()

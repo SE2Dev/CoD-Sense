@@ -55,9 +55,9 @@ ArgParsedInfo::ArgParsedInfo(void) : cmd(NULL), argc(0), argv(NULL)
 
 ArgParsedInfo::~ArgParsedInfo(void)
 {
-	for(; argc; argc--)
+	for(; argc; )
 	{
-		free((void*)this->argv[argc - 1]);
+		free((void*)this->argv[--argc]);
 	}
 	
 	delete[] this->argv;
@@ -88,7 +88,6 @@ char* ArgParsedInfo::Argv(int index) const
 	
 	return this->argv[index];
 }
-
 
 void Arg_PrintUsage(void)
 {
