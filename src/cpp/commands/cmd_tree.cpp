@@ -31,59 +31,67 @@ void yyerror(YYLTYPE* loc, Symbol** AST, yyscan_t scanner, const char* err)
 
 int Cmd_Tree_f(int argc, char** argv)
 {
-		FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
+	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
+
+#ifdef _WIN32
+	LARGE_INTEGER freq, start;
+	QueryPerformanceFrequency(&freq);
+	QueryPerformanceCounter(&start);
+#else //LINUX
+	timespec start;
+	clock_gettime(CLOCK_REALTIME, &start);
+#endif
+		
+	yyscan_t scanner = NULL;
+	yylex_init(&scanner);
 	
-#if _DEBUG
-	while(1)
+	yyset_in(in, scanner);
+	yyset_out(stdout, scanner);
+	
+	Symbol* AST = NULL;
+	yyparse(&AST, scanner);
+	yylex_destroy(scanner);
+	
+	for(Symbol* symbol = AST; symbol; symbol = symbol->NextElem())
 	{
-#endif
-
-#ifdef _WIN32
-		LARGE_INTEGER freq, start;
-		QueryPerformanceFrequency(&freq);
-		QueryPerformanceCounter(&start);
-#else //LINUX
-		timespec start;
-		clock_gettime(CLOCK_REALTIME, &start);
-#endif
-		
-		yyscan_t scanner = NULL;
-		yylex_init(&scanner);
-		
-		yyset_in(in, scanner);
-		yyset_out(stdout, scanner);
-		
-		Symbol* AST = NULL;
-		yyparse(&AST, scanner);
-		yylex_destroy(scanner);
-		
-		for(Symbol* symbol = AST; symbol; symbol = symbol->NextElem())
-		{
-			symbol->PrintInfoRecursive();
-		}
-		
-		double elapsed_time_ms = 0.0;
-#ifdef _WIN32
-		LARGE_INTEGER end;
-		QueryPerformanceCounter(&end);
-
-		elapsed_time_ms = (double)end.QuadPart - (double)start.QuadPart;
-		elapsed_time_ms /= (double)(freq.QuadPart / 1000);
-#else //LINUX
-		timespec end;
-		clock_gettime(CLOCK_REALTIME, &end);
-
-		int nanos = end.tv_nsec - start.tv_nsec;
-		elapsed_time_ms = (double)nanos / 1000000.0;
-#endif
-		
-		if(argc > 1)
-		{
-			printf("Parsed in %f ms\n", elapsed_time_ms);
-			exit(0);
-		}
-	
-#if _DEBUG
+		symbol->PrintInfoRecursive();
 	}
+	
+	delete AST;
+	
+	double elapsed_time_ms = 0.0;
+#ifdef _WIN32
+	LARGE_INTEGER end;
+	QueryPerformanceCounter(&end);
+	
+	elapsed_time_ms = (double)end.QuadPart - (double)start.QuadPart;
+	elapsed_time_ms /= (double)(freq.QuadPart / 1000);
+#else //LINUX
+	timespec end;
+	clock_gettime(CLOCK_REALTIME, &end);
+
+	timespec delta;
+	if(end.tv_nsec - start.tv_nsec < 0)
+	{
+		delta.tv_sec = end.tv_sec - start.tv_sec - 1;
+		delta.tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
+	}
+	else
+	{
+		delta.tv_sec = end.tv_sec - start.tv_sec;
+		delta.tv_nsec = end.tv_nsec - start.tv_nsec;
+	}
+	
+	elapsed_time_ms = 1000.0 * (double)delta.tv_sec;
+	elapsed_time_ms += (double)delta.tv_nsec / 1000000.0;
+	
 #endif
+		
+	if(argc > 1)
+	{
+		printf("Parsed in %f ms\n", elapsed_time_ms);
+	}
+	
+	fclose(in);
+	return 0;
 }
