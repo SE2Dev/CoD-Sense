@@ -52,8 +52,6 @@ int Cmd_Tree_f(int argc, char** argv)
 	yyparse(&AST, scanner);
 	yylex_destroy(scanner);
 	
-	delete AST;
-	
 	double elapsed_time_ms = 0.0;
 #ifdef _WIN32
 	LARGE_INTEGER end;
@@ -86,6 +84,8 @@ int Cmd_Tree_f(int argc, char** argv)
 	{
 		symbol->PrintInfoRecursive();
 	}
+	
+	delete AST;
 		
 	if(argc > 1)
 	{

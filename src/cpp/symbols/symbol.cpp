@@ -23,7 +23,9 @@ Symbol::~Symbol()
 		location.end.character);*/
 	
 	delete this->children;
+	this->children = NULL;
 	delete this->NextElem();
+	this->next = NULL;
 }
 
 void Symbol::AddChild(Symbol* child)
