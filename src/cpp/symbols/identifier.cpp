@@ -20,7 +20,7 @@ Identifier::Identifier(char* str, YYLTYPE loc)
 
 Identifier::~Identifier()
 {
-	//delete[] value;
+	free((void*)this->value);
 	printf("~Identifier()\n");
 }
 

@@ -15,6 +15,7 @@ Symbol::Symbol(YYLTYPE loc) : type(S_TYPE_NONE), prev(NULL), next(NULL), childre
 Symbol::~Symbol()
 {
 	printf("~SYMBOL\n");
+	this->FreeChildren();
 }
 
 void Symbol::AddChild(Symbol* child)
@@ -27,6 +28,11 @@ void Symbol::AddChild(Symbol* child)
 
 void Symbol::FreeChildren(void)
 {
+	for(Symbol* s = this->children; s; s = s->NextElem())
+	{
+		s->FreeChildren();
+	}
+	
 	delete this->children;
 	this->children = NULL;
 }
