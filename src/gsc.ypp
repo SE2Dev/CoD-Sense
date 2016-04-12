@@ -430,7 +430,8 @@ ModifiableExpression
 		{ $$ = $2; }*/
 
 e
-	: BasicExpression 
+	: BasicExpression
+		{ $$ = (Expression*)new Group((Symbol*)$1, @1); }
 	
 	/* PREFIX OPERATORS */
 	| OP_INC ModifiableExpression %prec OP_INC_PRE
@@ -551,9 +552,11 @@ SwitchStatement
 
 CaseStatement
 	: T_CASE LiteralExpression OP_COLON 
-		{ $$ = new Conditional((Expression*)$2, NULL, @$, S_TYPE_CONDITIONAL_CASE); }
+		{ $$ = new Conditional((Expression*)$2, NULL, @$, S_TYPE_CONDITIONAL_CASE);
+		}
 	| T_DEFAULT OP_COLON 
-		{ $$ = new Conditional(NULL, NULL, @$, S_TYPE_CONDITIONAL_CASE); }
+		{ $$ = new Conditional(NULL, NULL, @$, S_TYPE_CONDITIONAL_CASE);
+		}
 	;
 
 LoopStatement
