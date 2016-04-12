@@ -38,6 +38,8 @@
 	//#define PRINT_TOKEN(S) printf(S)
 %}
 
+%option nodefault
+
 %option reentrant
 %option bison-bridge
 %option bison-locations
@@ -49,22 +51,25 @@
 RX_T_STRING			\"(?:\\.|[^\"])*?\"|\'(?:\\.|[^\'])*?\'
 RX_T_FLOAT			[0-9]+\.(?:[0-9]*)?f?|\.[0-9]+f?
 RX_T_INT			[0-9]+
+RX_T_FILEPATH		([_a-zA-Z0-9]+\\)+[_a-zA-Z0-9]+
 RX_T_IDENTIFIER		[a-zA-Z_][a-zA-Z\-_0-9]*
+
+RX_DEFAULT			(.|\n)
 
 %x S_BLOCK_COMMENT
 %x S_BLOCK_DEVSCRIPT
 
 %%
 
-\s+						/* skip whitespace */
+[ \t\n\r]				/* skip whitespace & newlines */
 "//".*					/* skip single line comments */
 "/*"					{ BEGIN(S_BLOCK_COMMENT); }
 
-<S_BLOCK_COMMENT>.		/* ignore unicode shenanigans in comment blocks */
-<S_BLOCK_COMMENT>"*/"	{ BEGIN(INITIAL); }
+<S_BLOCK_COMMENT>(.|\n)		/* ignore unicode shenanigans in comment blocks */
+<S_BLOCK_COMMENT>"*/"		{ BEGIN(INITIAL); }
 
-<INITIAL>"/#"			{ BEGIN(S_BLOCK_DEVSCRIPT); }
-<S_BLOCK_DEVSCRIPT>"#/"	{ BEGIN(INITIAL); }	
+<INITIAL>"/#"				{ BEGIN(S_BLOCK_DEVSCRIPT); }
+<S_BLOCK_DEVSCRIPT>"#/"		{ BEGIN(INITIAL); }	
 
 {RX_T_STRING}		{ PRINT_TOKEN("T_STRING, "); yylval->literal_string = strdup(yytext); return T_STRING; }
 {RX_T_FLOAT}		{ PRINT_TOKEN("T_FLOAT, "); yylval->literal_string = strdup(yytext); return T_FLOAT; }
@@ -135,7 +140,10 @@ RX_T_IDENTIFIER		[a-zA-Z_][a-zA-Z\-_0-9]*
 "thread"		{ PRINT_TOKEN("T_THREAD, "); return T_THREAD; }
 "wait"			{ PRINT_TOKEN("T_WAIT, "); return T_WAIT; }
 
-([_a-zA-Z0-9]+\\)+[_a-zA-Z0-9]+			{ PRINT_TOKEN("T_FILEPATH, "); yylval->literal_string = strdup(yytext); return T_FILEPATH; }
+{RX_T_FILEPATH}		{ PRINT_TOKEN("T_FILEPATH, "); yylval->literal_string = strdup(yytext); return T_FILEPATH; }
 {RX_T_IDENTIFIER}	{ PRINT_TOKEN("T_IDENTIFIER, "); yylval->literal_string = strdup(yytext); return T_IDENTIFIER; }
+
+<*>{RX_DEFAULT}		/* Ignore unexpected characters (this should never happen)
+					{ fprintf(stderr, "RX_DEFAULT ACTION AT %d(%d) FOR '%s'\n", yyget_lloc(yyscanner)->first_line, yyget_lloc(yyscanner)->first_column, yytext);*/
 
 %%
