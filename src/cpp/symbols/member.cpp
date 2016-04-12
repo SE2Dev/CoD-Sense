@@ -10,7 +10,12 @@ Member::Member(Expression* obj, Expression* expr, YYLTYPE loc, SYMBOL_TYPE type_
 	this->type = type_override;
 	this->location = loc;
 	
-	if(!obj || !expr) { return; }
+	if(!obj || !expr)
+	{
+		delete obj;
+		delete expr;
+		return;
+	}
 	
 	this->AddChild(obj);	
 	this->AddChild(expr);

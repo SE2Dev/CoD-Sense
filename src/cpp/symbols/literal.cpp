@@ -15,6 +15,7 @@ Literal::Literal(char* val, YYLTYPE loc, SYMBOL_TYPE type_override)
 Literal::~Literal()
 {
 	free((void*)value);
+	value = NULL;
 }
 
 void Literal::PrintInfo()

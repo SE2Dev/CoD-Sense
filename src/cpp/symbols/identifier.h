@@ -4,7 +4,7 @@
 class Identifier : public Symbol
 {
 	public:
-		const char* value;
+		char* value;
 		
 		Identifier(void);
 		Identifier(char* str);

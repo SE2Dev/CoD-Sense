@@ -8,8 +8,8 @@
 
 debug()
 {
-	self thread callme(arg);	//this line leaks
-	 							// Issue caused by Call::SetCaller
+	maps\myfile::myfunc(a,b,c);
+	::func_from_this_file(d,e,f);
 }
 
 main(arg1, arg2, arg3, arg4, arg5, arg6)
@@ -29,7 +29,7 @@ main(arg1, arg2, arg3, arg4, arg5, arg6)
 	 idfunc();
 	 thread threadfunc();
 	 [[ref]]();
-	 
+	 self thread callme(arg);
 	 return 67;
 }
 

@@ -13,7 +13,7 @@ Reference::Reference(Literal* filepath, Identifier* identifier, YYLTYPE loc)
 	this->identifier = identifier;
 	this->location = loc;
 	
-	this->AddChild(filepath);
+	if(filepath) { this->AddChild(filepath); }
 	this->AddChild(identifier);
 }
 

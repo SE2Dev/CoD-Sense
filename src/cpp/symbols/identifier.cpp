@@ -5,16 +5,14 @@ Identifier::Identifier(void) : value(NULL)
 	this->type = S_TYPE_IDENTIFIER;
 }
 
-Identifier::Identifier(char* str)
+Identifier::Identifier(char* str) : value(str)
 {
 	this->type = S_TYPE_IDENTIFIER;
-	this->value = str;
 }
 
-Identifier::Identifier(char* str, YYLTYPE loc)
+Identifier::Identifier(char* str, YYLTYPE loc) : value(str)
 {
 	this->type = S_TYPE_IDENTIFIER;
-	this->value = str;
 	this->location = loc;
 }
 

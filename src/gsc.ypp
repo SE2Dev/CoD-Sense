@@ -278,15 +278,15 @@ Block
 	;
 
 FunctionParameterList
-	: Expression 
-		{ $$ = $1; }
-	| FunctionParameterList OP_COMMA Expression 
+	: FunctionParameterList OP_COMMA Expression 
 		{
 			$1->AddToEnd($3);
 			$$ = $1;
 		}
+	| Expression 
+		{ $$ = $1; }
 	|  
-		{ $$ = new Symbol(@$); }
+		{ $$ = NULL; }
 	;
 
 FunctionCall
@@ -294,37 +294,37 @@ FunctionCall
 		{
 			$$ = new Call(@$, CALL_FLAG_IDENTIFIER);
 			$$->AddChild(new Identifier($1,@1));
-			$$->AddChild($3);
+			$$->AddChild(new Group($3, @3));
 		}
 	| T_THREAD T_IDENTIFIER OP_LPAREN FunctionParameterList OP_RPAREN 
 		{
 			$$ = new Call(@$, CALL_FLAG_THREAD | CALL_FLAG_IDENTIFIER);
 			$$->AddChild(new Identifier($2,@2));
-			$$->AddChild($4);
+			$$->AddChild(new Group($4, @4));
 		}
 	| PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN 
 		{
 			$$ = new Call(@$, CALL_FLAG_POINTER);
 			$$->AddChild($1);
-			$$->AddChild($3);
+			$$->AddChild(new Group($3, @3));
 		}
 	| T_THREAD PointerExpression OP_LPAREN FunctionParameterList OP_RPAREN 
 		{
 			$$ = new Call(@$, CALL_FLAG_THREAD | CALL_FLAG_POINTER);
 			$$->AddChild($2);
-			$$->AddChild($4);
+			$$->AddChild(new Group($4, @4));
 		}
 	| ReferenceExpression OP_LPAREN FunctionParameterList OP_RPAREN 
 		{
 			$$ = new Call(@$, CALL_FLAG_REFERENCE);
 			$$->AddChild($1);
-			$$->AddChild($3);
+			$$->AddChild(new Group($3, @3));
 		}
 	| T_THREAD ReferenceExpression OP_LPAREN FunctionParameterList OP_RPAREN 
 		{
 			$$ = new Call(@$, CALL_FLAG_THREAD | CALL_FLAG_REFERENCE);
 			$$->AddChild($2);
-			$$->AddChild($4);
+			$$->AddChild(new Group($4, @4));
 		}
 	;
 

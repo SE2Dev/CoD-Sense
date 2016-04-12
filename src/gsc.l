@@ -141,7 +141,7 @@ RX_DEFAULT			(.|\n)
 "wait"			{ PRINT_TOKEN("T_WAIT, "); return T_WAIT; }
 
 {RX_T_FILEPATH}		{ PRINT_TOKEN("T_FILEPATH, "); yylval->literal_string = strdup(yytext); return T_FILEPATH; }
-{RX_T_IDENTIFIER}	{ PRINT_TOKEN("T_IDENTIFIER, "); yylval->literal_string = strdup(yytext); return T_IDENTIFIER; }
+{RX_T_IDENTIFIER}	{ PRINT_TOKEN("T_IDENTIFIER, "); yylval->t_identifier = strdup(yytext); return T_IDENTIFIER; }
 
 <*>{RX_DEFAULT}		/* Ignore unexpected characters (this should never happen)
 					{ fprintf(stderr, "RX_DEFAULT ACTION AT %d(%d) FOR '%s'\n", yyget_lloc(yyscanner)->first_line, yyget_lloc(yyscanner)->first_column, yytext);*/
