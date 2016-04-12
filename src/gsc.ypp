@@ -253,8 +253,7 @@ SourceElements:
 
 Program: SourceElements T_EOF
 	{
-		*yyAST_out = $1;
-		printf("\nFILE RANGE: %d[%d] - %d[%d]\n", @$.first_line, @$.first_column, @$.last_line, @$.last_column);
+		*yyAST_out = new Group($1, @1);
 	}
 	
 StringLiteral

@@ -20,6 +20,7 @@ extern int yylex_init(yyscan_t* ptr_yy_globals);
 extern int yylex_destroy(yyscan_t yyscanner);
 extern void yyset_in(FILE* in, yyscan_t scanner);
 extern void yyset_out(FILE* out, yyscan_t scanner);
+extern void yyset_debug (int bdebug, yyscan_t yyscanner);
 
 void yyerror(YYLTYPE* loc, Symbol** AST, yyscan_t scanner, const char* err) 
 {
@@ -46,7 +47,8 @@ int Cmd_Tree_f(int argc, char** argv)
 	yylex_init(&scanner);
 	
 	yyset_in(in, scanner);
-	yyset_out(stdout, scanner);
+	//yyset_debug(1, scanner);
+	yyset_out(stderr, scanner);
 	
 	Symbol* AST = NULL;
 	yyparse(&AST, scanner);
@@ -80,10 +82,7 @@ int Cmd_Tree_f(int argc, char** argv)
 	
 #endif
 	
-	for(Symbol* symbol = AST; symbol; symbol = symbol->NextElem())
-	{
-		symbol->PrintInfoRecursive();
-	}
+	AST->PrintInfoRecursive();
 	
 	delete AST;
 		
