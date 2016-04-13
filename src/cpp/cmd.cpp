@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "commands/cmd_help.h"
-#include "commands/cmd_tree.h"
+#include "commands/cmd_common.h"
 
 #define REGISTER_GLOBAL_COMMAND(IDENTIFIER, NAME, DESCRIPTION, FUNC) Command IDENTIFIER(NAME, DESCRIPTION, FUNC);
 
 Command* Command::g_cmds = NULL;
 REGISTER_GLOBAL_COMMAND(g_cmd_help, "help", "Print usage information", Cmd_Help_f);
 REGISTER_GLOBAL_COMMAND(g_cmd_tree, "tree", "Print the AST for a given script file", Cmd_Tree_f);
+REGISTER_GLOBAL_COMMAND(g_cmd_symbols, "symbols", "Print the top level symbols for a given script file", Cmd_Symbols_f);
 
 #undef REGISTER_GLOBAL_COMMAND
 

@@ -44,6 +44,8 @@ class Symbol : public LList<Symbol>
 		void AddChild(Symbol* child);
 		void FreeChildren(void);
 		
+		Symbol* Children(void) const;
+		
 		virtual void PrintInfo();
 		void PrintInfoRecursive(int indentLevel = 0);
 		

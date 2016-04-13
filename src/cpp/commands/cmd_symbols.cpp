@@ -24,15 +24,7 @@ extern void yyset_in(FILE* in, yyscan_t scanner);
 extern void yyset_out(FILE* out, yyscan_t scanner);
 extern void yyset_debug (int bdebug, yyscan_t yyscanner);
 
-void yyerror(YYLTYPE* loc, Symbol** AST, yyscan_t scanner, const char* err) 
-{
-	fprintf(stderr, "PARSE ERROR AT LINE %d(%d): %s\n", loc->first_line, loc->first_column, err);
-#if !(_DEBUG)
-	exit(1);
-#endif
-}
-
-int Cmd_Tree_f(int argc, char** argv)
+int Cmd_Symbols_f(int argc, char** argv)
 {
 	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
 
@@ -94,7 +86,10 @@ int Cmd_Tree_f(int argc, char** argv)
 	
 #endif
 	
-	AST->PrintInfoRecursive();
+	for(Symbol* node = AST->Children(); node; node = node->NextElem())
+	{
+		node->PrintInfo();
+	} 
 	
 	delete AST;
 		

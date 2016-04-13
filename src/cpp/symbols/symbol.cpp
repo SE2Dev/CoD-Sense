@@ -53,6 +53,11 @@ void Symbol::FreeChildren(void)
 	this->children = NULL;
 }
 
+Symbol* Symbol::Children(void) const
+{
+	return this->children;
+}
+
 void Symbol::PrintInfo()
 {
 	printf("%s with %d children at %d(%d) - %d(%d)\n",
