@@ -31,9 +31,15 @@ Symbol::~Symbol()
 void Symbol::AddChild(Symbol* child)
 {
 	if(!this->children)
+	{
 		children = child;
+		child->parent = this;
+	}
 	else
+	{
 		children->AddToEnd(child);
+		child->parent = this;
+	}
 }
 
 void Symbol::FreeChildren(void)

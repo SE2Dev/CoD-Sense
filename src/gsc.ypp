@@ -199,8 +199,8 @@
 %type<symbol> 		Statement;
 %type<symbol> 		StatementList;
 
-%destructor { printf("DISCARD SYMBOL\n"); } <*>
-%destructor { printf("DISCARD TOKEN %s\n", $$); free($$); } T_FILEPATH T_IDENTIFIER T_STRING T_FLOAT T_INT
+%destructor { delete $$; } <*>
+%destructor { free($$); } T_FILEPATH T_IDENTIFIER T_STRING T_FLOAT T_INT
 
 %start Program
 

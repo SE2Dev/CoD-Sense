@@ -51,8 +51,18 @@ int Cmd_Tree_f(int argc, char** argv)
 	yyset_out(stderr, scanner);
 	
 	Symbol* AST = NULL;
-	yyparse(&AST, scanner);
+	int result = yyparse(&AST, scanner);
 	yylex_destroy(scanner);
+	
+	if(argc > 1)
+	{
+		fclose(in);
+	}
+	
+	if(result)
+	{
+		return result;
+	}
 	
 	double elapsed_time_ms = 0.0;
 #ifdef _WIN32
@@ -91,6 +101,5 @@ int Cmd_Tree_f(int argc, char** argv)
 		printf("Parsed in %f ms\n", elapsed_time_ms);
 	}
 	
-	fclose(in);
 	return 0;
 }
