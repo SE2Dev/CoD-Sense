@@ -597,6 +597,8 @@ StatementList
 				$$ = $2;
 			}
 		}
+	| StatementList error
+		/* Catches most errors, but also causes the next function / statement / etc. to be skipped in certain cases */
 	| 
 		{ $$ = NULL; }
 	;
