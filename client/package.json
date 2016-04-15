@@ -60,6 +60,11 @@
 				"cod-sense.active_lib": {
 					"type": "string",
 					"description": "The name of the user defined library that is to be used for include's etc. (Must match a key in cod-sense.libs)"
+				},
+				"cod-sense.use_builtin_completionItems": {
+					"type": "boolean",
+					"description": "Enables built-in engine functions in the completion provider",
+					"default": true
 				}
 			}
 		}

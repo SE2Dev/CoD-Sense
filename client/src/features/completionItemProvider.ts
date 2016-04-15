@@ -66,7 +66,15 @@ export class completionItemProvider
 
 			parser.on('close', (code) => {
 				console.log(`Parser Exit: ${code}`);
-				resolve(completionItems);
+				
+				if(vscode.workspace.getConfiguration("cod-sense").get("use_builtin_completionItems", true))
+				{
+					resolve(completionItems.concat(this.completionItems));	
+				}
+				else
+				{
+					resolve(completionItems);
+				}
 			});
 
 			if(parser.pid)
