@@ -12,9 +12,10 @@
 // WIN32 Specific ( required for _isatty )
 #include <io.h>
 
-#define isatty _isatty
-#define fileno _fileno
-#define strdup _strdup
+#define isatty		_isatty
+#define fileno		_fileno
+#define strdup		_strdup
+#define snprintf	_snprintf
 
 #define W32_WARNING_DISABLE(NUM)	__pragma(warning(disable:NUM))
 #define W32_WARNING_ENABLE(NUM)		__pragma(warning(default:NUM))

@@ -1,8 +1,8 @@
 #include "cvar.h"
+#include "platform.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "platform.h"
 
 CVar* g_cvar[GLOBAL_CVAR_MAX];
 
@@ -186,7 +186,7 @@ int CVar::AssignRawString(const char* val)
 			else if (stricmp(this->str_val, "true") == 0)
 				this->bool_val = true;
 			else
-				this->bool_val = (bool)atoi(str_val);
+				this->bool_val = (atoi(str_val) != 0);
 			this->int_val = bool_val ? 1 : 0;
 			this->float_val = (float)int_val;
 			break;
