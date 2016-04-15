@@ -15,5 +15,5 @@ public:
 	
 	~Conditional(void);
 	
-	void PrintInfo(void);
+	void PrintInfo(void) const;
 };

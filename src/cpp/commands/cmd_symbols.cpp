@@ -88,7 +88,7 @@ int Cmd_Symbols_f(int argc, char** argv)
 	
 	for(Symbol* node = AST->Children(); node; node = node->NextElem())
 	{
-		node->PrintInfo();
+		node->PrintSymbol();
 	} 
 	
 	delete AST;

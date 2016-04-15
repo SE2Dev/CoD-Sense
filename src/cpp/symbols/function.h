@@ -11,7 +11,8 @@ class Function : public Symbol
 		
 		~Function(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
+		void PrintSymbol() const;
 };
 
 enum ENUM_CALL_FLAGS
@@ -40,5 +41,5 @@ class Call : public Symbol
 		
 		void SetCaller(Expression* caller);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

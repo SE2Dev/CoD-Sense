@@ -20,7 +20,7 @@ Function::~Function()
 	//delete this->identifier;
 }
 
-void Function::PrintInfo()
+void Function::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d), name '%s'\n",
 		SYMBOL_TYPE_STRING(type),
@@ -32,7 +32,24 @@ void Function::PrintInfo()
 		this->identifier->value);
 }
 
-
+//
+// Used to provide symbol data to CoD-Sense
+//
+void Function::PrintSymbol() const
+{
+	//
+	// type|name|location[|details]
+	// By default do not provide type specific info
+	//
+	printf("%s|%s|%d %d %d %d|%s\n",
+		SYMBOL_TYPE_STRING(type),
+		this->identifier->value,
+		location.start.line,
+		location.start.character,
+		location.end.line,
+		location.end.character,
+		"...");
+}
 
 
 Call::Call(void) : flags(CALL_FLAG_NULL), identifier(NULL), caller(NULL)
@@ -72,7 +89,7 @@ void Call::SetCaller(Expression* caller)
 	this->flags |= CALL_FLAGS_EXPLICIT_CALLER;
 }
 
-void Call::PrintInfo()
+void Call::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d), flags 0x%X\n",
 		SYMBOL_TYPE_STRING(type),

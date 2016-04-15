@@ -11,5 +11,5 @@ class Wait : public Symbol
 		
 		virtual ~Wait(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

@@ -11,5 +11,5 @@ class Literal : public Symbol
 		
 		virtual ~Literal(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

@@ -20,7 +20,7 @@ Animtree::~Animtree()
 	//printf("~Animtree()\n");
 }
 
-void Animtree::PrintInfo()
+void Animtree::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d), str '%s'\n",
 		SYMBOL_TYPE_STRING(type),

@@ -11,5 +11,5 @@ class Include : public Symbol
 		
 		~Include(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

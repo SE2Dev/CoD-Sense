@@ -12,5 +12,5 @@ class Reference : public Symbol
 		
 		~Reference(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

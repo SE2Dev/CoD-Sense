@@ -16,7 +16,7 @@ Return::~Return()
 {
 }
 
-void Return::PrintInfo()
+void Return::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d)\n",
 		SYMBOL_TYPE_STRING(type),

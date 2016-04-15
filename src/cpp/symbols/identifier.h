@@ -12,5 +12,5 @@ class Identifier : public Symbol
 		
 		virtual ~Identifier(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };
