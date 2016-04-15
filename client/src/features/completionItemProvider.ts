@@ -37,6 +37,69 @@ export class completionItemProvider
 	
 	provideCompletionItems(document: vscode.TextDocument, position, token): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[]
 	{
+		//
+		// If a file path is being typed - present the user with a list of files in the directory they have entered
+		//
+		if (document.getText()[document.offsetAt(position) - 1] == "\\")
+		{
+			let r = rxIncludeDirective_Part.exec(document.lineAt(position).text);
+			if (r.length <= 1)
+				return null;
+			
+			return server.sendRequest(CoDSenseResolveDirectoryRequest.type, r[1]).then
+			(
+				function(files) //Resolved
+				{
+					//console.log("RESOLVE");
+					let completionFiles: vscode.CompletionItem[] = [];
+					
+					for(var i = 0; i < files.length; i++)
+					{
+						let extension = Path.extname(files[i]);
+						let file = Path.basename(files[i], extension)
+						
+						switch(extension.toUpperCase())
+						{
+							case ".GSC":
+							case ".CSC":
+							{
+								let completionItem = new vscode.CompletionItem(file);
+								completionItem.kind = vscode.CompletionItemKind.File;
+								completionItem.detail = files[i];
+						
+								completionFiles.push(completionItem);
+								continue;
+							}
+							case "":
+							{
+								let completionItem = new vscode.CompletionItem(file);
+								completionItem.kind = vscode.CompletionItemKind.File;
+								completionItem.detail = file + "\\";
+						
+								completionFiles.push(completionItem);
+								continue;
+							}
+							default:
+								continue;
+						}
+					}
+					
+					//console.log(completionItems);
+					return completionFiles;
+				},
+			
+				function(rejectReason) //Rejected
+				{
+					console.error("REJECTED" + rejectReason);
+					let completionFiles: vscode.CompletionItem[] = [];
+					return completionFiles;
+				}
+			);
+		}
+		
+		//
+		// Present the user with a list of functions from the current file
+		//
 		return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
 			let completionItems: vscode.CompletionItem[] = [];
 
@@ -53,7 +116,7 @@ export class completionItemProvider
 						continue;
 
 					let completionItem = new vscode.CompletionItem(str[1]);
-					completionItem.kind = vscode.CompletionItemKind.File;
+					completionItem.kind = vscode.CompletionItemKind.Function;
 					completionItem.detail = str[3];
 
 					completionItems.push(completionItem);
@@ -87,68 +150,5 @@ export class completionItemProvider
 				console.error("Could not launch parser");
 			}
 		});
-		
-		//
-		// DEPRECATED
-		//
-		/*if (document.getText()[document.offsetAt(position) - 1] == "\\") {
-			let r = rxIncludeDirective_Part.exec(document.lineAt(position).text);
-			if (r.length <= 1)
-				return null;
-
-			return server.sendRequest(CoDSenseResolveDirectoryRequest.type, r[1]).then
-			(
-				function(files) //Resolved
-				{
-					//console.log("RESOLVE");
-					let completionItems: vscode.CompletionItem[] = [];
-					
-					for(var i = 0; i < files.length; i++)
-					{
-						let extension = Path.extname(files[i]);
-						let file = Path.basename(files[i], extension)
-						
-						switch(extension.toUpperCase())
-						{
-							case ".GSC":
-							case ".CSC":
-							{
-								let completionItem = new vscode.CompletionItem(file);
-								completionItem.kind = vscode.CompletionItemKind.File;
-								completionItem.detail = files[i];
-						
-								completionItems.push(completionItem);
-								continue;
-							}
-							case "":
-							{
-								let completionItem = new vscode.CompletionItem(file);
-								completionItem.kind = vscode.CompletionItemKind.File;
-								completionItem.detail = file + "\\";
-						
-								completionItems.push(completionItem);
-								continue;
-							}
-							default:
-								continue;
-						}
-					}
-					
-					//console.log(completionItems);
-					return completionItems;
-				},
-
-				function(rejectReason) //Rejected
-				{
-					console.error("REJECTED" + rejectReason);
-					let completionItems: vscode.CompletionItem[] = [];
-					return completionItems;
-				}
-			);
-		}
-		else
-		{
-			return this.completionItems;
-		}*/
 	}
 }
