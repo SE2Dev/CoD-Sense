@@ -47,7 +47,9 @@ export class completionItemProvider
 				var lines = file_str.split("\n");
 				for (var i = 0; i < lines.length; i++) {
 					var str = lines[i].split("|");
-					if (str.length != 2)
+					
+					// Temp Fix for Non-Symbol Data
+					if (str.length <= 2)
 						continue;
 
 					let completionItem = new vscode.CompletionItem(str[1]);
