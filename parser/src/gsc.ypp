@@ -331,7 +331,7 @@ FunctionCall
 FunctionExpression
 	: ObjectExpression FunctionCall 
 		{
-			$2->SetCaller((Expression*)$1);
+			$2->SetCaller($<expression>1);
 			$$ = $2;
 		}
 	| FunctionCall 
@@ -340,9 +340,9 @@ FunctionExpression
 
 PointerExpression
 	: FUNC_POINTER_BEGIN ObjectExpression OP_RBRACKET OP_RBRACKET 
-		{ $$ = new Pointer((Expression*)$2, @$); }
+		{ $$ = new Pointer($<expression>2, @$); }
 	| FUNC_POINTER_BEGIN ReferenceExpression OP_RBRACKET OP_RBRACKET 
-		{ $$ = new Pointer((Expression*)$2, @$); }
+		{ $$ = new Pointer($<expression>2, @$); }
 	;
 
 ReferenceExpression
@@ -366,9 +366,9 @@ AnimReferenceExpression
 
 MemberExpression
 	: ObjectExpression OP_LBRACKET Expression OP_RBRACKET 
-		{ $$ = new Member((Expression*)$1, (Expression*)$3, @$, S_TYPE_MEMBER_ARRAY_ELEMENT); }
+		{ $$ = new Member($<expression>1, $<expression>3, @$, S_TYPE_MEMBER_ARRAY_ELEMENT); }
 	| ObjectExpression OP_DOT ObjectExpression
-		{ $$ = new Member((Expression*)$1, (Expression*)$3, @$, S_TYPE_MEMBER_OBJECT_PROPERTY); }
+		{ $$ = new Member($<expression>1, $<expression>3, @$, S_TYPE_MEMBER_OBJECT_PROPERTY); }
 	| OP_LBRACKET OP_RBRACKET 
 		{ $$ = new Member(NULL, NULL, @$, S_TYPE_MEMBER_ARRAY_EMPTY); }
 	;
@@ -411,13 +411,13 @@ OptionalExpression
 
 BasicExpression
 	: ObjectExpression 
-		{ $$ = (Expression*)$1; }
+		{ $$ = $<expression>1; }
 	| LiteralExpression 
-		{ $$ = (Expression*)$1; }
+		{ $$ = $<expression>1; }
 	| ListExpression //used for things like vectors 
-		{ $$ = (Expression*)$1; }
+		{ $$ = $<expression>1; }
 	| ReferenceExpression 
-		{ $$ = (Expression*)$1; }
+		{ $$ = $<expression>1; }
 	| ANIMTREE 
 		{ $$ = new Expression(@$); }
 	;
@@ -431,13 +431,13 @@ ModifiableExpression
 
 e
 	: BasicExpression
-		{ $$ = (Expression*)new Group((Symbol*)$1, @1); }
+		{ $$ = (Expression*)new Group($1, @1); }
 	
 	/* PREFIX OPERATORS */
 	| OP_INC ModifiableExpression %prec OP_INC_PRE
-		{ $$ = new Expression(OP_TYPE_INC, (Expression*)$2, @$); };
+		{ $$ = new Expression(OP_TYPE_INC, $<expression>2, @$); };
 	| OP_DEC ModifiableExpression %prec OP_DEC_PRE
-		{ $$ = new Expression(OP_TYPE_DEC, (Expression*)$2, @$); };
+		{ $$ = new Expression(OP_TYPE_DEC, $<expression>2, @$); };
 	| OP_ADD e %prec OP_POSITIVE
 		{ $$ = new Expression(OP_TYPE_ADD, $2, @$); };
 	| OP_SUB e %prec OP_NEGATIVE
@@ -449,9 +449,9 @@ e
 	
 	/* POSTFIX OPERATORS */
 	| ModifiableExpression OP_INC %prec OP_INC_POST
-		{ $$ = new Expression((Expression*)$1, OP_TYPE_INC, @$); };
+		{ $$ = new Expression($<expression>1, OP_TYPE_INC, @$); };
 	| ModifiableExpression OP_DEC %prec OP_DEC_POST
-		{ $$ = new Expression((Expression*)$1, OP_TYPE_INC, @$); };
+		{ $$ = new Expression($<expression>1, OP_TYPE_INC, @$); };
 	
 	/* MID OPERATORS */
 	| e OP_MULT e 
@@ -505,7 +505,7 @@ e
 	| e OP_ASSIGN_BW_OR e
 		{ $$ = new Expression($1, OP_TYPE_ASSIGN_BW_OR, $3, @$); };
 	| AnimReferenceExpression 
-		{ $$ = (Expression*)$1; }
+		{ $$ = $<expression>1; }
 	| OP_LPAREN e OP_RPAREN 
 		{ $$ = $2; }
 	;
@@ -552,7 +552,7 @@ SwitchStatement
 
 CaseStatement
 	: T_CASE LiteralExpression OP_COLON 
-		{ $$ = new Conditional((Expression*)$2, NULL, @$, S_TYPE_CONDITIONAL_CASE);
+		{ $$ = new Conditional($<expression>2, NULL, @$, S_TYPE_CONDITIONAL_CASE);
 		}
 	| T_DEFAULT OP_COLON 
 		{ $$ = new Conditional(NULL, NULL, @$, S_TYPE_CONDITIONAL_CASE);
@@ -597,6 +597,8 @@ StatementList
 				$$ = $2;
 			}
 		}
+	| StatementList error
+		/* Catches most errors, but also causes the next function / statement / etc. to be skipped in certain cases */
 	| 
 		{ $$ = NULL; }
 	;

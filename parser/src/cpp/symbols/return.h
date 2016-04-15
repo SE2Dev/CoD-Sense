@@ -11,5 +11,5 @@ class Return : public Symbol
 		
 		virtual ~Return(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

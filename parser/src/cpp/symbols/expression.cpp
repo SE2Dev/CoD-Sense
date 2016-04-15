@@ -47,7 +47,7 @@ Expression::~Expression()
 {
 }
 
-void Expression::PrintInfo()
+void Expression::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d), op '%s'\n",
 		SYMBOL_TYPE_STRING(type),

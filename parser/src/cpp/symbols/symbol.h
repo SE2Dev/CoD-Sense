@@ -46,8 +46,9 @@ class Symbol : public LList<Symbol>
 		
 		Symbol* Children(void) const;
 		
-		virtual void PrintInfo();
-		void PrintInfoRecursive(int indentLevel = 0);
+		virtual void PrintInfo() const;
+		void PrintInfoRecursive(int indentLevel = 0) const;
+		virtual void PrintSymbol() const;
 		
 		void _debug_override_type(SYMBOL_TYPE type);
 };

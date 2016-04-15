@@ -21,7 +21,7 @@ Reference::~Reference()
 {
 }
 
-void Reference::PrintInfo()
+void Reference::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d), file '%s', func '%s'\n",
 		SYMBOL_TYPE_STRING(type),

@@ -30,7 +30,7 @@ Conditional::~Conditional()
 {
 }
 
-void Conditional::PrintInfo()
+void Conditional::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d)\n",
 		SYMBOL_TYPE_STRING(type),

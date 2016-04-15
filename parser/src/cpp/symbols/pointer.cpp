@@ -17,7 +17,7 @@ Pointer::~Pointer()
 {
 }
 
-void Pointer::PrintInfo()
+void Pointer::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d)\n",
 		SYMBOL_TYPE_STRING(type),

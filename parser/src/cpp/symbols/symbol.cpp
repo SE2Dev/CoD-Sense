@@ -58,18 +58,35 @@ Symbol* Symbol::Children(void) const
 	return this->children;
 }
 
-void Symbol::PrintInfo()
+void Symbol::PrintInfo() const
 {
-	printf("%s with %d children at %d(%d) - %d(%d)\n",
+	//printf("%s with %d children at %d(%d) - %d(%d)\n",
+	//	SYMBOL_TYPE_STRING(type),
+	//	this->children ? this->children->Size() + 1 : 0,
+	//	location.start.line,
+	//	location.start.character,
+	//	location.end.line,
+	//	location.end.character);
+}
+
+//
+// Used to provide symbol data to CoD-Sense
+//
+void Symbol::PrintSymbol() const
+{
+	//
+	// type|location[|name|details]
+	// By default do not provide type specific info
+	//
+	printf("%s|%d %d %d %d\n",
 		SYMBOL_TYPE_STRING(type),
-		this->children ? this->children->Size() + 1 : 0,
 		location.start.line,
 		location.start.character,
 		location.end.line,
 		location.end.character);
 }
 
-void Symbol::PrintInfoRecursive(int indentLevel)
+void Symbol::PrintInfoRecursive(int indentLevel) const
 {
 	this->PrintInfo();
 	

@@ -11,5 +11,5 @@ class Pointer : public Symbol
 		
 		~Pointer(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

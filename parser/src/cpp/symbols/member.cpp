@@ -25,7 +25,7 @@ Member::~Member()
 {
 }
 
-void Member::PrintInfo()
+void Member::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d)\n",
 		SYMBOL_TYPE_STRING(type),

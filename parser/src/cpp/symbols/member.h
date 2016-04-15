@@ -12,5 +12,5 @@ class Member : public Symbol
 		
 		virtual ~Member(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

@@ -11,5 +11,5 @@ class Animtree : public Symbol
 		
 		~Animtree(void);
 		
-		void PrintInfo();
+		void PrintInfo() const;
 };

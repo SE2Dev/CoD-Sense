@@ -19,7 +19,7 @@ Include::~Include()
 {
 }
 
-void Include::PrintInfo()
+void Include::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d), file '%s'\n",
 		SYMBOL_TYPE_STRING(type),

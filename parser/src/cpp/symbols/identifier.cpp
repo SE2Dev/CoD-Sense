@@ -21,7 +21,7 @@ Identifier::~Identifier()
 	free((void*)this->value);
 }
 
-void Identifier::PrintInfo()
+void Identifier::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d), name '%s'\n",
 		SYMBOL_TYPE_STRING(type),

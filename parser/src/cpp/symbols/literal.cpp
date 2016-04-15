@@ -18,7 +18,7 @@ Literal::~Literal()
 	value = NULL;
 }
 
-void Literal::PrintInfo()
+void Literal::PrintInfo() const
 {
 	printf("%s with %d children at %d(%d) - %d(%d), name '%s'\n",
 		SYMBOL_TYPE_STRING(type),
