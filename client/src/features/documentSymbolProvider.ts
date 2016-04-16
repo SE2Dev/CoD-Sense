@@ -23,6 +23,10 @@ export class documentSymbolProvider
 
 			var parser = cp.spawn(this.parserPath, ["symbols"]);
 
+			parser.stdin.on('error', (error) => {
+				console.warn("Ignoring stdin error in parser.exe");
+			});
+
 			parser.stdout.on('data', (data) => {
 				var file_str = `${data}`;
 				var lines = file_str.split("\n");
