@@ -27,8 +27,8 @@ connection.onInitialize((params): InitializeResult => {
     let serverFeatures: ServerCapabilities =
         {
             textDocumentSync: TextDocumentSyncKind.Incremental,
-            documentSymbolProvider: true,
-            workspaceSymbolProvider: true,
+            documentSymbolProvider: false,
+            workspaceSymbolProvider: false,
             completionProvider: { triggerCharacters: ["."] }
         }
 

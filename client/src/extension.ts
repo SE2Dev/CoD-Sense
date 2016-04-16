@@ -1,6 +1,7 @@
 'use strict';
 import * as vscode from 'vscode';
 import {completionItemProvider} from './features/completionItemProvider'
+import {documentSymbolProvider} from './features/documentSymbolProvider'
 
 import {
 	ServerOptions, NodeModule, TransportKind,
@@ -19,6 +20,7 @@ export function activate(context: vscode.ExtensionContext)
 	// Register the built-in function definitions
 	//vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider())
 	vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider(context.extensionPath), "\\");
+	vscode.languages.registerDocumentSymbolProvider("gsc", new documentSymbolProvider(context.extensionPath));
 	
 	let module = context.asAbsolutePath("server/server.js");
 	
