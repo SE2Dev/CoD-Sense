@@ -7,4 +7,5 @@ bin/parser
 obj/
 src/cpp/parser
 
-browse.VC.db
+*.db
+*.db-wal

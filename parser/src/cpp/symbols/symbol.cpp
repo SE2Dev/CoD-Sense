@@ -78,12 +78,12 @@ void Symbol::PrintSymbol() const
 	// type|location[|name|details]
 	// By default do not provide type specific info
 	//
-	printf("%s|%d %d %d %d\n",
-		SYMBOL_TYPE_STRING(type),
-		location.start.line,
-		location.start.character,
-		location.end.line,
-		location.end.character);
+	//printf("%s|%d %d %d %d\n",
+	//	SYMBOL_TYPE_STRING(type),
+	//	location.start.line,
+	//	location.start.character,
+	//	location.end.line,
+	//	location.end.character);
 }
 
 void Symbol::PrintInfoRecursive(int indentLevel) const
