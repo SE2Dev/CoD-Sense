@@ -8,7 +8,7 @@ import {CoDSenseResolveDirectoryRequest} from "../request"
 import Path = require("path");
 import cp = require('child_process');
 
-var rxIncludeDirective_Part = /include\s+(\w[\w\\]*\\)/;
+var rxFilepath = /([_\w]+\\)+[_\w]*/;
 
 export class completionItemProvider
 {
@@ -35,17 +35,17 @@ export class completionItemProvider
 		}
 	}
 	
-	provideCompletionItems(document: vscode.TextDocument, position, token): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[]
+	provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[]
 	{
 		//
 		// If a file path is being typed - present the user with a list of files in the directory they have entered
 		//
 		if (document.getText()[document.offsetAt(position) - 1] == "\\")
 		{
-			let r = rxIncludeDirective_Part.exec(document.lineAt(position).text);
-			if (r.length <= 1)
+			let r = rxFilepath.exec(document.lineAt(position).text);
+			if (r == undefined)
 				return null;
-			
+				
 			return server.sendRequest(CoDSenseResolveDirectoryRequest.type, r[1]).then
 			(
 				function(files) //Resolved
