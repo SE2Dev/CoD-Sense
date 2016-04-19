@@ -8,4 +8,5 @@ obj/
 src/cpp/parser
 
 *.db
+*.db-shm
 *.db-wal
