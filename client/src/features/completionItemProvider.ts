@@ -46,7 +46,7 @@ export class completionItemProvider
 			if (r == undefined)
 				return null;
 				
-			return server.sendRequest(CoDSenseResolveDirectoryRequest.type, r[1]).then
+			return server.sendRequest(CoDSenseResolveDirectoryRequest.type, r[0]).then
 			(
 				function(files) //Resolved
 				{
