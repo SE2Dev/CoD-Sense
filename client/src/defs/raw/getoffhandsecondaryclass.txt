@@ -1,0 +1,7 @@
+Name: GetOffhandSecondaryClass
+Function: GetOffhandSecondaryClass()
+Module: Player
+Summary: Gets the name (either "smoke" or "flash") that toggle is set to.
+CallOn: The player
+Example:  if ( "flash" == level.player GetOffhandSecondaryClass() )...
+

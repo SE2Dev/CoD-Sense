@@ -1,0 +1,7 @@
+﻿Name: StopShellShock
+Function: StopShellShock()
+Module: Player
+Summary: Stop a shell shock sequence for the player
+CallOn: <player>
+Example: self StopShellShock();
+

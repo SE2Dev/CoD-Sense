@@ -1,0 +1,10 @@
+Name: HasPerk
+Function: HasPerk( <perk name> )
+Module: Player
+Restriction: MP Only
+Summary: test if player has a perk
+CallOn: A player
+Example: player HasPerk( "specialty_gpsjammer" );
+RequiredArgs:
+1 : <perk name> the perk to check
+

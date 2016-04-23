@@ -1,0 +1,7 @@
+Name: GetCurrentWeapon
+Function: GetCurrentWeapon( <weapon name> )
+Module: Player
+Summary: Gets the players current weapon.
+CallOn: The player
+Example: currentweapon = level.player GetCurrentWeapon();
+

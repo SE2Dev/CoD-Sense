@@ -1,0 +1,8 @@
+Name: GiveStartAmmo
+Function: GiveStartAmmo( <weapon name> )
+Module: Player
+Summary: Set the player's ammunition to the weapon's default starting ammunition
+CallOn: The player
+RequiredArgs:
+1 : <weapon name> The weapon name (a string)
+

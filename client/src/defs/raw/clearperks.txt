@@ -1,0 +1,8 @@
+Name: ClearPerks
+Function: ClearPerks()
+Module: Player
+Restriction: MP Only
+Summary: removes all perks for a player
+CallOn: A player
+Example: player ClearPerks();
+

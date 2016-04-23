@@ -1,0 +1,7 @@
+Name: GetVelocity
+Function: GetVelocity()
+Module: Player
+Summary: Gets the player's velocity
+CallOn: The player
+Example:  vel = level.player GetVelocity();
+

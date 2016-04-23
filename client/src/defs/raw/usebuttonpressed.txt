@@ -1,0 +1,7 @@
+Name: UseButtonPressed
+Function: UseButtonPressed()
+Module: Player
+Restriction: MP Only
+CallOn: The player
+Example: if ( self UseButtonPressed() ) ...
+

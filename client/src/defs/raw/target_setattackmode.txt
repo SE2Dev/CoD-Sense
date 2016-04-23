@@ -1,0 +1,10 @@
+Name: Target_SetAttackMode
+Function: Target_SetAttackMode( <target entity>, <mode name> )
+Module: Objective
+Restriction: SP Only
+Summary: Sets how missiles and rockets should approach the target.
+Example: Target_SetAttackMode( enemy_tank, "top" );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+2 : <mode name> "top" or "direct"
+

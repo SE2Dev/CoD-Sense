@@ -1,0 +1,9 @@
+Name: OpenMenuNoMouse
+Function: OpenMenuNoMouse(<menu>)
+Module: Player
+Summary: Open a menu for this player, with no mouse control.
+CallOn: The player
+Example: self OpenMenuNoMouse( game["menu_weapon_allies_only"] );
+RequiredArgs:
+1 : <menu>: A string. The name of the menu to open
+

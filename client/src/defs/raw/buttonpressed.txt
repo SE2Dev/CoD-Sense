@@ -1,0 +1,8 @@
+Name: ButtonPressed
+Function: ButtonPressed( <buttonName> )
+Module: Player
+Restriction: MP Only
+Summary: Check if the host is pressing the button/key, "BUTTON_A", "BUTTON_B", "K
+CallOn: The player (it will only check the host player's buttons though)
+Example: while( self ButtonPressed( "BUTTON_A" ) ) ...
+

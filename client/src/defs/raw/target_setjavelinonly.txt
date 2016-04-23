@@ -1,0 +1,10 @@
+Name: Target_SetJavelinOnly
+Function: Target_SetJavelinOnly( <target entity>, <true/false> )
+Module: Objective
+Restriction: SP Only
+Summary: Target will only draw on player's hud when they are looking through the Javelin-weapon's site.
+Example: Target_SetJavelinOnly( enemy_tank, true );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+2 : <mode name> "top" or "direct"
+

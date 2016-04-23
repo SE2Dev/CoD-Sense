@@ -1,0 +1,7 @@
+Name: GetCurrentWeaponClipAmmo
+Function: GetCurrentWeaponClipAmmo()
+Module: Player
+Summary: Gets the amount of ammo left in the player's clip.
+CallOn: The player
+Example:  bulletCnt = level.player GetCurrentWeaponClipAmmo();
+

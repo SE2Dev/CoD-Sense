@@ -1,0 +1,16 @@
+Name: SetEQ
+Function: SetEQ( <channel>, <eqIndex>, <band>, <filter type>, <gain>, <frequency>, <q> )
+Module: Player
+Restriction: SP Only
+Summary: Set a parametric filter for the player on a specified channel
+CallOn: The player
+Example: level.player SetEQ( "ambient", 0, "bell", 3, 1000, 2.1 );
+RequiredArgs:
+1 : <channel>: the name of the audio channel to apply the eq to.
+2 : <eqIndex> : the eq index to use (0 and 1).
+3 : <band>: select which band, there are currently two bands (0 and 1).
+4 : <filter type>: the type of filter to apply ("lowpass", "highpass", "lowshelf", "highshelf", "bell" ).
+5 : <gain>: the gain in dB.  Has no effect on "lowpass" or "highpass
+6 : <frequency>: the "important" frequency, between 0 and 20 kHZ.  enter value in Hz.
+7 : <q>: the quality factor.
+

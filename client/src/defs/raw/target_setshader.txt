@@ -1,0 +1,10 @@
+Name: Target_SetShader
+Function: Target_SetShader( <target entity>, <materialname> )
+Module: Objective
+Restriction: SP Only
+Summary: Changes the material of a target.  The target must have already been created with target_set()
+Example: Target_SetShader( enemy_chopper, "locked_on_shader" );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+2 : <materialname> The shader for the quad drawn over the target
+

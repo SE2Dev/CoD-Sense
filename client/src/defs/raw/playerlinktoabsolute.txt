@@ -1,0 +1,12 @@
+Name: PlayerLinkToAbsolute
+Function: PlayerLinkToAbsolute( <lockto entity>, <tag> )
+Module: Player
+Restriction: SP Only
+Summary: Attaches the player to an entity.  No view movement is allowed.    The player's eye position will remain fixed relative to the parent entity/tag.  Thus, pitching and rolling will cause the player's eye position to move. (But the player entity always remains vertical)
+CallOn: A Player Entity
+Example: level.player PlayerLinkToAbsolute( vehicle, "tag_player" );
+RequiredArgs:
+1 : <lockto entity> The entity to attach the player to
+OptionalArgs:
+1 : <tag> The tag to attach the player to
+

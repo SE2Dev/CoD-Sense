@@ -1,0 +1,8 @@
+Name: IsMeleeing
+Function: IsMeleeing()
+Module: Player
+Restriction: SP Only
+Summary: Returns true if the player is currently meleeing
+CallOn: The player
+Example: level.player IsMeleeing();
+

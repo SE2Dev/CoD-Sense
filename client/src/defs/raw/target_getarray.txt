@@ -1,0 +1,7 @@
+Name: Target_GetArray
+Function: Target_GetArray()
+Module: Objective
+Restriction: SP Only
+Summary: Gets an array of entities that are set as targets
+Example: mytargets = Target_GetArray();
+

@@ -1,0 +1,9 @@
+Name: HasWeapon
+Function: HasWeapon(<weapon name>)
+Module: Player
+Summary: Checks whether the player has the given weapon.
+CallOn: The player
+Example:  if( level.player HasWeapon( "Panzerfaust" ) ) [...]
+RequiredArgs:
+1 : <weapon name> The weapon name (a string)
+

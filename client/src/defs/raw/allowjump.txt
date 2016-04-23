@@ -1,0 +1,9 @@
+Name: AllowJump
+Function: AllowJump( <player jump> )
+Module: Player
+Summary: Sets whether the player can jump
+CallOn: The player
+Example: level.player AllowJump(false);
+RequiredArgs:
+1 : <player jump>: A boolean. True if the player can jump, and false otherwise
+

@@ -1,0 +1,10 @@
+Name: ViewKick
+Function: ViewKick( <force>, <source> )
+Module: Player
+Summary: Damage the player, and throw the screen around
+CallOn: <player>
+Example: level.player ViewKick( 127, level.player.origin );
+RequiredArgs:
+1 : <force> The force of the kick, from 0 to 127
+2 : <source> (a point) the source of the kick
+

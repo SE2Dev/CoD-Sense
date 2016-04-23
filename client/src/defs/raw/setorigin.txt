@@ -1,0 +1,9 @@
+Name: SetOrigin
+Function: SetOrigin( <player origin> )
+Module: Player
+Summary: Set the player's origin
+CallOn: The player
+Example:  level.player SetOrigin( pltruck.origin );
+RequiredArgs:
+1 : <player origin> The player's origin (a point)
+

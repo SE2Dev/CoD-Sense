@@ -1,0 +1,13 @@
+Name: RotateRoll
+Function: RotateRoll( <roll angle>, <time>, <acceleration time>, <deceleration time> )
+Module: Motion
+Summary: Rotate this entity to the given roll angle
+CallOn: script_model, script_origin or script_brushmodel
+Example: self RotateRoll( (2 * 1500 + 3 * Randomfloat( 2500 )) * -1, 5, 0, 0 );
+RequiredArgs:
+1 : <roll angle> The new roll angle in degrees
+2 : <time> The time to rotate in seconds
+OptionalArgs:
+1 : <acceleration time> The time spent accelerating in seconds
+2 : <deceleration time> The time spent decelerating in seconds
+

@@ -1,0 +1,11 @@
+Name: PhysicsJolt
+Function: PhysicsJolt( <center>, <outer radius>, <inner radius>, <force> )
+Module: Physics
+Summary: Imparts a 1-frame randomly-jittered impulse on physics objects in a radius.
+Example: PhysicsJolt( origin, 200, 150, (0.01, 0.01, 0.2) );
+RequiredArgs:
+1 : <center> The world position of the center of the cylinder
+2 : <outer radius> The radius beyond which the force is zero
+3 : <inner radius> The radius within which the force is maximum
+4 : <force> A vector giving the direction and magnitude of the force of the explosion
+

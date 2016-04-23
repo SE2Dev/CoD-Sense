@@ -1,0 +1,11 @@
+Name: PhysicsExplosionSphere
+Function: PhysicsExplosionSphere( <position of explosion>, <outer radius>, <inner radius>, <magnitude> )
+Module: Physics
+Summary: Imparts a 1-frame explosion impulse on physics objects, similar to a grenade.
+Example: PhysicsExplosionSphere( origin, 100, 80, 1 );
+RequiredArgs:
+1 : <position of effect> The world position of the center of the explosion
+2 : <outer radius> The radius beyond which the force is zero
+3 : <inner radius> The radius within which the force is maximum
+4 : <magnitude> The strength of the force. 1 = the default explosion
+

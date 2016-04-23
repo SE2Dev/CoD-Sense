@@ -1,0 +1,9 @@
+Name: StopLocalSound
+Function: StopLocalSound( <sound name> )
+Module: Player
+Summary: Stops all instances of a local soundalias running on a player.
+CallOn: The player
+Example: level.player StopLocalSound( "annoying_siren" );
+RequiredArgs:
+1 : <sound name>: The name of the sound to stop.
+

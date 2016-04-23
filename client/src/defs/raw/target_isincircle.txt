@@ -1,0 +1,12 @@
+Name: Target_IsInCircle
+Function: Target_IsInCircle( <target entity>, <player>, <fov>, <radius> )
+Module: Objective
+Restriction: SP Only
+Summary: Returns whether a target is within a given radius from the center of the player's screen
+Example: level.player Target_IsInCircle( enemy_chopper, level.player, 65, 100 );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+2 : <player> The player entity
+3 : <fov> The player's field of view
+4 : <radius> radius of the circle, centered at the center of the screen
+

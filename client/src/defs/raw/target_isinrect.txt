@@ -1,0 +1,13 @@
+Name: Target_IsInRect
+Function: Target_IsInRect( <target entity>, <player>, <fov>, <halfwidth>, <halfheight> )
+Module: Objective
+Restriction: SP Only
+Summary: Returns whether a target is within a given rectangle, centered in the center of the player's screen
+Example: level.player Target_IsInRect( enemy_chopper, level.player, 65, 100, 100 );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+2 : <player> The player entity
+3 : <fov> The player's field of view
+4 : <halfwidth> half the width of the rectangle
+5 : <halfheight> half the height of the rectangle
+

@@ -1,0 +1,8 @@
+Name: SwitchToOffhand
+Function: SwitchToOffhand( <weapon name> )
+Module: Player
+Summary: Switch the player's offhand weapon
+CallOn: The player
+RequiredArgs:
+1 : <weapon name> The weapon name (a string)
+

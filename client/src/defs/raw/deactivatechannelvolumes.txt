@@ -1,0 +1,11 @@
+Name: DeactivateChannelVolumes
+Function: DeactivateChannelVolumes( <priority>, <fade time> )
+Module: Player
+Summary: deactivate the channel volumes for the player on the given priority level
+CallOn: The player
+Example: level.player DeactivateChannelVolumes( "snd_enveffectsprio_level", 3 );
+RequiredArgs:
+1 : <priority>: Valid priorities are "snd_channelvolprio_holdbreath", "snd_channelvolprio_pain", or "snd_channelvolprio_shellshock".
+OptionalArgs:
+1 : <fade time>: the time spent fading to the next lowest active channelvol priority level in seconds.
+

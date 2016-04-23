@@ -1,0 +1,7 @@
+Name: Solid
+Function: Solid()
+Module: Motion
+Summary: Set the solid flag, so that this object is collidable.
+CallOn: script_brushmodel
+Example: self Solid();
+

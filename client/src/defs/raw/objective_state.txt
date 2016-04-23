@@ -1,0 +1,9 @@
+Name: Objective_State
+Function: Objective_State( <objective_number>, <state> )
+Module: Objective
+Summary: Sets the state of an objective
+Example: Objective_State( 8, "done" );
+RequiredArgs:
+1 : <objective_number> The number of the objective to alter
+2 : <state> A string value representing the state of the objective. Valid states are "empty", "active", "invisible", "done", "current" and "failed"
+

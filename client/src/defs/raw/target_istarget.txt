@@ -1,0 +1,9 @@
+Name: Target_IsTarget
+Function: Target_IsTarget( <entity> )
+Module: Objective
+Restriction: SP Only
+Summary: Returns whether an entity has been marked as a target
+Example: if ( Target_IsTarget( foundEnt ) ) ...
+RequiredArgs:
+1 : <entity> The entity to check
+

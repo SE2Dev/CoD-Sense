@@ -1,0 +1,9 @@
+Name: Objective_Icon
+Function: Objective_Icon( <objective_number>, <icon> )
+Module: Objective
+Summary: Set the compass icon for an objective 
+Example: Objective_Icon( 0, game["radio_none"] );
+RequiredArgs:
+1 : <objective_number> The ID of the objective to alter
+2 : <icon> A compass icon
+

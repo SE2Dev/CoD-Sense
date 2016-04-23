@@ -1,0 +1,9 @@
+Name: AllowLeanLeft
+Function: AllowLeanLeft(<player lean left>)
+Module: Player
+Summary: Sets whether the player can lean left
+CallOn: The player
+Example: level.player AllowLeanLeft(false);
+RequiredArgs:
+1 : <player lean left>: A boolean. True if the player can lean left, and false otherwise
+

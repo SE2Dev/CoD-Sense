@@ -1,0 +1,14 @@
+Name: SetDepthOfField
+Function: SetDepthOfField( <near start>, <near end>, <far start>, <far end>, <near blur>, <far blur> )
+Module: Player
+Summary: Set the depth of field values for a player.  If start >= end for near or far, depth of field is disabled for that region.
+CallOn: <player>
+Example: self SetDepthOfField( 10, 80, 1000, 7000, 5, 1.5 );
+RequiredArgs:
+1 : <near start> Before this distance, near depth of field is maximally blurry
+2 : <near end> After this distance, near depth of field is perfectly in focus
+3 : <far start> Before this distance, far depth of field is perfectly in focus
+4 : <far end> After this distance, far depth of field is maximally blurry
+5 : <near blur> Maximal blur radius for near depth of field, in pixels at 640x480
+6 : <far blur> Maximal blur radius for far depth of field, in pixels at 640x480
+

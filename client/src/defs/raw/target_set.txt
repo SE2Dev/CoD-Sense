@@ -1,0 +1,11 @@
+Name: Target_Set
+Function: Target_Set( <target entity>, <target offset> )
+Module: Objective
+Restriction: SP Only
+Summary: Adds a new target to draw on the hud
+Example: Target_Set( enemy_chopper );
+RequiredArgs:
+1 : <target entity> The entity that is the target
+OptionalArgs:
+1 : <target offset> The offset of the target position from the entity's origin
+

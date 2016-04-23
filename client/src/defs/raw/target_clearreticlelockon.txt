@@ -1,0 +1,7 @@
+Name: Target_ClearReticleLockOn
+Function: Target_ClearReticleLockOn()
+Module: Objective
+Restriction: SP Only
+Summary: Cancels any lock-on sequence on the hud.
+Example: Target_ClearReticleLockOn();
+
