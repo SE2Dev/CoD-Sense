@@ -2,6 +2,10 @@
 .vscode/c_cpp_properties.json
 
 *.o
+*.obj
+*.suo
+/vcpp/Debug
+/vcpp/Release
 
 bin/parser
 obj/
