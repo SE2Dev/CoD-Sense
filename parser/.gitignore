@@ -1,5 +1,11 @@
-node_modules
-*.d.ts
-/src/types.js
-/out
-npm-debug.log
+.vscode/keybindings.json
+.vscode/c_cpp_properties.json
+
+*.o
+
+bin/parser
+obj/
+src/cpp/parser
+
+*.db
+*.db-wal

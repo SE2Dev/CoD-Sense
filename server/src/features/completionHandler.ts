@@ -14,10 +14,10 @@ import * as tree from '../ast/tree'
 //
 export function CompletionHandler(params: TextDocumentPosition): CompletionItem[]
 {
-    console.log("COMPLETION");
+    console.log("COMPLETION for " + JSON.stringify(params.position));
     var startTime = new Date().getTime();
     
-    console.log(tree.ResolveElement(params.uri, params.position));
+    console.log(tree.ResolveElement_Relative(params.uri, params.position));
     var endTime = new Date().getTime();
     console.log(`COMPLETIOn RESOLVED: ${endTime - startTime} ms`);
     return null;

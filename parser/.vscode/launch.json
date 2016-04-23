@@ -2,34 +2,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch",
-			"type": "node",
+			"name": "Debug",
+			"type": "gdb",
 			"request": "launch",
-			"program": "${workspaceRoot}/debug/main.js",
-			"stopOnEntry": false,
-			"args": [],
-			"cwd": "${workspaceRoot}/debug",
-			"runtimeExecutable": null,
-			"runtimeArgs": [
-				"--nolazy"
-			],
-			"env": {
-				"NODE_ENV": "development"
-			},
-			"externalConsole": false,
-			"sourceMaps": false,
-			"outDir": null
-		},
-		
-		{
-			"name": "Attach",
-			"type": "node",
-			"request": "attach",
-			"port": 5858,
-			"sourceMaps": false,
-			"outDir": null,
-			"localRoot": "${workspaceRoot}",
-			"remoteRoot": null
+			"target": "${workspaceRoot}/bin/parser",
+			"cwd": "${workspaceRoot}",
+			"preLaunchTask": "default",
+			"terminal": ""
 		}
 	]
 }

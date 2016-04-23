@@ -7,6 +7,7 @@ import {PathToURI} from "./util/uri"
 
 import * as branch from "./ast/branch"
 import * as cache from "./ast/cache"
+import * as tree from "./ast/tree"
 
 import {
     SymbolInformation, SymbolKind,
@@ -103,17 +104,26 @@ export function analyzeDocumentSync(path: string, contents?: string) {
 }
 
 function PerformDocumentAnalysis(uri: string, text: string) {
-    var startTime = new Date().getTime();
+    var parseTime = NaN;
+    var genTime = NaN;
 
     try {
+        var startTime = new Date().getTime();
         cache.Add(uri, parser.parse(text));
+        var endTime = new Date().getTime();
+        parseTime = endTime - startTime;
+        
+        startTime = new Date().getTime();
+        tree.GenerateRelativeData(uri);
+        endTime = new Date().getTime();
+        genTime = endTime - startTime;
+        
     } catch (err) {
         console.error(`ERROR: Could not parse '${Path.basename(uri)}'`);
         console.error(err.message);
         return false;
     }
 
-    var endTime = new Date().getTime();
-    console.log(`PARSED: ${Path.basename(uri)} in ${endTime - startTime} ms`);
+    console.log(`PARSED: ${Path.basename(uri)} in ${parseTime + genTime} ms (${parseTime} ms + ${genTime} ms)`);
     return true;
 }

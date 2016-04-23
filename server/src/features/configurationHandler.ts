@@ -28,7 +28,6 @@ export var config: IConfiguration = new IConfiguration;
 
 export function DidChangeConfigurationHandler(params: DidChangeConfigurationParams): void
 {
-    vss.WorkspaceChange
     config.settings = params.settings["cod-sense"];
     console.warn(JSON.stringify(config));
     if(config.settings.active_lib != "" && config.settings.libs[config.settings.active_lib])

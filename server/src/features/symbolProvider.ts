@@ -10,7 +10,7 @@ import * as tree from "../ast/tree"
 export function provideDocumentSymbols(params): SymbolInformation[]
 {
     var startTime = new Date().getTime();
-    let symbols = tree.ResolveFunctionSymbols(params.uri);
+    let symbols = tree.ResolveFunctionSymbols_Clean(params.uri);
     var endTime = new Date().getTime();
     console.log(`PROVIDER: Found ${symbols.length} symbols for '${Path.basename(params.uri)}' in ${endTime - startTime} ms`);
     return symbols;

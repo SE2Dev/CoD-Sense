@@ -27,8 +27,8 @@ connection.onInitialize((params): InitializeResult => {
     let serverFeatures: ServerCapabilities =
         {
             textDocumentSync: TextDocumentSyncKind.Incremental,
-            documentSymbolProvider: true,
-            workspaceSymbolProvider: true,
+            documentSymbolProvider: false,
+            workspaceSymbolProvider: false,
             completionProvider: { triggerCharacters: ["."] }
         }
 
@@ -42,9 +42,9 @@ import {DidOpenTextDocumentHandler, DidCloseTextDocumentHandler, DidChangeTextDo
 import {DidChangeConfigurationHandler} from "./features/configurationHandler"
 import {CompletionHandler} from "./features/completionHandler"
 
-connection.onDidOpenTextDocument(DidOpenTextDocumentHandler);
-connection.onDidChangeTextDocument(DidChangeTextDocumentHandler);
-connection.onCompletion(CompletionHandler);
+//connection.onDidOpenTextDocument(DidOpenTextDocumentHandler);
+//connection.onDidChangeTextDocument(DidChangeTextDocumentHandler);
+//connection.onCompletion(CompletionHandler);
 //connection.onDidCloseTextDocument(DidCloseTextDocumentHandler)
 
 connection.onDidChangeConfiguration(DidChangeConfigurationHandler);
