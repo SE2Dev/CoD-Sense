@@ -1,87 +1,99 @@
 {
-	"name": "cod-sense",
-	"displayName": "CoD-Sense",
-	"description": "Syntax highlighting and Intellisense support for Call of Duty scripts",
-	"version": "0.0.2",
-	"publisher": "se2dev",
-	"homepage": "https://github.com/SE2Dev/CoD-Sense/tree/master",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/SE2Dev/CoD-Sense.git"
-	},
-	"bugs": {
-		"url": "https://github.com/SE2Dev/CoD-Sense/issues"
-	},
-	"icon": "images/cod-sense_logo_128x128.png",
-	 "galleryBanner": {
+    "name": "cod-sense",
+    "displayName": "CoD-Sense",
+    "description": "Syntax highlighting and Intellisense support for Call of Duty scripts",
+    "version": "0.0.2",
+    "publisher": "se2dev",
+    "author": {
+        "name": "SE2Dev"
+    },
+    "homepage": "https://github.com/SE2Dev/CoD-Sense/tree/master",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SE2Dev/CoD-Sense.git"
+    },
+    "bugs": {
+        "url": "https://github.com/SE2Dev/CoD-Sense/issues"
+    },
+    "icon": "images/cod-sense_logo_128x128.png",
+    "galleryBanner": {
         "color": "#444444",
         "theme": "dark"
     },
-	"engines": {
-		"vscode": "^0.10.10"
-	},
-	"categories": [
-		"Languages"
-	],
-	"activationEvents": [
-		"onLanguage:gsc"
-	],
-	"main": "./out/src/extension",
-	"contributes": {
-		"languages": [{
-			"id": "gsc",
-			"aliases": ["GSC", "gsc"],
-			"extensions": [".gsc", ".csc"],
-			"configuration": "./gsc.configuration.json"
-		}],
-		"grammars": [{
-			"language": "gsc",
-			"scopeName": "source.gsc",
-			"path": "./syntaxes/gsc.tmLanguage"
-		}],
-		"snippets": [
-			{
-				"language": "gsc",
-				"path": "./snippets/snippets.json"
-			}
-		],
-		"configuration": {
-			"type": "object",
-			"title": "Example configuration",
-			"properties": {
-				"cod-sense.libs": {
-					"type": "object",
-					"description": "List of script libraries (such as game raw directories) in the format: {\n'Name1': 'rawPath1', 'Name2': 'rawPath2', ...\n}",
-					"string-map": {
-						"type": "object",
-						"additionalProperties": false,
-						"patternProperties": {
-							".+": {
-								"type": "string"
-							}
-						}
-					}
-				},
-				"cod-sense.active_lib": {
-					"type": "string",
-					"description": "The name of the user defined library that is to be used for include's etc. (Must match a key in cod-sense.libs)"
-				}
-			}
-		}
-	},
-	
-	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compileClient": "node ./node_modules/vscode/bin/compile -watch -p ./",
-		"compileAlt": "cd ../server && npm run compile && cd ../client && npm run compileClient",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install"
-	},
-	"dependencies": {
-		"vscode-languageclient": "^1.4.2"
-	},
-	"devDependencies": {
-		"typescript": "^1.7.5",
-		"vscode": "^0.11.6"
-	}
+    "engines": {
+        "vscode": "^0.10.10"
+    },
+    "categories": [
+        "Languages"
+    ],
+    "activationEvents": [
+        "onLanguage:gsc"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "languages": [
+            {
+                "id": "gsc",
+                "aliases": [
+                    "GSC",
+                    "gsc"
+                ],
+                "extensions": [
+                    ".gsc",
+                    ".csc"
+                ],
+                "configuration": "./gsc.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "gsc",
+                "scopeName": "source.gsc",
+                "path": "./syntaxes/gsc.tmLanguage"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "gsc",
+                "path": "./snippets/snippets.json"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Example configuration",
+            "properties": {
+                "cod-sense.libs": {
+                    "type": "object",
+                    "description": "List of script libraries (such as game raw directories) in the format: {\n'Name1': 'rawPath1', 'Name2': 'rawPath2', ...\n}",
+                    "string-map": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "patternProperties": {
+                            ".+": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "cod-sense.active_lib": {
+                    "type": "string",
+                    "description": "The name of the user defined library that is to be used for include's etc. (Must match a key in cod-sense.libs)"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compileClient": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "compileAlt": "cd ../server && npm run compile && cd ../client && npm run compileClient",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^1.4.2"
+    },
+    "devDependencies": {
+        "typescript": "^1.7.5",
+        "vscode": "^0.11.6"
+    }
 }
