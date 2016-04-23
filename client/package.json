@@ -12,6 +12,11 @@
 	"bugs": {
 		"url": "https://github.com/SE2Dev/CoD-Sense/issues"
 	},
+	"icon": "images/cod-sense_logo_128x128.png",
+	 "galleryBanner": {
+        "color": "#444444",
+        "theme": "dark"
+    },
 	"engines": {
 		"vscode": "^0.10.10"
 	},
