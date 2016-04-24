@@ -60,13 +60,13 @@ Symbol* Symbol::Children(void) const
 
 void Symbol::PrintInfo() const
 {
-	//printf("%s with %d children at %d(%d) - %d(%d)\n",
-	//	SYMBOL_TYPE_STRING(type),
-	//	this->children ? this->children->Size() + 1 : 0,
-	//	location.start.line,
-	//	location.start.character,
-	//	location.end.line,
-	//	location.end.character);
+	printf("%s with %d children at %d(%d) - %d(%d)\n",
+		SYMBOL_TYPE_STRING(type),
+		this->children ? this->children->Size() + 1 : 0,
+		location.start.line,
+		location.start.character,
+		location.end.line,
+		location.end.character);
 }
 
 //
