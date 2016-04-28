@@ -4,6 +4,7 @@
 *.o
 *.obj
 *.suo
+*.sdf
 /vcpp/Debug
 /vcpp/Release
 
