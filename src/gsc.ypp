@@ -27,7 +27,7 @@
 
 %code requires
 {
-	#include "../platform.h"
+	#include "../sys/sys_platform.h"
 	#include "../symbols/operator_enum.h"
 	
 	//

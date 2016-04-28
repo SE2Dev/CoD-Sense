@@ -7,7 +7,7 @@
 #endif
 
 #include "parser/gsc.tab.hpp"
-#include "platform.h"
+#include "sys/sys_platform.h"
 #include "arg.h"
 #include "cvar.h"
 #include "cmd.h"

@@ -4,7 +4,7 @@
 #include "cvar.h"
 #include "cmd.h"
 #include "util/llist.h"
-#include "platform.h"
+#include "sys/sys_platform.h"
 
 Argument* g_shortcut[255] = {NULL};
 

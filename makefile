@@ -12,7 +12,7 @@ FLEX_OPTIONS=-d -Cfa
 
 MAKE_CHILD_OPTIONS=--no-print-directory
 
-GPP_OPTIONS=-D_DEBUG -g
+GPP_OPTIONS=-D_DEBUG -g -pthread
 
 default:
 	@$(MAKE) ${MAKE_CHILD_OPTIONS} clean

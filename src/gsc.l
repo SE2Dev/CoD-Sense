@@ -1,6 +1,6 @@
 %{
 	#include <stdio.h>
-	#include "../platform.h"
+	#include "../sys/sys_platform.h"
 	
 	#include "gsc.tab.hpp"
 	#include "../symbols/symbol.h"
