@@ -1,0 +1,73 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+
+#ifdef _WIN32
+	#include <Windows.h>
+#endif
+
+#include "../sys/sys_platform.h"
+#include "../sys/sys_worker.h"
+#include "../sys/sys_cpu.h"
+
+int Cmd_Watch_f(int argc, char** argv)
+{
+
+#ifdef _WIN32
+	LARGE_INTEGER freq, start;
+	QueryPerformanceFrequency(&freq);
+	QueryPerformanceCounter(&start);
+#else //LINUX
+	timespec start;
+	clock_gettime(CLOCK_REALTIME, &start);
+#endif
+	
+	int workerCount = Sys_CPUCount() - 1;
+	printf("Using %d threads\n", workerCount + 1);
+	Worker* workers = new Worker[workerCount];
+
+	for(ssize_t readLen = 0; readLen != -1; )
+	{
+		size_t bufLen = 64;
+		char* buf = (char*)malloc(bufLen);
+		readLen = getline(&buf, &bufLen, stdin);
+		printf("Read %d bytes from stdin\n%s\n", (int)readLen, buf);
+		free(buf);
+	}
+
+	double elapsed_time_ms = 0.0;
+#ifdef _WIN32
+	LARGE_INTEGER end;
+	QueryPerformanceCounter(&end);
+	
+	elapsed_time_ms = (double)end.QuadPart - (double)start.QuadPart;
+	elapsed_time_ms /= (double)(freq.QuadPart / 1000);
+#else //LINUX
+	timespec end;
+	clock_gettime(CLOCK_REALTIME, &end);
+
+	timespec delta;
+	if(end.tv_nsec - start.tv_nsec < 0)
+	{
+		delta.tv_sec = end.tv_sec - start.tv_sec - 1;
+		delta.tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
+	}
+	else
+	{
+		delta.tv_sec = end.tv_sec - start.tv_sec;
+		delta.tv_nsec = end.tv_nsec - start.tv_nsec;
+	}
+	
+	elapsed_time_ms = 1000.0 * (double)delta.tv_sec;
+	elapsed_time_ms += (double)delta.tv_nsec / 1000000.0;
+	
+#endif
+	
+	Job::PostQuitJob();
+	delete[] workers;
+	
+	printf("Watch mode ended after %f ms\n", elapsed_time_ms);
+
+	
+	return 0;
+}

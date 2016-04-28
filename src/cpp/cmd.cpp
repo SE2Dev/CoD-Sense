@@ -11,6 +11,8 @@ REGISTER_GLOBAL_COMMAND(g_cmd_help, "help", "Print usage information", Cmd_Help_
 REGISTER_GLOBAL_COMMAND(g_cmd_tree, "tree", "Print the AST for a given script file", Cmd_Tree_f);
 REGISTER_GLOBAL_COMMAND(g_cmd_symbols, "symbols", "Print the top level symbols for a given script file", Cmd_Symbols_f);
 
+REGISTER_GLOBAL_COMMAND(g_cmd_watch, "watch", "Start watch/reentrant mode", Cmd_Watch_f);
+
 #undef REGISTER_GLOBAL_COMMAND
 
 Command::Command(const char* name, const char* description,  cmd_func_t func) : func(func)

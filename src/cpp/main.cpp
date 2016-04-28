@@ -6,8 +6,9 @@
 	#include <Windows.h>
 #endif
 
-#include "parser/gsc.tab.hpp"
 #include "sys/sys_platform.h"
+#include "sys/sys_worker.h"
+#include "sys/sys_cpu.h"
 #include "arg.h"
 #include "cvar.h"
 #include "cmd.h"
@@ -26,6 +27,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "Fatal Error: %d\n", err);
 		return err;
 	}
-
+	
 	return cmd_info.Cmd()->Exec(cmd_info.Argc(), cmd_info.Argv());
 }

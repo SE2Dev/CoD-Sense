@@ -183,14 +183,3 @@ int Worker::Count(void)
 {
 	return Worker::count;
 }
-
-/*
-
-int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
-	
-SYSTEM_INFO sysinfo;
-GetSystemInfo( &sysinfo );
-
-numCPU = sysinfo.dwNumberOfProcessors;
-
-*/
