@@ -9,9 +9,9 @@
 #include "sys/sys_platform.h"
 #include "sys/sys_worker.h"
 #include "sys/sys_cpu.h"
-#include "arg.h"
-#include "cvar.h"
-#include "cmd.h"
+#include "cl/cl_arg.h"
+#include "cl/cl_cvar.h"
+#include "cl/cl_cmd.h"
 
 int main(int argc, char** argv)
 {

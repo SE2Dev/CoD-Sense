@@ -6,12 +6,12 @@
 	#include <Windows.h>
 #endif
 
-#include "../sys/sys_platform.h"
-#include "../sys/sys_worker.h"
-#include "../sys/sys_cpu.h"
+#include "../../sys/sys_platform.h"
+#include "../../sys/sys_worker.h"
+#include "../../sys/sys_cpu.h"
 
-#include "../arg.h"
-#include "../cmd.h"
+#include "../cl_arg.h"
+#include "../cl_cmd.h"
 
 int Cmd_Watch_f(int argc, char** argv)
 {
@@ -39,7 +39,7 @@ int Cmd_Watch_f(int argc, char** argv)
 			printf("Read %d bytes from stdin\n%s\n", (int)readLen, buf);
 			
 			ArgParsedInfo cmd_info;
-			if(int err = Arg_ParseCmdLine(buf, &cmd_info))
+			if(Arg_ParseCmdLine(buf, &cmd_info))
 			{
 				free(buf);
 				continue;

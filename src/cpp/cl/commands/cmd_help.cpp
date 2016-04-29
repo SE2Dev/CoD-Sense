@@ -1,5 +1,5 @@
 #include "cmd_common.h"
-#include "../arg.h"
+#include "../cl_arg.h"
 
 int Cmd_Help_f(int argc, char** argv)
 {

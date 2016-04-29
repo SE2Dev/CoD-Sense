@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "arg.h"
-#include "string.h"
-#include "cvar.h"
-#include "cmd.h"
-#include "util/llist.h"
-#include "sys/sys_platform.h"
+#include "cl_arg.h"
+#include <string.h>
+#include "cl_cvar.h"
+#include "cl_cmd.h"
+#include "../util/llist.h"
+#include "../sys/sys_platform.h"
 
 Argument* g_shortcut[255] = {NULL};
 

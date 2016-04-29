@@ -6,13 +6,13 @@
 	#include <Windows.h>
 #endif
 
-#include "../parser/gsc.tab.hpp"
-#include "../sys/sys_platform.h"
-#include "../arg.h"
-#include "../cvar.h"
-#include "../cmd.h"
+#include "../../parser/gsc.tab.hpp"
+#include "../../sys/sys_platform.h"
+#include "../cl_arg.h"
+#include "../cl_cvar.h"
+#include "../cl_cmd.h"
 
-#include "../symbols/symbol.h"
+#include "../../symbols/symbol.h"
 
 #include "cmd_common.h"
 
@@ -24,22 +24,9 @@ extern void yyset_in(FILE* in, yyscan_t scanner);
 extern void yyset_out(FILE* out, yyscan_t scanner);
 extern void yyset_debug (int bdebug, yyscan_t yyscanner);
 
-void yyerror(YYLTYPE* loc, Symbol** AST, yyscan_t scanner, const char* err) 
-{
-	fprintf(stderr, "PARSE ERROR AT LINE %d(%d): %s\n", loc->first_line, loc->first_column, err);
-#if !(_DEBUG)
-	exit(1);
-#endif
-}
-
-int Cmd_Tree_f(int argc, char** argv)
+int Cmd_Symbols_f(int argc, char** argv)
 {
 	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
-	if(!in)
-	{
-		fprintf(stderr, "Error: File %s could not be opened\n", argv[1]);
-		return 1;
-	}
 
 #ifdef _WIN32
 	LARGE_INTEGER freq, start;
@@ -99,7 +86,10 @@ int Cmd_Tree_f(int argc, char** argv)
 	
 #endif
 	
-	AST->PrintInfoRecursive();
+	for(Symbol* node = AST->Children(); node; node = node->NextElem())
+	{
+		node->PrintSymbol();
+	} 
 	
 	delete AST;
 		

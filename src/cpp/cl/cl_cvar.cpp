@@ -1,5 +1,5 @@
-#include "cvar.h"
-#include "sys/sys_platform.h"
+#include "cl_cvar.h"
+#include "../sys/sys_platform.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

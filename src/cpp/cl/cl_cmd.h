@@ -1,6 +1,6 @@
 #pragma once
-#include "arg.h"
-#include "util/llist.h"
+#include "cl_arg.h"
+#include "../util/llist.h"
 
 typedef int (*cmd_func_t)(int argc, char** argv);
 
