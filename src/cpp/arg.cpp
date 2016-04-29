@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <ctype.h>
+
 #include "arg.h"
 #include "string.h"
 #include "cvar.h"
@@ -191,4 +193,70 @@ int Arg_ParseArguments(int argc, char** argv, ArgParsedInfo* out_info)
 	}*/
 	
 	return 0;
+}
+
+int Arg_ParseCmdLine(char* cmdLine, ArgParsedInfo* out_info)
+{
+	char* cl = strdup(cmdLine);
+	int cl_len = strlen(cl);
+	
+	int argc = 0;
+	
+	char* arg_list[32];
+	memset(arg_list, 0, sizeof(char*) * 32);
+	
+	bool last_was_space = true; //skips leading spaces
+	for(int i = 0; i < cl_len; i++)
+	{
+		switch(cl[i])
+		{
+			case '\\':
+				i++;
+				last_was_space = false;
+				continue;
+			
+			case '"':
+			case '\'':
+				for(int j = i+1; j < cl_len; j++)
+				{
+					if(cl[j] == cl[i] && cl[j-1] != '\\')
+					{
+						i = j;
+					}
+				}
+				
+				last_was_space = false;
+				continue;
+				
+			default:
+				int is_space = isspace(cl[i]);
+				if(last_was_space && !is_space)
+				{
+					last_was_space = false;
+					arg_list[argc++] = &cl[i];
+					if(argc >= 32)
+					{
+						i = cl_len;
+						continue;
+					}
+				}
+				
+				if((last_was_space = is_space))
+				{
+					cl[i] = '\0';
+				}
+				
+				continue;
+		}
+	}
+	
+	printf("Argc: %d\n", argc);
+	for(int i = 0; i < argc; i++)
+	{
+		printf("[%d]: %s\n", i, arg_list[i]);
+	}
+	
+	int result = Arg_ParseArguments(argc, arg_list, out_info);
+	free(cl);
+	return result;
 }

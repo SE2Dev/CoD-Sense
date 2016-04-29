@@ -10,6 +10,9 @@
 #include "../sys/sys_worker.h"
 #include "../sys/sys_cpu.h"
 
+#include "../arg.h"
+#include "../cmd.h"
+
 int Cmd_Watch_f(int argc, char** argv)
 {
 
@@ -31,7 +34,27 @@ int Cmd_Watch_f(int argc, char** argv)
 		size_t bufLen = 64;
 		char* buf = (char*)malloc(bufLen);
 		readLen = getline(&buf, &bufLen, stdin);
-		printf("Read %d bytes from stdin\n%s\n", (int)readLen, buf);
+		if(readLen >= 0)
+		{
+			printf("Read %d bytes from stdin\n%s\n", (int)readLen, buf);
+			
+			ArgParsedInfo cmd_info;
+			if(int err = Arg_ParseCmdLine(buf, &cmd_info))
+			{
+				free(buf);
+				continue;
+			}
+			
+			if(strcmp(cmd_info.Cmd()->Name(), "watch") != 0)
+			{
+				cmd_info.Cmd()->Exec(cmd_info.Argc(), cmd_info.Argv());
+			}
+			else
+			{
+				fprintf(stderr, "Error: 'watch' is not a valid command in watch mode");
+			}
+		}
+		
 		free(buf);
 	}
 
@@ -67,7 +90,6 @@ int Cmd_Watch_f(int argc, char** argv)
 	delete[] workers;
 	
 	printf("Watch mode ended after %f ms\n", elapsed_time_ms);
-
 	
 	return 0;
 }

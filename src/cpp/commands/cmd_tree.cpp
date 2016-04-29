@@ -35,6 +35,11 @@ void yyerror(YYLTYPE* loc, Symbol** AST, yyscan_t scanner, const char* err)
 int Cmd_Tree_f(int argc, char** argv)
 {
 	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
+	if(!in)
+	{
+		fprintf(stderr, "Error: File %s could not be opened\n", argv[1]);
+		return 1;
+	}
 
 #ifdef _WIN32
 	LARGE_INTEGER freq, start;

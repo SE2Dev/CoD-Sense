@@ -61,3 +61,4 @@ public:
 
 void Arg_PrintUsage(void);
 int Arg_ParseArguments(int argc, char** argv, ArgParsedInfo* out_info);
+int Arg_ParseCmdLine(char* cmdLine, ArgParsedInfo* out_info);
