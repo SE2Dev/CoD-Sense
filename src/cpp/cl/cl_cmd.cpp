@@ -7,11 +7,17 @@
 #define REGISTER_COMMAND(IDENTIFIER, NAME, DESCRIPTION, FUNC, FLAGS) Command IDENTIFIER(NAME, DESCRIPTION, FUNC, FLAGS);
 
 Command* Command::g_cmds = NULL;
+
 REGISTER_COMMAND(g_cmd_help, "help", "Print usage information", Cmd_Help_f, COMMAND_LAUNCH | COMMAND_WATCH);
 REGISTER_COMMAND(g_cmd_tree, "tree", "Print the AST for a given script file", Cmd_Tree_f, COMMAND_LAUNCH | COMMAND_WATCH);
 REGISTER_COMMAND(g_cmd_symbols, "symbols", "Print the top level symbols for a given script file", Cmd_Symbols_f, COMMAND_LAUNCH | COMMAND_WATCH);
 
 REGISTER_COMMAND(g_cmd_watch, "watch", "Start watch/reentrant mode", Cmd_Watch_f, COMMAND_LAUNCH);
+
+REGISTER_COMMAND(g_cmd_cache_list, "cache-list", "Start watch/reentrant mode", Cmd_Cache_List_f, COMMAND_WATCH);
+REGISTER_COMMAND(g_cmd_cache_update, "cache-update", "Add or Update a cache entry", Cmd_Cache_Update_f, COMMAND_WATCH);
+REGISTER_COMMAND(g_cmd_cache_remove, "cache-remove", "Remove a cache entry", Cmd_Cache_Remove_f, COMMAND_WATCH);
+
 
 #undef REGISTER_COMMAND
 
@@ -40,18 +46,15 @@ int Command::CmdFlags(void) const
 
 int Command::Exec(int argc, char** argv) const
 {
-	printf("this is a %s %s cmd\n", 
-	flags & COMMAND_LAUNCH ? "launch": "",
-	flags & COMMAND_WATCH ? "watch": ""
-	);
-	
+#if _DEBUG
 	printf("Executing command: '%s' with the following arguments:\n", this->name);
 	for(int i = 0; i < argc; i++)
 	{
 		printf("  [%d] %s\n", i, argv[i]);
 	}
 	printf("\n");
-	
+#endif
+
 	return this->func(argc, argv);
 }
 

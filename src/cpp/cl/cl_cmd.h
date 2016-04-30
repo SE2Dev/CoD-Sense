@@ -30,10 +30,15 @@ public:
 
 #define REGISTER_COMMAND(IDENTIFIER) extern Command IDENTIFIER;
 
+
 REGISTER_COMMAND(g_cmd_help);
 REGISTER_COMMAND(g_cmd_tree);
 REGISTER_COMMAND(g_cmd_symbols);
 
 REGISTER_COMMAND(g_cmd_watch);
+
+REGISTER_COMMAND(g_cmd_cache_list);
+REGISTER_COMMAND(g_cmd_cache_update);
+REGISTER_COMMAND(g_cmd_cache_remove);
 
 #undef REGISTER_COMMAND

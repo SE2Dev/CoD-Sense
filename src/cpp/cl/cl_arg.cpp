@@ -108,10 +108,23 @@ void Arg_PrintUsage(void)
 	}
 	printf("\n");
 	
-	printf("Commands:\n");
+	printf("Launch Commands:\n");
 	for(Command* cmd = Command::GlobalCommands(); cmd; cmd = cmd->NextElem())
 	{
-		printf("  %-22s%s\n", cmd->Name(), cmd->Description());
+		if(cmd->CmdFlags() & COMMAND_LAUNCH)
+		{
+			printf("  %-22s%s\n", cmd->Name(), cmd->Description());
+		}
+	}
+	printf("\n");
+	
+	printf("Watch Commands:\n");
+	for(Command* cmd = Command::GlobalCommands(); cmd; cmd = cmd->NextElem())
+	{
+		if(cmd->CmdFlags() & COMMAND_WATCH)
+		{
+			printf("  %-22s%s\n", cmd->Name(), cmd->Description());
+		}
 	}
 	printf("\n");
 }
