@@ -6,6 +6,8 @@
 	#include <Windows.h>
 #endif
 
+#include "../cl_watch_mode.h"
+
 #include "../../sys/sys_platform.h"
 #include "../../sys/sys_worker.h"
 #include "../../sys/sys_cpu.h"
@@ -15,6 +17,7 @@
 
 int Cmd_Watch_f(int argc, char** argv)
 {
+	CL_WatchMode_Enable();
 
 #ifdef _WIN32
 	LARGE_INTEGER freq, start;
@@ -29,7 +32,7 @@ int Cmd_Watch_f(int argc, char** argv)
 	printf("Using %d threads\n", workerCount + 1);
 	Worker* workers = new Worker[workerCount];
 
-	for(ssize_t readLen = 0; readLen != -1; )
+	for(ssize_t readLen = 0; readLen != -1 && CL_WatchMode_IsEnabled(); )
 	{
 		size_t bufLen = 64;
 		char* buf = (char*)malloc(bufLen);
@@ -89,6 +92,8 @@ int Cmd_Watch_f(int argc, char** argv)
 	
 	Job::PostQuitJob();
 	delete[] workers;
+	
+	CL_WatchMode_Disable();
 	
 	printf("Watch mode ended after %f ms\n", elapsed_time_ms);
 	

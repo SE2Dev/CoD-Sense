@@ -14,10 +14,10 @@ REGISTER_COMMAND(g_cmd_symbols, "symbols", "Print the top level symbols for a gi
 
 REGISTER_COMMAND(g_cmd_watch, "watch", "Start watch/reentrant mode", Cmd_Watch_f, COMMAND_LAUNCH);
 
+REGISTER_COMMAND(g_cmd_exit, "exit", "Close the parser", Cmd_Exit_f, COMMAND_WATCH);
 REGISTER_COMMAND(g_cmd_cache_list, "cache-list", "Start watch/reentrant mode", Cmd_Cache_List_f, COMMAND_WATCH);
 REGISTER_COMMAND(g_cmd_cache_update, "cache-update", "Add or Update a cache entry", Cmd_Cache_Update_f, COMMAND_WATCH);
 REGISTER_COMMAND(g_cmd_cache_remove, "cache-remove", "Remove a cache entry", Cmd_Cache_Remove_f, COMMAND_WATCH);
-
 
 #undef REGISTER_COMMAND
 
