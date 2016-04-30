@@ -12,7 +12,8 @@
 			"args": ["watch"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceRoot}/bin",
-			"environment": []
+			"environment": [],
+			"preLaunchTask": "default"
 		},
 		{
 			"name": "C++ Attach (GDB)",
