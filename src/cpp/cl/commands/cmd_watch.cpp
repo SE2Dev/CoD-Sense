@@ -33,25 +33,26 @@ int Cmd_Watch_f(int argc, char** argv)
 	{
 		size_t bufLen = 64;
 		char* buf = (char*)malloc(bufLen);
+		
 		readLen = getline(&buf, &bufLen, stdin);
-		if(readLen >= 0)
+		if(readLen > 0)
 		{
-			printf("Read %d bytes from stdin\n%s\n", (int)readLen, buf);
+			//printf("Read %d bytes from stdin '%s'\n", (int)readLen, buf);
 			
 			ArgParsedInfo cmd_info;
-			if(Arg_ParseCmdLine(buf, &cmd_info))
+			if(Arg_ParseCmdLine(buf, &cmd_info) != 0)
 			{
 				free(buf);
 				continue;
 			}
 			
-			if(strcmp(cmd_info.Cmd()->Name(), "watch") != 0)
+			if(cmd_info.Cmd() && cmd_info.Cmd()->CmdFlags() & COMMAND_WATCH)
 			{
 				cmd_info.Cmd()->Exec(cmd_info.Argc(), cmd_info.Argv());
 			}
 			else
 			{
-				fprintf(stderr, "Error: 'watch' is not a valid command in watch mode");
+				fprintf(stderr, "Error: '%s' is not a valid command in watch mode\n", cmd_info.Cmd()->Name());
 			}
 		}
 		

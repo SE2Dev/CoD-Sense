@@ -4,18 +4,18 @@
 
 #include "commands/cmd_common.h"
 
-#define REGISTER_GLOBAL_COMMAND(IDENTIFIER, NAME, DESCRIPTION, FUNC) Command IDENTIFIER(NAME, DESCRIPTION, FUNC);
+#define REGISTER_COMMAND(IDENTIFIER, NAME, DESCRIPTION, FUNC, FLAGS) Command IDENTIFIER(NAME, DESCRIPTION, FUNC, FLAGS);
 
 Command* Command::g_cmds = NULL;
-REGISTER_GLOBAL_COMMAND(g_cmd_help, "help", "Print usage information", Cmd_Help_f);
-REGISTER_GLOBAL_COMMAND(g_cmd_tree, "tree", "Print the AST for a given script file", Cmd_Tree_f);
-REGISTER_GLOBAL_COMMAND(g_cmd_symbols, "symbols", "Print the top level symbols for a given script file", Cmd_Symbols_f);
+REGISTER_COMMAND(g_cmd_help, "help", "Print usage information", Cmd_Help_f, COMMAND_LAUNCH | COMMAND_WATCH);
+REGISTER_COMMAND(g_cmd_tree, "tree", "Print the AST for a given script file", Cmd_Tree_f, COMMAND_LAUNCH | COMMAND_WATCH);
+REGISTER_COMMAND(g_cmd_symbols, "symbols", "Print the top level symbols for a given script file", Cmd_Symbols_f, COMMAND_LAUNCH | COMMAND_WATCH);
 
-REGISTER_GLOBAL_COMMAND(g_cmd_watch, "watch", "Start watch/reentrant mode", Cmd_Watch_f);
+REGISTER_COMMAND(g_cmd_watch, "watch", "Start watch/reentrant mode", Cmd_Watch_f, COMMAND_LAUNCH);
 
-#undef REGISTER_GLOBAL_COMMAND
+#undef REGISTER_COMMAND
 
-Command::Command(const char* name, const char* description,  cmd_func_t func) : func(func)
+Command::Command(const char* name, const char* description,  cmd_func_t func, int cmd_flags) : func(func), cmd_flags(cmd_flags)
 {
 	this->SetOwner(this);
 	
@@ -33,8 +33,18 @@ Command::Command(const char* name, const char* description,  cmd_func_t func) : 
 	this->flags = ARG_COMMAND;
 }
 
+int Command::CmdFlags(void) const
+{
+	return cmd_flags;
+}
+
 int Command::Exec(int argc, char** argv) const
 {
+	printf("this is a %s %s cmd\n", 
+	flags & COMMAND_LAUNCH ? "launch": "",
+	flags & COMMAND_WATCH ? "watch": ""
+	);
+	
 	printf("Executing command: '%s' with the following arguments:\n", this->name);
 	for(int i = 0; i < argc; i++)
 	{

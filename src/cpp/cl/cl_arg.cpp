@@ -169,6 +169,11 @@ int Arg_ParseArgument(char*** consumable_argv, int* consumable_argc)
 
 int Arg_ParseArguments(int argc, char** argv, ArgParsedInfo* out_info)
 {
+	if(argc < 1)
+	{
+		return -1;
+	}
+	
 	out_info->cmd = Command::ResolveCommand(*argv);
 	if(!out_info->cmd)
 	{
@@ -250,13 +255,19 @@ int Arg_ParseCmdLine(char* cmdLine, ArgParsedInfo* out_info)
 		}
 	}
 	
-	printf("Argc: %d\n", argc);
+	/*printf("Argc: %d\n", argc);
 	for(int i = 0; i < argc; i++)
 	{
 		printf("[%d]: %s\n", i, arg_list[i]);
-	}
+	}*/
 	
-	int result = Arg_ParseArguments(argc, arg_list, out_info);
+	int result = -1;
+	
+	if(argc)
+	{
+		result = Arg_ParseArguments(argc, arg_list, out_info);
+	}
+
 	free(cl);
 	return result;
 }
