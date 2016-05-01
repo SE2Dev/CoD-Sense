@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdio.h>
+
 template <typename T>
 class LList
 {
