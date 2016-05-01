@@ -37,6 +37,7 @@ void Cache_List()
 	printf("%d elements in cache\n", elemCount);
 }
 
+
 ScriptCacheEntry::ScriptCacheEntry(void) : file_data(NULL), file_size(0), ast(NULL)
 {
 	sem_init(&sem_file, 0, 1);
@@ -93,14 +94,17 @@ size_t ScriptCacheEntry::UpdateStreamBuffer(size_t len, FILE* h)
 // The file data is NOT flushed after parsing to allow for other threads
 // to refresh it while the AST is being used
 //
-int ScriptCacheEntry::ParseStreamBuffer(void* arg)
+// arg must be deleted from within this function
+//
+int ScriptCacheEntry::ParseStreamBuffer(analysis_arg_s* arg)
 {
-	ScriptCacheEntry* entry = (ScriptCacheEntry*)arg;
+	ScriptCacheEntry* entry = arg->entry;
 	
 	entry->LockStreamBuffer();
 	if(entry->file_data == NULL)
 	{
 		entry->UnlockStreamBuffer();
+		delete arg;
 		return 1;
 	}
 	
@@ -120,6 +124,7 @@ int ScriptCacheEntry::ParseStreamBuffer(void* arg)
 	//
 	if(err)
 	{
+		delete arg;
 		return err;
 	}
 	
@@ -129,11 +134,16 @@ int ScriptCacheEntry::ParseStreamBuffer(void* arg)
 	entry->LockAST();
 	Symbol* old = entry->ast;
 	entry->ast = AST;
-	AST->PrintInfoRecursive();
+	
+	if(arg->ast_callback)
+	{
+		arg->ast_callback(AST);
+	}
 	
 	entry->UnlockAST();
 	delete old;
 	
+	delete arg;
 	return 0;
 }
 
@@ -154,15 +164,22 @@ void ScriptCacheEntry::FlushAST()
 	UnlockAST();
 }
 
-int ScriptCacheEntry::PostAnalysisJob(void)
-{
+int ScriptCacheEntry::PostAnalysisJob(job_func_t callback)
+{	
+	//
+	// Cleaned up by the ParseStreamBuffer function
+	//
+	analysis_arg_s* arg = new analysis_arg_s;
+	arg->entry = this;
+	arg->ast_callback = callback;
+	
 	if(!CL_WatchMode_IsEnabled())
 	{
-		ScriptCacheEntry::ParseStreamBuffer(this);
+		ScriptCacheEntry::ParseStreamBuffer(arg);
 		return 0;
 	} 
 	
-	Job* job = new Job(ScriptCacheEntry::ParseStreamBuffer, (void*)this);
+	Job* job = new Job((job_func_t)ScriptCacheEntry::ParseStreamBuffer, arg);
 	job->Register();
 	return 0;
 }

@@ -1,7 +1,15 @@
 #pragma once
 
 #include "../symbols/symbol.h"
-#include "../sys/sys_semaphore.h"
+#include "../sys/sys_worker.h"
+
+class ScriptCacheEntry;
+
+struct analysis_arg_s
+{
+	ScriptCacheEntry* entry;
+	job_func_t ast_callback;
+};
 
 class ScriptCacheEntry
 {
@@ -20,7 +28,7 @@ private:
 	// Parse the contents of the stream buffer and store the result in ast
 	// returns non-zero if there was an error (in which case the old AST is used)
 	//
-	static int ParseStreamBuffer(void* arg);
+	static int ParseStreamBuffer(analysis_arg_s* arg);
 
 public:
 	ScriptCacheEntry(void);
@@ -36,7 +44,7 @@ public:
 	size_t UpdateStreamBuffer(size_t len, FILE* h);
 	void FlushStreamBuffer(void);
 	
-	int PostAnalysisJob(void);
+	int PostAnalysisJob(job_func_t callback = NULL);
 };
 
 void Cache_List();

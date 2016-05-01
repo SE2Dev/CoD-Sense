@@ -20,6 +20,13 @@
 
 #include <stdlib.h>
 
+int Cmd_Tree_ASTCallback_f(void* _arg)
+{
+	Symbol* ast = (Symbol*)_arg;
+	ast->PrintInfoRecursive();
+	return 0;
+}
+
 /*
 	USAGE:	tree [filepath]
 			tree [filepath fileSize -d fileData]
@@ -64,11 +71,6 @@ int Cmd_Tree_f(int argc, char** argv)
 		entry->UpdateStreamBuffer(file_size, stdin);
 	}
 
-	//
-	// TODO: Dispatch the following to another thread
-	//
-	entry->PostAnalysisJob();
-	/*Symbol* AST = entry->AST();
-	AST->PrintInfoRecursive();*/
-	return 1;
+	entry->PostAnalysisJob(Cmd_Tree_ASTCallback_f);
+	return 0;
 }
