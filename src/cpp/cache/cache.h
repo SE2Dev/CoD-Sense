@@ -1,10 +1,14 @@
 #pragma once
 
 #include "../symbols/symbol.h"
+#include "../sys/sys_semaphore.h"
 
 class ScriptCacheEntry
 {
 private:
+	sem_t sem_file;
+	sem_t sem_ast;
+	
 	char* file_data;
 	size_t file_size;
 	
@@ -16,10 +20,21 @@ public:
 	ScriptCacheEntry(void);
 	~ScriptCacheEntry(void);
 	
-	size_t UpdateFile(size_t len, FILE* h);
-	void UpdateAST(void);
+	void LockAST(void);
+	void LockStreamBuffer(void);
+	void UnlockAST(void);
+	void UnlockStreamBuffer(void);
 	
-	void FlushFile(void);
+	Symbol* AST(void) const;
+	
+	//
+	// Parse the contents of the stream buffer and store the result in ast
+	// returns non-zero if there was an error (in which case the old AST is used)
+	//
+	int ParseStreamBuffer(void);
+	
+	size_t UpdateStreamBuffer(size_t len, FILE* h);
+	void FlushStreamBuffer(void);
 };
 
 void Cache_List();

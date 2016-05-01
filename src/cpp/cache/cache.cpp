@@ -23,7 +23,7 @@ void Cache_Clear()
 void Cache_List_Callback_f(int index, const char* key, void* value)
 {
 	ScriptCacheEntry* entry = (ScriptCacheEntry*)value;
-	printf("[%d] %s\n", index, key);
+	printf("[%d] %s %s\n", index, key, entry ? "VALID" : "NULL");
 }
 
 void Cache_List()
@@ -34,66 +34,113 @@ void Cache_List()
 
 ScriptCacheEntry::ScriptCacheEntry(void) : file_data(NULL), file_size(0), ast(NULL)
 {
-	
+	sem_init(&sem_file, 0, 1);
+	sem_init(&sem_ast, 0, 1);
 }
 
 ScriptCacheEntry::~ScriptCacheEntry(void)
 {
-	FlushFile();
+	FlushStreamBuffer();
 	FlushAST();
+	
+	sem_destroy(&sem_ast);
+	sem_destroy(&sem_file);
 }
 
-size_t ScriptCacheEntry::UpdateFile(size_t len, FILE* h)
+void ScriptCacheEntry::LockAST(void)
 {
-	delete[] file_data;
-	file_size = len;
-	file_data = new char[file_size];
+	sem_wait(&sem_ast);
+}
+
+void ScriptCacheEntry::LockStreamBuffer(void)
+{
+	sem_wait(&sem_file);
+}
+
+void ScriptCacheEntry::UnlockAST(void)
+{
+	sem_post(&sem_ast);
+}
+
+void ScriptCacheEntry::UnlockStreamBuffer(void)
+{
+	sem_post(&sem_file);
+}
+
+Symbol* ScriptCacheEntry::AST(void) const
+{
+	return this->ast;
+}
+
+size_t ScriptCacheEntry::UpdateStreamBuffer(size_t len, FILE* h)
+{
+	if(len > file_size)
+	{
+		delete[] file_data;
+		file_data = new char[len];
+	}
 	
+	file_size = len;
 	return fread(file_data, 1, file_size, h);
 }
 
-void ScriptCacheEntry::UpdateAST()
+//
+// The file data is NOT flushed after parsing to allow for other threads
+// to refresh it while the AST is being used
+//
+int ScriptCacheEntry::ParseStreamBuffer()
 {
+	LockStreamBuffer();
 	if(file_data == NULL)
 	{
-		return;
+		UnlockStreamBuffer();
+		return 1;
 	}
 	
 	yyscan_t scanner = NULL;
 	yylex_init(&scanner);
 	
 	yy_scan_bytes(file_data, file_size, scanner);
+	UnlockStreamBuffer();
 	
 	Symbol* AST = NULL;
-	int result = yyparse(&AST, scanner);
+	int err = yyparse(&AST, scanner);
 	yylex_destroy(scanner);
 	
 	//
 	// If the new file cannot be parsed
 	// the old AST is reused
 	//
-	if(result != 0)
+	if(err)
 	{
-		return;
+		return err;
 	}
 	
 	//
 	// Otherwise use the new one
 	//
-	Symbol* oldAST = this->ast;
+	LockAST();
+	Symbol* old = this->ast;
 	this->ast = AST;
-	delete oldAST;
+	UnlockAST();
+	delete old;
+	
+	return 0;
 }
 
-void ScriptCacheEntry::FlushFile()
+void ScriptCacheEntry::FlushStreamBuffer()
 {
+	LockStreamBuffer();
 	file_size = 0;
 	delete[] file_data;
 	file_data = NULL;
+	UnlockStreamBuffer();
 }
 
 void ScriptCacheEntry::FlushAST()
 {
-	delete[] ast;
+	LockAST();
+	delete ast;
 	ast = NULL;
+	UnlockAST();
 }

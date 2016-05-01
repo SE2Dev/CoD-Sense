@@ -6,93 +6,66 @@
 	#include <Windows.h>
 #endif
 
-#include "../../parser/gsc.tab.hpp"
-#include "../../parser/gsc.yy.h"
-#include "../../sys/sys_platform.h"
+#include "cmd_common.h"
 #include "../cl_arg.h"
 #include "../cl_cvar.h"
 #include "../cl_cmd.h"
 
 #include "../../symbols/symbol.h"
+#include "../../sys/sys_platform.h"
+#include "../../cache/cache.h"
+#include "../../fs/fs.h"
 
-#include "cmd_common.h"
+#include <stdlib.h>
 
+/*
+	USAGE:	tree [filepath]
+			tree [filepath fileSize -d fileData]
+*/
 int Cmd_Tree_f(int argc, char** argv)
 {
-	FILE* in = argc > 1 ? fopen(argv[1], "r") : stdin;
-	if(!in)
+	if(argc < 2)
 	{
-		fprintf(stderr, "Error: File %s could not be opened\n", argv[1]);
+		fprintf(stderr, "Error: Incorrect number of arguments\n");
 		return 1;
 	}
-
-#ifdef _WIN32
-	LARGE_INTEGER freq, start;
-	QueryPerformanceFrequency(&freq);
-	QueryPerformanceCounter(&start);
-#else //LINUX
-	timespec start;
-	clock_gettime(CLOCK_REALTIME, &start);
-#endif
+	
+	FILE* f = NULL;
+	ScriptCacheEntry* entry = Cache_Update(argv[1]);
+	
+	if(argc == 2)
+	{
+		long int file_size = FS_FileSize(argv[1]);
+		if(file_size == -1)
+		{
+			fprintf(stderr, "Error: File '%s' could not be opened\n", argv[1]);
+			return 1;
+		}
 		
-	yyscan_t scanner = NULL;
-	yylex_init(&scanner);
-	
-	yyset_in(in, scanner);
-	//yyset_debug(1, scanner);
-	yyset_out(stderr, scanner);
-	
-	Symbol* AST = NULL;
-	int result = yyparse(&AST, scanner);
-	yylex_destroy(scanner);
-	printf("PARSE RESULT %d\n", result);
-	
-	if(argc > 1)
-	{
-		fclose(in);
+		f = fopen(argv[1], "r");
+		if(!f)
+		{
+			fprintf(stderr, "Error: File '%s' could not be opened\n", argv[1]);
+			return 1;
+		}
+		
+		entry->UpdateStreamBuffer(file_size, f);
+		fclose(f);
 	}
-	
-	if(result)
+	else if( argc == 3 )
 	{
-		return result;
+		char* end = NULL;
+		long int file_size = strtol(argv[2], &end, 10);
+		printf("Waiting for %ld bytes on stdin\n", file_size);
+		
+		entry->UpdateStreamBuffer(file_size, stdin);
 	}
-	
-	double elapsed_time_ms = 0.0;
-#ifdef _WIN32
-	LARGE_INTEGER end;
-	QueryPerformanceCounter(&end);
-	
-	elapsed_time_ms = (double)end.QuadPart - (double)start.QuadPart;
-	elapsed_time_ms /= (double)(freq.QuadPart / 1000);
-#else //LINUX
-	timespec end;
-	clock_gettime(CLOCK_REALTIME, &end);
 
-	timespec delta;
-	if(end.tv_nsec - start.tv_nsec < 0)
-	{
-		delta.tv_sec = end.tv_sec - start.tv_sec - 1;
-		delta.tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
-	}
-	else
-	{
-		delta.tv_sec = end.tv_sec - start.tv_sec;
-		delta.tv_nsec = end.tv_nsec - start.tv_nsec;
-	}
-	
-	elapsed_time_ms = 1000.0 * (double)delta.tv_sec;
-	elapsed_time_ms += (double)delta.tv_nsec / 1000000.0;
-	
-#endif
-	
+	//
+	// TODO: Dispatch the following to another thread
+	//
+	entry->ParseStreamBuffer();
+	Symbol* AST = entry->AST();
 	AST->PrintInfoRecursive();
-	
-	delete AST;
-		
-	if(argc > 1)
-	{
-		printf("Parsed in %f ms\n", elapsed_time_ms);
-	}
-	
-	return 0;
+	return 1;
 }
