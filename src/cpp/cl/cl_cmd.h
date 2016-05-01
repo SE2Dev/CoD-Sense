@@ -41,5 +41,6 @@ REGISTER_COMMAND(g_cmd_exit);
 REGISTER_COMMAND(g_cmd_cache_list);
 REGISTER_COMMAND(g_cmd_cache_update);
 REGISTER_COMMAND(g_cmd_cache_remove);
+REGISTER_COMMAND(g_cmd_cache_clear);
 
 #undef REGISTER_COMMAND

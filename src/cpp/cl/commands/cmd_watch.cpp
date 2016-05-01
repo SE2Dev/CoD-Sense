@@ -12,6 +12,8 @@
 #include "../../sys/sys_worker.h"
 #include "../../sys/sys_cpu.h"
 
+#include "../../cache/cache.h"
+
 #include "../cl_arg.h"
 #include "../cl_cmd.h"
 
@@ -93,6 +95,7 @@ int Cmd_Watch_f(int argc, char** argv)
 	Job::PostQuitJob();
 	delete[] workers;
 	
+	Cache_Clear();
 	CL_WatchMode_Disable();
 	
 	printf("Watch mode ended after %f ms\n", elapsed_time_ms);

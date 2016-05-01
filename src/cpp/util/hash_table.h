@@ -4,6 +4,8 @@
 #include <string>
 #include "llist.h"
 
+typedef void (*hash_table_traverse_f)(int index, const char* key, void* value);
+
 int Str_CalcHash(const char* str);
 
 template <typename T>
@@ -39,7 +41,6 @@ public:
 	
 	int Hash(void) const;
 	const char* Key(void) const;
-	
 	T& Value(void);
 };
 
@@ -163,6 +164,12 @@ public:
 	// Remove all nodes
 	//
 	void Clear(void);
+	
+	//
+	// Traverse the hash table calling callback on each entry
+	// return the number of elements
+	//
+	int Traverse(hash_table_traverse_f callback);
 };
 
 template <typename T>
@@ -242,13 +249,28 @@ void HashTable<T>::Clear(void)
 {
 	for(int i = 0; i < bucketCount; i++)
 	{
-		for(HashNode<T>* bucket = buckets[i]; bucket;)
+		for(HashNode<T>* node = buckets[i]; node;)
 		{
-			HashNode<T>* next = bucket->next;
-			delete bucket;
-			bucket = next;
+			HashNode<T>* next = node->next;
+			delete node;
+			node = next;
 		}
 		
 		buckets[i] = NULL;
 	}
+}
+
+template <typename T>
+int HashTable<T>::Traverse(hash_table_traverse_f callback)
+{
+	int count = 0;
+	for(int i = 0; i < bucketCount; i++)
+	{
+		for(HashNode<T>* node = buckets[i]; node; node = node->next)
+		{
+			callback(count++, node->Key(), &node->value);
+		}
+	}
+	
+	return count;
 }
