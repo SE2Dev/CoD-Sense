@@ -8,7 +8,7 @@ PARSER_SRC_OUT="src/cpp/parser/gsc.tab"
 LEXER_SRC_OUT="src/cpp/parser/gsc.yy"
 
 BISON_OPTIONS=-d
-FLEX_OPTIONS=-d -Cfa
+FLEX_OPTIONS=-d -Cfa --header-file=$(LEXER_SRC_OUT)".h"
 
 MAKE_CHILD_OPTIONS=--no-print-directory
 
