@@ -7,6 +7,7 @@
 #endif
 
 #include "../../parser/gsc.tab.hpp"
+#include "../../parser/gsc.yy.h"
 #include "../../sys/sys_platform.h"
 #include "../cl_arg.h"
 #include "../cl_cvar.h"
@@ -15,22 +16,6 @@
 #include "../../symbols/symbol.h"
 
 #include "cmd_common.h"
-
-typedef void* yyscan_t;
-
-extern int yylex_init(yyscan_t* ptr_yy_globals);
-extern int yylex_destroy(yyscan_t yyscanner);
-extern void yyset_in(FILE* in, yyscan_t scanner);
-extern void yyset_out(FILE* out, yyscan_t scanner);
-extern void yyset_debug (int bdebug, yyscan_t yyscanner);
-
-void yyerror(YYLTYPE* loc, Symbol** AST, yyscan_t scanner, const char* err) 
-{
-	fprintf(stderr, "PARSE ERROR AT LINE %d(%d): %s\n", loc->first_line, loc->first_column, err);
-#if !(_DEBUG)
-	exit(1);
-#endif
-}
 
 int Cmd_Tree_f(int argc, char** argv)
 {
@@ -60,6 +45,7 @@ int Cmd_Tree_f(int argc, char** argv)
 	Symbol* AST = NULL;
 	int result = yyparse(&AST, scanner);
 	yylex_destroy(scanner);
+	printf("PARSE RESULT %d\n", result);
 	
 	if(argc > 1)
 	{

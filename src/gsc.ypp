@@ -5,6 +5,7 @@
 	
 	#include "../symbols/symbol.h"
 	#include "gsc.tab.hpp"
+	#include "gsc.yy.h"
 
 	int yylex(YYSTYPE *yylval_param, YYLTYPE *yylloc_param, void* yyscanner);
 	extern void yyerror(YYLTYPE* loc, Symbol** yyAST_out, void* scanner, const char* err);
@@ -605,3 +606,15 @@ StatementList
 
 %%
 
+//
+// Notify the user that there was an error while parsing
+// if error recovery is impossible, YYABORT is automatically called
+// and the symbol tree is cleaned up
+//
+void yyerror(YYLTYPE* loc, Symbol** AST, yyscan_t scanner, const char* err) 
+{
+	fprintf(stderr, "PARSE ERROR AT LINE %d(%d): %s\n", loc->first_line, loc->first_column, err);
+/*#if !(_DEBUG)
+	exit(1);
+#endif*/
+}

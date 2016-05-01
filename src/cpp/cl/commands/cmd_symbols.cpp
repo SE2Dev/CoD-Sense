@@ -7,6 +7,7 @@
 #endif
 
 #include "../../parser/gsc.tab.hpp"
+#include "../../parser/gsc.yy.h"
 #include "../../sys/sys_platform.h"
 #include "../cl_arg.h"
 #include "../cl_cvar.h"
@@ -17,12 +18,6 @@
 #include "cmd_common.h"
 
 typedef void* yyscan_t;
-
-extern int yylex_init(yyscan_t* ptr_yy_globals);
-extern int yylex_destroy(yyscan_t yyscanner);
-extern void yyset_in(FILE* in, yyscan_t scanner);
-extern void yyset_out(FILE* out, yyscan_t scanner);
-extern void yyset_debug (int bdebug, yyscan_t yyscanner);
 
 int Cmd_Symbols_f(int argc, char** argv)
 {
