@@ -1,7 +1,12 @@
 #include "cache.h"
+#include <iostream>
+
+#include "../cl/cl_watch_mode.h"
+
 #include "../util/hash_table.h"
 #include "../parser/gsc.yy.h"
-#include <iostream>
+#include "../sys/sys_worker.h"
+
 
 HashTable<ScriptCacheEntry> script_cache;
 
@@ -88,20 +93,22 @@ size_t ScriptCacheEntry::UpdateStreamBuffer(size_t len, FILE* h)
 // The file data is NOT flushed after parsing to allow for other threads
 // to refresh it while the AST is being used
 //
-int ScriptCacheEntry::ParseStreamBuffer()
+int ScriptCacheEntry::ParseStreamBuffer(void* arg)
 {
-	LockStreamBuffer();
-	if(file_data == NULL)
+	ScriptCacheEntry* entry = (ScriptCacheEntry*)arg;
+	
+	entry->LockStreamBuffer();
+	if(entry->file_data == NULL)
 	{
-		UnlockStreamBuffer();
+		entry->UnlockStreamBuffer();
 		return 1;
 	}
 	
 	yyscan_t scanner = NULL;
 	yylex_init(&scanner);
 	
-	yy_scan_bytes(file_data, file_size, scanner);
-	UnlockStreamBuffer();
+	yy_scan_bytes(entry->file_data, entry->file_size, scanner);
+	entry->UnlockStreamBuffer();
 	
 	Symbol* AST = NULL;
 	int err = yyparse(&AST, scanner);
@@ -119,10 +126,12 @@ int ScriptCacheEntry::ParseStreamBuffer()
 	//
 	// Otherwise use the new one
 	//
-	LockAST();
-	Symbol* old = this->ast;
-	this->ast = AST;
-	UnlockAST();
+	entry->LockAST();
+	Symbol* old = entry->ast;
+	entry->ast = AST;
+	AST->PrintInfoRecursive();
+	
+	entry->UnlockAST();
 	delete old;
 	
 	return 0;
@@ -143,4 +152,17 @@ void ScriptCacheEntry::FlushAST()
 	delete ast;
 	ast = NULL;
 	UnlockAST();
+}
+
+int ScriptCacheEntry::PostAnalysisJob(void)
+{
+	if(!CL_WatchMode_IsEnabled())
+	{
+		ScriptCacheEntry::ParseStreamBuffer(this);
+		return 0;
+	} 
+	
+	Job* job = new Job(ScriptCacheEntry::ParseStreamBuffer, (void*)this);
+	job->Register();
+	return 0;
 }

@@ -16,6 +16,12 @@ private:
 
 	void FlushAST(void); // AST is only flushed when the entry is destroyed
 
+	//
+	// Parse the contents of the stream buffer and store the result in ast
+	// returns non-zero if there was an error (in which case the old AST is used)
+	//
+	static int ParseStreamBuffer(void* arg);
+
 public:
 	ScriptCacheEntry(void);
 	~ScriptCacheEntry(void);
@@ -27,14 +33,10 @@ public:
 	
 	Symbol* AST(void) const;
 	
-	//
-	// Parse the contents of the stream buffer and store the result in ast
-	// returns non-zero if there was an error (in which case the old AST is used)
-	//
-	int ParseStreamBuffer(void);
-	
 	size_t UpdateStreamBuffer(size_t len, FILE* h);
 	void FlushStreamBuffer(void);
+	
+	int PostAnalysisJob(void);
 };
 
 void Cache_List();

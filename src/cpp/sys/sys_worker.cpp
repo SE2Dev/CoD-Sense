@@ -125,15 +125,16 @@ void* THREAD_CALL Worker::JobHandler(void* args)
 		{
 			//printf("Worker[%d]: Job error - invalid job\n", thread->owner->id);
 		}
-		delete job;
 		
 		Job::UnlockAccess();
+		
+		job->func(job->argv);
+		delete job;
+		
 		if(!thread->IsAlive())
 		{
 			continue;
 		}
-		
-		//Do Job
 	}
 	
 	if(~thread->state & THREAD_JOINING)

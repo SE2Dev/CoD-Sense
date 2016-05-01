@@ -11,6 +11,8 @@
 #include "../cl_cvar.h"
 #include "../cl_cmd.h"
 
+#include "../cl_watch_mode.h"
+
 #include "../../symbols/symbol.h"
 #include "../../sys/sys_platform.h"
 #include "../../cache/cache.h"
@@ -31,6 +33,7 @@ int Cmd_Tree_f(int argc, char** argv)
 	}
 	
 	FILE* f = NULL;
+	
 	ScriptCacheEntry* entry = Cache_Update(argv[1]);
 	
 	if(argc == 2)
@@ -52,7 +55,7 @@ int Cmd_Tree_f(int argc, char** argv)
 		entry->UpdateStreamBuffer(file_size, f);
 		fclose(f);
 	}
-	else if( argc == 3 )
+	else if( argc == 3 && CL_WatchMode_IsEnabled() )
 	{
 		char* end = NULL;
 		long int file_size = strtol(argv[2], &end, 10);
@@ -64,8 +67,8 @@ int Cmd_Tree_f(int argc, char** argv)
 	//
 	// TODO: Dispatch the following to another thread
 	//
-	entry->ParseStreamBuffer();
-	Symbol* AST = entry->AST();
-	AST->PrintInfoRecursive();
+	entry->PostAnalysisJob();
+	/*Symbol* AST = entry->AST();
+	AST->PrintInfoRecursive();*/
 	return 1;
 }
