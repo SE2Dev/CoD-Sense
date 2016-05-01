@@ -1,60 +1,72 @@
 #pragma once
+#include "../sys/sys_platform.h"
+#include <stdlib.h>
+#include <string>
 #include "llist.h"
 
-class HashKey
-{
-private:
-	const char* str;
-	int hash;
+int Str_CalcHash(const char* str);
 
-public:
-	HashKey(void);
-	HashKey(const char*);
-	HashKey(const HashKey& key);
-	~HashKey(void);
-	
-	HashKey& operator=(const HashKey&);
-	
-	int Hash(void) const;
-	const char* Key(void) const;
-};
+template <typename T>
+class HashTable;
 
 template <typename T>
 class HashNode
 {
+friend class HashTable<T>;
 private:
-	HashKey key;
-	T* value;
+	const char* key;
+	int hash;
+	
+	T value;
 
-public:
 	HashNode<T>* prev;
 	HashNode<T>* next;
 
+protected:
+	//
+	// Adds this node before the argument node
+	//
+	void AddBefore(HashNode<T>* node);
+
+public:
 	HashNode(void);
-	HashNode(HashKey key);
+	HashNode(const HashNode& node);
+	HashNode(const char* key);
 	
 	~HashNode(void);
+	
+	HashNode& operator=(const HashNode& node);
 	
 	int Hash(void) const;
 	const char* Key(void) const;
 	
-	T** Value(void);
+	T& Value(void);
 };
 
 template <typename T>
-HashNode<T>::HashNode(void) :  value(NULL), prev(NULL), next(NULL)
+HashNode<T>::HashNode(void) :  value(), prev(NULL), next(NULL)
 {
 }
 
 template <typename T>
-HashNode<T>::HashNode(HashKey key) :  value(NULL), prev(NULL), next(NULL)
+HashNode<T>::HashNode(const HashNode& node) :  value(), prev(NULL), next(NULL)
 {
-	this->key = HashKey(key.Key());
+	this->hash = node->hash;
+	this->key = strdup(node.key);
+}
+
+template <typename T>
+HashNode<T>::HashNode(const char* key) :  value(), prev(NULL), next(NULL)
+{
+	this->key = strdup(key);
+	this->hash = Str_CalcHash(key);
 }
 
 template <typename T>
 HashNode<T>::~HashNode()
 {
+	free((void*)key);
+	
 	if(this->prev)
 	{
 		if(next)
@@ -72,26 +84,50 @@ HashNode<T>::~HashNode()
 		next->prev = NULL;
 	}
 	
-	delete value;
-	value = NULL;
+	///delete value;
+	//value = NULL;
+}
+
+template <typename T>
+HashNode<T>& HashNode<T>::operator=(const HashNode& node)
+{
+	free(key);
+	
+	this->hash = node->hash;
+	this->key = strdup(node.key);
+}
+
+//
+// Add this before node
+//
+template <typename T>
+void HashNode<T>::AddBefore(HashNode<T>* node)
+{
+	this->next = node;
+	this->prev = node->prev;
+	if(prev)
+	{
+		prev->next = this;
+	} 
+	node->prev = this;
 }
 
 template <typename T>
 int HashNode<T>::Hash(void) const
 {
-	return key.Hash();
+	return this->hash;
 }
 
 template <typename T>
 const char* HashNode<T>::Key(void) const
 {
-	return key.Key();
+	return this->key;
 }
 
 template <typename T>
-T** HashNode<T>::Value(void)
+T& HashNode<T>::Value(void)
 {
-	return &this->value;
+	return this->value;
 }
 
 template <typename T>
@@ -106,9 +142,27 @@ public:
 	HashTable(void);
 	~HashTable(void);
 	
-	T**		Get(HashKey key);
+	//
+	// Returns a pointer to the contents of a node with a matching key
+	// or NULL if no matching node is found
+	//
+	T* Get(const char* key);
 	
-	//void	Remove(HashKey key);
+	//
+	// Adds a new node with the given key, and return a pointer to its value
+	// or returns a ptr to the contents of an existing node if a match already exists
+	//
+	T* Add(const char* key);
+	
+	//
+	// Remove a node with the given key (if it exists) from the table
+	//
+	void RemoveNode(const char* key);
+	
+	//
+	// Remove all nodes
+	//
+	void Clear(void);
 };
 
 template <typename T>
@@ -121,6 +175,71 @@ HashTable<T>::HashTable()
 template <typename T>
 HashTable<T>::~HashTable()
 {
+	this->Clear();	
+	delete[] buckets;
+}
+
+template <typename T>
+T* HashTable<T>::Get(const char* key)
+{
+	int hash = Str_CalcHash(key);
+	
+	for(HashNode<T>* node = buckets[hash & hashMask]; node; node = node->next)
+	{
+		if(strcmp(node->Key(), key) == 0)
+		{
+			return &node->value;
+		}
+	}
+	
+	return NULL;
+}
+
+template <typename T>
+T* HashTable<T>::Add(const char* key)
+{
+	int hash = Str_CalcHash(key);
+	
+	if(buckets[hash & hashMask] == NULL)
+	{
+		HashNode<T>* node = new HashNode<T>(key);
+		buckets[hash & hashMask] = node;
+		return &node->value;
+	}
+	
+	for(HashNode<T>* node = buckets[hash & hashMask]; node; node = node->next)
+	{
+		if(strcmp(node->Key(), key) == 0)
+		{
+			return &node->value;
+		}
+	}
+	
+	HashNode<T>* head = buckets[hash & hashMask];
+	HashNode<T>* node = new HashNode<T>(key);
+	node->AddBefore(head);
+	buckets[hash & hashMask] = node;
+	return &node->value;
+}
+
+template <typename T>
+void HashTable<T>::RemoveNode(const char* key)
+{
+	int hash = Str_CalcHash(key);
+
+	for(HashNode<T>* node = buckets[hash & hashMask]; node; node = node->next)
+	{
+		if(strcmp(node->Key(), key) == 0)
+		{
+			delete node;
+			return;
+		}
+	}
+}
+
+template <typename T>
+void HashTable<T>::Clear(void)
+{
 	for(int i = 0; i < bucketCount; i++)
 	{
 		for(HashNode<T>* bucket = buckets[i]; bucket;)
@@ -132,36 +251,4 @@ HashTable<T>::~HashTable()
 		
 		buckets[i] = NULL;
 	}
-	
-	delete[] buckets;
-}
-
-//
-// Returns a pointer to the object pointer
-// if the retval dereferences to a null ptr there is no object for that node
-//
-template <typename T>
-T** HashTable<T>::Get(HashKey key)
-{
-	if(buckets[key.Hash() & hashMask] == NULL)
-	{
-		HashNode<T>* node = new HashNode<T>(key);
-		buckets[key.Hash() & hashMask] = node;
-		return node->Value();
-	}
-	
-	for(HashNode<T>* bucket = buckets[key.Hash() & hashMask]; bucket; bucket = bucket->next)
-	{
-		if(strcmp(bucket->Key(), key.Key()) == 0)
-		{
-			return bucket->Value();
-		}
-	}
-	
-	HashNode<T>* bucket = buckets[key.Hash() & hashMask];
-	HashNode<T>* node = new HashNode<T>(key);
-	node->next = bucket;
-	bucket->prev = node;
-	buckets[key.Hash() & hashMask] = node;
-	return bucket->Value();
 }
