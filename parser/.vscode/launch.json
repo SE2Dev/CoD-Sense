@@ -2,13 +2,31 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Debug",
-			"type": "gdb",
+			"name": "C++ Launch (GDB)",
+			"type": "cppdbg",
 			"request": "launch",
-			"target": "${workspaceRoot}/bin/parser",
+			"launchOptionType": "Local",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"targetArchitecture": "x64",
+			"program": "${workspaceRoot}/bin/parser",
+			"args": ["watch"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceRoot}/bin",
+			"environment": [],
+			"preLaunchTask": "default"
+		},
+		{
+			"name": "C++ Attach (GDB)",
+			"type": "cppdbg",
+			"request": "launch",
+			"launchOptionType": "Local",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"targetArchitecture": "x64",
+			"program": "${workspaceRoot}/bin/parser",
+			"args": [],
+			"stopAtEntry": false,
 			"cwd": "${workspaceRoot}",
-			"preLaunchTask": "default",
-			"terminal": ""
+			"environment": []
 		}
 	]
 }

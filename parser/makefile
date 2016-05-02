@@ -8,11 +8,11 @@ PARSER_SRC_OUT="src/cpp/parser/gsc.tab"
 LEXER_SRC_OUT="src/cpp/parser/gsc.yy"
 
 BISON_OPTIONS=-d
-FLEX_OPTIONS=-d -Cfa
+FLEX_OPTIONS=-d -Cfa --header-file=$(LEXER_SRC_OUT)".h"
 
 MAKE_CHILD_OPTIONS=--no-print-directory
 
-GPP_OPTIONS=-D_DEBUG -g
+GPP_OPTIONS=-D_DEBUG -g -pthread
 
 default:
 	@$(MAKE) ${MAKE_CHILD_OPTIONS} clean
