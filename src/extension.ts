@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log("CoD-Sense: Init");
 
 	// Register the built-in function definitions
-	vscode.languages.registerCompletionItemProvider("gsc", new completionItemProvider(context.extensionPath), "\\");
+	vscode.languages.registerCompletionItemProvider("gsc-legacy", new completionItemProvider(context.extensionPath), "\\");
 }
 
 export function deactivate() {
