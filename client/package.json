@@ -44,12 +44,6 @@
 				"path": "./syntaxes/gsc.tmLanguage"
 			}
 		],
-		"snippets": [
-			{
-				"language": "gsc",
-				"path": "./snippets/snippets.json"
-			}
-		],
 		"configuration": {
 			"type": "object",
 			"title": "Example configuration",
