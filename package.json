@@ -19,13 +19,13 @@
 		"Programming Languages"
 	],
 	"activationEvents": [
-		"onLanguage:gsc-legacy"
+		"onLanguage:gsc"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
 		"languages": [
 			{
-				"id": "gsc-legacy",
+				"id": "gsc",
 				"aliases": [
 					"GSC",
 					"gsc"
@@ -34,14 +34,14 @@
 					".gsc",
 					".csc"
 				],
-				"configuration": "./gsc-legacy.configuration.json"
+				"configuration": "./gsc.configuration.json"
 			}
 		],
 		"grammars": [
 			{
-				"language": "gsc-legacy",
+				"language": "gsc",
 				"scopeName": "source.gsc",
-				"path": "./syntaxes/gsc-legacy.tmLanguage"
+				"path": "./syntaxes/gsc.tmLanguage"
 			}
 		],
 		"configuration": {
