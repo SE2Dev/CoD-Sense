@@ -7,7 +7,18 @@ export class Def_Function
     desc: string;
     reqArgs: string[];
     optArgs: string[];
-    example: string;
+	example: string;
+	
+	constructor()
+    {
+        this.name = "";
+        this.decl = "";
+        this.callon = "";
+        this.desc = "";
+        this.reqArgs = [];
+        this.optArgs = [];
+        this.example = "";
+    }
 };
 
 export var defs = new Array<Def_Function>();

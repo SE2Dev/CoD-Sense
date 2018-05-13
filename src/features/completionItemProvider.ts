@@ -4,20 +4,12 @@ import * as vscode from 'vscode';
 import * as funcDefs from '../defs/defs'
 import * as fieldDefs from '../defs/field'
 
-import { server } from "../extension"
-import { CoDSenseResolveDirectoryRequest } from "../request"
-
-import Path = require("path");
-import cp = require('child_process');
-
-var rxFilepath = /([_\w]+\\)+[_\w]*/;
-
 // Provides function completion
 export class functionProvider {
 	functions: vscode.CompletionItem[];
 
 	// Generate completion items for the hardcoded functions
-	constructor(extensionPath) {
+	constructor(extensionPath: string) {
 		this.functions = new Array<vscode.CompletionItem>();
 
 		for (var i in funcDefs.defs) {
@@ -31,7 +23,10 @@ export class functionProvider {
 		}
 	}
 
-	provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[] {
+	provideCompletionItems(document: vscode.TextDocument,
+		position: vscode.Position,
+		token: vscode.CancellationToken,
+		context: vscode.CompletionContext): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[] {
 		//
 		// Present the user with a list of common GSC / CSC functions
 		//
@@ -58,7 +53,7 @@ export class propertyProvider {
 	props: vscode.CompletionItem[];
 
 	// Generate completion items for the hardcoded functions
-	constructor(extensionPath) {
+	constructor(extensionPath : string) {
 		this.props = new Array<vscode.CompletionItem>();
 
 		for (var i in fieldDefs.fields) {
@@ -88,7 +83,8 @@ export class propertyProvider {
 
 			// Dynamically resolved completion items
 			let propItems: vscode.CompletionItem[] = [];
-
+			if (propItems.length)
+				resolve(this.props.concat(propItems))
 			resolve(this.props);
 		});
 	}
