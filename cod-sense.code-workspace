@@ -4,9 +4,6 @@
 			"path": "client"
 		},
 		{
-			"path": "server"
-		},
-		{
 			"path": "parser"
 		}
 	],
