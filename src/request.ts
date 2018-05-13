@@ -4,15 +4,15 @@ import * as vscode from "vscode";
 import { RequestType } from 'vscode-languageclient'
 
 export namespace CoDSenseContentRequest {
-    export const type: RequestType<string, string, any> = { get method() { return 'codsense/content'; } };
+    export const type = new RequestType<string, string, any, any>('codsense/content');
 }
 
 export namespace CoDSenseResolveDirectoryRequest {
-    export const type: RequestType<string, string[], any> = { get method() { return 'codsense/vfs_resolvedirectory'; } };
+    export const type = new RequestType<string, string[], any, any>('codsense/vfs_resolvedirectory')
 }
 
 export namespace CoDSenseWorkspaceUrisRequest {
-    export const type: RequestType<string, string[], any> = { get method() { return 'codsense/workspace_uris'; } };
+    export const type = new RequestType<string, string[], any, any>('codsense/workspace_uris')
 }
 
 export function HandleContentRequest(uri_string: string) {
