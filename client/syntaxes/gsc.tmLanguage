@@ -126,7 +126,7 @@
 				<key>0</key>
 				<dict>
 				    <key>name</key>
-				    <string>punctuation.definition.string.begin</string>
+				    <string>punctuation.definition.string.begin.gsc</string>
 				</dict>
 			</dict>
 			<key>end</key>
@@ -136,11 +136,11 @@
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>punctuation.definition.string.end</string>
+					<string>punctuation.definition.string.end.gsc</string>
 				</dict>
 			</dict>
             <key>name</key>
-            <string>punctuation.definition.string</string>
+            <string>string.quoted.double.gsc</string>
         </dict>
         
          <!-- Numeric Literals -->
