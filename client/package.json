@@ -23,17 +23,27 @@
 	],
 	"main": "./out/src/extension",
 	"contributes": {
-		"languages": [{
-			"id": "gsc",
-			"aliases": ["GSC", "gsc"],
-			"extensions": [".gsc", ".csc"],
-			"configuration": "./gsc.configuration.json"
-		}],
-		"grammars": [{
-			"language": "gsc",
-			"scopeName": "source.gsc",
-			"path": "./syntaxes/gsc.tmLanguage"
-		}],
+		"languages": [
+			{
+				"id": "gsc",
+				"aliases": [
+					"GSC",
+					"gsc"
+				],
+				"extensions": [
+					".gsc",
+					".csc"
+				],
+				"configuration": "./gsc.configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "gsc",
+				"scopeName": "source.gsc",
+				"path": "./syntaxes/gsc.tmLanguage"
+			}
+		],
 		"snippets": [
 			{
 				"language": "gsc",
@@ -69,7 +79,6 @@
 			}
 		}
 	},
-	
 	"scripts": {
 		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
 		"compileClient": "node ./node_modules/vscode/bin/compile -watch -p ./",
