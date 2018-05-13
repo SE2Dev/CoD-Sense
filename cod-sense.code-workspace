@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "client"
+		},
+		{
+			"path": "server"
+		},
+		{
+			"path": "parser"
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": false,
+		"npm.enableScriptExplorer": true,
+	}
+}
