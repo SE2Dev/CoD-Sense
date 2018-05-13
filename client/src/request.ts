@@ -1,7 +1,7 @@
 'use strict'
 
 import * as vscode from "vscode";
-import {RequestType} from 'vscode-languageclient'
+import { RequestType } from 'vscode-languageclient'
 
 export namespace CoDSenseContentRequest {
     export const type: RequestType<string, string, any> = { get method() { return 'codsense/content'; } };
