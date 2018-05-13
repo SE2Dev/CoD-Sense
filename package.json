@@ -21,7 +21,7 @@
 	"activationEvents": [
 		"onLanguage:gsc"
 	],
-	"main": "./out/src/extension",
+	"main": "./out/extension",
 	"contributes": {
 		"languages": [
 			{
