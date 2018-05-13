@@ -32,11 +32,20 @@ export class completionItemProvider {
 		// Present the user with a list of common GSC / CSC functions
 		//
 		return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
+			// Dynamically resolved completion items
 			let completionItems: vscode.CompletionItem[] = [];
-			if(vscode.workspace.getConfiguration("cod-sense").get("use_builtin_completionItems", true))
-				resolve(completionItems.concat(this.completionItems));	
-			else
-				resolve(completionItems);
+
+			if (vscode.workspace.getConfiguration("cod-sense").get("use_builtin_completionItems", true)) {
+				// Fallback to just using the built-in completion items if no dynamic ones were found
+				if (!completionItems.length) {
+					resolve(this.completionItems);
+				}
+
+				resolve(this.completionItems.concat(completionItems));
+			}
+
+			// Use the non-builtin results (current none)
+			resolve(completionItems);
 		});
 	}
 }
