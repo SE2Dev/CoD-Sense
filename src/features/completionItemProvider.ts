@@ -73,16 +73,19 @@ export class propertyProvider {
 		token: vscode.CancellationToken,
 		context: vscode.CompletionContext): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[] {
 
-		// Don't provide the property completionItems unless we were activated by the trigger character
-		if (context.triggerKind != vscode.CompletionTriggerKind.TriggerCharacter)
-			return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
-				reject();
-			});
 
 		//
 		// Present the user with a list of common GSC / CSC functions
 		//
 		return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
+			// Don't provide completion unless it's enabled
+			if (!vscode.workspace.getConfiguration("cod-sense").get("use_builtin_completionItems", true))
+				reject();
+
+			// Don't provide the property completionItems unless we were activated by the trigger character
+			if (context.triggerKind != vscode.CompletionTriggerKind.TriggerCharacter)
+				reject();
+
 			// Dynamically resolved completion items
 			let propItems: vscode.CompletionItem[] = [];
 
