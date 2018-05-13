@@ -1,0 +1,11 @@
+.vscode/keybindings.json
+.vscode/c_cpp_properties.json
+
+*.o
+
+bin/parser
+obj/
+src/cpp/parser
+
+*.db
+*.db-wal

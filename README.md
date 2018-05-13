@@ -1,10 +1,12 @@
 # CoD-Sense
-## Syntax highlighting and Intellisense support for Call of Duty scripts in VSCode
+
+## Syntax highlighting support for Call of Duty scripts in VSCode
+
 -------------------------------------------------------------
 
-###Features
-#### Access Document Symbols
-![Document Symbols](screenshots/documentSymbols.png)
+Supports the GSC scripting syntax used for all titles prior to Black Ops III.
 
-#### Access Workspace-wide Symbols
-![Workspace Symbols](screenshots/workspaceSymbols.gif)
+<!-- It's probably easier just to define references to any screenshots at the top of the file -->
+[grammar-legacy]: ./images/screenshots/grammar-legacy.png "Syntax highlighting for legacy GSC files"
+
+![alt text][grammar-legacy]

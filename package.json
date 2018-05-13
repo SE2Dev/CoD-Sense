@@ -1,0 +1,76 @@
+{
+	"name": "cod-sense",
+	"displayName": "CoD-Sense",
+	"description": "Syntax highlighting for Call of Duty scripts",
+	"version": "0.0.2",
+	"publisher": "SE2Dev",
+	"homepage": "https://github.com/SE2Dev/CoD-Sense/blob/development/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SE2Dev/CoD-Sense"
+	},
+	"bugs": {
+		"url": "https://github.com/SE2Dev/CoD-Sense/issues"
+	},
+	"engines": {
+		"vscode": "^1.23.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"activationEvents": [
+		"onLanguage:gsc"
+	],
+	"main": "./out/src/extension",
+	"contributes": {
+		"languages": [
+			{
+				"id": "gsc",
+				"aliases": [
+					"GSC",
+					"gsc"
+				],
+				"extensions": [
+					".gsc",
+					".csc"
+				],
+				"configuration": "./gsc.configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "gsc",
+				"scopeName": "source.gsc",
+				"path": "./syntaxes/gsc.tmLanguage"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "CoD-Sense Configuration",
+			"properties": {
+				"cod-sense.use_builtin_completionItems": {
+					"type": "boolean",
+					"description": "Enables built-in engine functions in the completion provider",
+					"default": true
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"dependencies": {
+		"vscode-languageclient": "^4.1.3"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.6",
+		"tslint": "^5.8.0",
+		"@types/node": "^7.0.43",
+		"@types/mocha": "^2.2.42"
+	}
+}
