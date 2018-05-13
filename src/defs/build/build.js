@@ -3,6 +3,8 @@
 
 var fs = require("fs");
 
+var outfile = "defs.ts";
+
 var rxScriptArgument = new RegExp("^--(\\w*)$", "g");
 
 var rxAttribute = new RegExp("\n[^\\s+]\\w*[^\\s+]:");
@@ -192,8 +194,8 @@ function fsReadDirCallback(err, files) {
     outData = templateData + outData;
     outData = outData.replace(rxEndl, "\r\n");
 
-    console.log("Writing 'defs.ts':\n   " + outDir + "defs.ts");
-    fs.writeFileSync(outDir + "defs.ts", outData);
+    console.log("Writing '" + outfile + "':\n   " + outDir + outfile);
+    fs.writeFileSync(outDir + outfile, outData);
 
     console.log("Complete!")
     process.exit(0);
