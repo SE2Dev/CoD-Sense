@@ -32,7 +32,11 @@ export class completionItemProvider {
 		// Present the user with a list of common GSC / CSC functions
 		//
 		return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
-			resolve(this.completionItems);
+			let completionItems: vscode.CompletionItem[] = [];
+			if(vscode.workspace.getConfiguration("cod-sense").get("use_builtin_completionItems", true))
+				resolve(completionItems.concat(this.completionItems));	
+			else
+				resolve(completionItems);
 		});
 	}
 }

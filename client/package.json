@@ -46,25 +46,8 @@
 		],
 		"configuration": {
 			"type": "object",
-			"title": "Example configuration",
+			"title": "CoD-Sense Configuration",
 			"properties": {
-				"cod-sense.libs": {
-					"type": "object",
-					"description": "List of script libraries (such as game raw directories) in the format: {\n'Name1': 'rawPath1', 'Name2': 'rawPath2', ...\n}",
-					"string-map": {
-						"type": "object",
-						"additionalProperties": false,
-						"patternProperties": {
-							".+": {
-								"type": "string"
-							}
-						}
-					}
-				},
-				"cod-sense.active_lib": {
-					"type": "string",
-					"description": "The name of the user defined library that is to be used for include's etc. (Must match a key in cod-sense.libs)"
-				},
 				"cod-sense.use_builtin_completionItems": {
 					"type": "boolean",
 					"description": "Enables built-in engine functions in the completion provider",
