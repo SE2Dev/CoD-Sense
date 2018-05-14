@@ -2,7 +2,7 @@
     "name": "cod-sense",
     "displayName": "CoD-Sense",
     "description": "Syntax highlighting for Call of Duty scripts",
-    "version": "0.0.2",
+    "version": "1.0.1",
     "publisher": "se2dev",
     "icon": "images/cod-sense_logo_128x128.png",
     "homepage": "https://github.com/SE2Dev/CoD-Sense/blob/development/README.md",
