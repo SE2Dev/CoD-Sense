@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 import * as funcDefs from '../defs/defs'
 import * as fieldDefs from '../defs/field'
 
+const rx_property_word = /[A-Za-z]\w*((\(.*?\))?(\[.+?\])?)*\./;
+
 // Provides function completion
 export class functionProvider {
 	functions: vscode.CompletionItem[];
@@ -53,7 +55,7 @@ export class propertyProvider {
 	props: vscode.CompletionItem[];
 
 	// Generate completion items for the hardcoded functions
-	constructor(extensionPath : string) {
+	constructor(extensionPath: string) {
 		this.props = new Array<vscode.CompletionItem>();
 
 		for (var i in fieldDefs.fields) {
@@ -68,7 +70,6 @@ export class propertyProvider {
 		token: vscode.CancellationToken,
 		context: vscode.CompletionContext): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[] {
 
-
 		//
 		// Present the user with a list of common GSC / CSC functions
 		//
@@ -79,6 +80,16 @@ export class propertyProvider {
 
 			// Don't provide the property completionItems unless we were activated by the trigger character
 			if (context.triggerKind != vscode.CompletionTriggerKind.TriggerCharacter)
+				reject();
+
+			// Get the text at the previous position
+			// let pos = document.positionAt(document.offsetAt(position) - 1);
+
+			// Check if that text was a word
+			let word_range = document.getWordRangeAtPosition(position, rx_property_word);
+
+			// If it wasn't, don't provide property completion items
+			if (word_range === undefined)
 				reject();
 
 			// Dynamically resolved completion items
