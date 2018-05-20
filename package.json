@@ -53,6 +53,10 @@
                     "type": "boolean",
                     "description": "Enables built-in engine functions in the completion provider",
                     "default": true
+                },
+                "cod-sense.gamePaths" : {
+                    "type": "object",
+                    "default": {}
                 }
             }
         }

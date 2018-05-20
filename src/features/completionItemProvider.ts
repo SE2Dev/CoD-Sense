@@ -4,7 +4,10 @@ import * as vscode from 'vscode';
 import * as funcDefs from '../defs/defs'
 import * as fieldDefs from '../defs/field'
 
+import * as vfs from '../vfs';
+
 const rx_property_word = /[A-Za-z]\w*((\(.*?\))?(\[.+?\])?)*\./;
+const rx_filepath_word = /(\w+\\)+/;
 
 // Provides function completion
 export class functionProvider {
@@ -97,6 +100,46 @@ export class propertyProvider {
 			if (propItems.length)
 				resolve(this.props.concat(propItems))
 			resolve(this.props);
+		});
+	}
+}
+
+export class fileProvider {
+	// Generate completion items for the hardcoded functions
+	constructor(extensionPath: string) {
+	}
+
+	provideCompletionItems(document: vscode.TextDocument,
+		position: vscode.Position,
+		token: vscode.CancellationToken,
+		context: vscode.CompletionContext): Thenable<vscode.CompletionItem[]> | vscode.CompletionItem[] {
+
+		//
+		// Present the user with a list of common GSC / CSC functions
+		//
+		return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
+			// Don't provide completion unless it's enabled
+			if (!vscode.workspace.getConfiguration("cod-sense").get("use_builtin_completionItems", true))
+				return reject();
+
+			// Don't provide the property completionItems unless we were activated by the trigger character
+			if (context.triggerKind != vscode.CompletionTriggerKind.TriggerCharacter)
+				return reject();
+
+			// console.log(`${context.triggerKind}: ${context.triggerCharacter}`)
+
+			// Get the text at the previous position
+			// let pos = document.positionAt(document.offsetAt(position) - 1);
+
+			// Check if that text was a word
+			let word_range = document.getWordRangeAtPosition(position, rx_filepath_word);
+
+			// If it wasn't, don't provide property completion items
+			if (word_range === undefined)
+				return reject();
+
+			// Dynamically resolved completion items
+			return resolve(vfs.ResolvePathCompletion(document.getText(word_range)));
 		});
 	}
 }
