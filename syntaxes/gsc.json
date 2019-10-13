@@ -1,0 +1,165 @@
+{
+    "fileTypes": [
+        "gsc"
+    ],
+    "name": "gsc",
+    "scopeName": "source.gsc",
+    "foldingStartMarker": "\\{",
+    "foldingStopMarker": "\\}",
+    "patterns": [
+        {
+            "begin": "^\\s*(#include\\b)\\s*([^;]*);?",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.control.import.include"
+                },
+                "2": {
+                    "name": "string.filename.gsc"
+                }
+            },
+            "end": "\\s"
+        },
+        {
+            "match": "#using_animtree\\b",
+            "name": "meta.preprocessor.c"
+        },
+        {
+            "match": "\/\/.*",
+            "name": "comment.line"
+        },
+        {
+            "begin": "\/\\*",
+            "beginCaptures": [
+                {
+                    "name": "comment.begin"
+                }
+            ],
+            "end": "\\*\/",
+            "endCaptures": [
+                {
+                    "name": "comment.end"
+                }
+            ],
+            "name": "comment.block.gsc"
+        },
+        {
+            "begin": "\/#",
+            "beginCaptures": [
+                {
+                    "name": "comment.begin"
+                }
+            ],
+            "end": "#\/",
+            "endCaptures": [
+                {
+                    "name": "comment.end"
+                }
+            ],
+            "name": "comment.block.developerscript.gsc"
+        },
+        {
+            "begin": "\"",
+            "beginCaptures": [
+                {
+                    "name": "punctuation.definition.string.begin.gsc"
+                }
+            ],
+            "end": "(?<!\\\\)[\"\\n\\r]",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.string.end.gsc"
+                }
+            },
+            "name": "string.quoted.double.gsc"
+        },
+        {
+            "match": "(?<![a-zA-Z]-)(?<![a-zA-Z])\\b\\d+\\.?f?",
+            "name": "constant.numeric.c"
+        },
+        {
+            "match": "(i*)\\b(true|false)\\b",
+            "name": "constant.language.c"
+        },
+        {
+            "match": "\\b(if|else|switch|case|break|continue|for|while|return)\\b",
+            "name": "keyword.control.c"
+        },
+        {
+            "match": "\\b(level|player|self)\\b",
+            "name": "support.variable.gsc"
+        },
+        {
+            "match": "\\bthread\\b",
+            "name": "support.type.gsc"
+        },
+        {
+            "match": "(_?[a-zA-Z\\-_]\\w*)(?=\\s*\\(.*\\).*)",
+            "captures": {
+                "1": {
+                    "name": "entity.name.function.c"
+                }
+            }
+        },
+        {
+            "include": "#block"
+        }
+    ],
+    "repository": {
+        "block": {
+            "patterns": [
+                {
+                    "begin": "\\{",
+                    "beginCaptures": [
+                        {
+                            "name": "punctuation.section.block.begin.gsc"
+                        }
+                    ],
+                    "end": "\\}",
+                    "endCaptures": [
+                        {
+                            "name": "punctuation.section.block.end.gsc"
+                        }
+                    ],
+                    "name": "meta.block.gsc",
+                    "patterns": [
+                        {
+                            "include": "#block_innards"
+                        },
+                        {
+                            "include": "$base"
+                        }
+                    ]
+                }
+            ]
+        },
+        "block_innards": {
+            "patterns": [
+                {
+                    "include": "#function_call"
+                },
+                {
+                    "include": "#function_ptr"
+                },
+                {
+                    "include": "#block"
+                }
+            ]
+        },
+        "function_call": {
+            "match": "(_?[a-zA-Z\\-_]\\w*)(?=\\s*\\(.*\\).*)",
+            "captures": {
+                "1": {
+                    "name": "support.function.any-method.gsc"
+                }
+            }
+        },
+        "function_ptr": {
+            "match": "::\\b(\\w+)\\b",
+            "captures": {
+                "1": {
+                    "name": "support.function.any-method.gsc"
+                }
+            }
+        }
+    }
+}
