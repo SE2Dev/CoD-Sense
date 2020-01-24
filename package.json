@@ -2,7 +2,7 @@
     "name": "cod-sense",
     "displayName": "CoD-Sense",
     "description": "Syntax highlighting for Call of Duty scripts",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "publisher": "se2dev",
     "icon": "images/cod-sense_logo_128x128.png",
     "homepage": "https://github.com/SE2Dev/CoD-Sense/blob/development/README.md",
@@ -29,10 +29,13 @@
                 "id": "gsc",
                 "aliases": [
                     "GSC",
-                    "gsc"
+                    "gsc",
+                    "GSX",
+                    "gsx"
                 ],
                 "extensions": [
                     ".gsc",
+                    ".gsx",
                     ".csc"
                 ],
                 "configuration": "./gsc.configuration.json"
@@ -43,6 +46,11 @@
                 "language": "gsc",
                 "scopeName": "source.gsc",
                 "path": "./syntaxes/gsc.tmLanguage"
+            },
+            {
+                "language": "gsx",
+                "scopeName": "source.gsx",
+                "path": "./syntaxes/gsx.tmLanguage"
             }
         ],
         "configuration": {
@@ -73,5 +81,10 @@
         "tslint": "^5.8.0",
         "@types/node": "^7.0.43",
         "@types/mocha": "^2.2.42"
+    },
+    "__metadata": {
+        "id": "27c80a99-0ab4-4930-918b-9a3577605e9a",
+        "publisherId": "695ee91d-a52c-4964-8d62-4c14ba67a819",
+        "publisherDisplayName": "SE2Dev"
     }
 }
