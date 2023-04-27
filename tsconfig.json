@@ -22,6 +22,7 @@
 		"native",
 		"src/defs/.vscode",
 		"src/defs/build",
-		"src/defs/raw"
+		"src/defs/raw",
+        "research"
 	]
 }
