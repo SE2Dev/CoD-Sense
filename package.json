@@ -42,7 +42,7 @@
             {
                 "language": "gsc",
                 "scopeName": "source.gsc",
-                "path": "./syntaxes/gsc.tmLanguage"
+                "path": "./syntaxes/gsc.json"
             }
         ],
         "configuration": {
