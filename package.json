@@ -35,7 +35,7 @@
                     ".gsc",
                     ".csc"
                 ],
-                "configuration": "./gsc.json"
+                "configuration": "./language-configuration.json"
             }
         ],
         "grammars": [
