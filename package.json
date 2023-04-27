@@ -35,7 +35,7 @@
                     ".gsc",
                     ".csc"
                 ],
-                "configuration": "./gsc.configuration.json"
+                "configuration": "./gsc.json"
             }
         ],
         "grammars": [
